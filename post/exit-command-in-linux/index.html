@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://goroyal.github.io//favicon.ico?v=1560782926291">
+<link rel="shortcut icon" href="https://goroyal.github.io//favicon.ico?v=1560783604271">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://goroyal.github.io//styles/main.css">
 
@@ -36,7 +36,7 @@
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://goroyal.github.io/">
-        <img src="https://goroyal.github.io//images/avatar.png?v=1560782926291" class="site-logo">
+        <img src="https://goroyal.github.io//images/avatar.png?v=1560783604271" class="site-logo">
         <h1 class="site-title">Goroyal&#39;s blog</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -114,9 +114,11 @@
 <li>130 　　　　　　　通过Ctrl+C终止的命令</li>
 <li>255 　　　　　　　正常范围之外的退出状态码</li>
 </ul>
-<p>直接<code>exit</code>和<code>exit $?</code>是一样的，<code>$?</code>表示上次的命令执行的结果状态</p>
+<p>不带数字直接<code>exit</code>，脚本的退出状态码就由脚本里面最后执行的命令来决定（即exit之前的命令）。</p>
+<p>至于<code>exit $?</code>，它和<code>exit</code>是一样的作用。</p>
 <p>参考：
-<a href="http://man.linuxde.net/exit">Linux命令大全</a></p>
+<a href="http://man.linuxde.net/exit">Linux命令大全</a>
+<a href="https://www.ixdba.net/docs/shell/exit-status.html">退出和退出状态码</a></p>
 
             </div>
             
