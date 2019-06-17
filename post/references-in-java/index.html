@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>Java中的可重入锁ReetrantLock | Goroyal&#39;s blog</title>
+<title>Java中的几种引用 | Goroyal&#39;s blog</title>
 <meta name="description" content="学习分享">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -98,44 +98,33 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">Java中的可重入锁ReetrantLock</h2>
-            <div class="post-date">2015-08-28</div>
+            <h2 class="post-title">Java中的几种引用</h2>
+            <div class="post-date">2018-01-11</div>
             
             <div class="post-content">
-              <h2 id="类说明">类说明</h2>
-<p><code>ReetrantLock</code>是一个可重入排它<code>Lock</code>，和使用<code>synchronized</code>方法和语句的隐式监视器锁有着相同的基本行为和语义，但是有着扩展性能。</p>
-<p><code>ReentrantLock</code>由上次成功加锁但是还没有解锁的线程所持有。在锁没有被其他线程持有时，一个线程调用<code>lock</code>将返回成功获取锁。如果当前线程已经持有锁那么该方法将立即返回。这个可以使用方法<code>isHeldByCurrentThread</code>和<code>getHoldCount</code>检查。</p>
-<p>这个类的构造器接收一个可选的公平性参数。当设为 true 时，在争用的情况下，锁倾向于授权给等待时间最长的线程。另外，这个锁不保证任何特定访问顺序。使用被多个线程访问的公平锁的程序将呈现比使用默认设置的情况较低的总吞吐量（也就是变慢了，通常是慢很多），但是在获取锁和保证不饥饿的时间上有较小的方差。</p>
-<p>公平锁可以保证锁的获取按照FIFO原则，而代价是进行大量的线程切换。非公平性锁虽然可能造成线程饥饿，但是较少线程切换，保证了很大的吞吐量。</p>
-<p>同样需要注意的是，不计时的<code>tryLock()</code>方法不赞成公平设置。如果锁是可用的它将成功获得锁，而不管其他线程是否正在等待。</p>
-<p>建议实践时永远在<code>lock</code>后面立即跟上一个<code>try</code>块，大多数典型的在构造之前/之后的情况是：</p>
-<pre><code class="language-java">class X{
-	private final ReentrantLock lock = new ReentrantLock();
-	//...
-	public void m(){
-		lock.lock(); // block until condition holds
-		try{
-			// ... method body
-		} finally {
-			lock.unlock();
-		}
-	}
-}
-</code></pre>
-<p>除了实现<code>Lock</code>接口，这个类定义了大量 public 和 protected 方法来检查锁的状态。其中有一些方法只用于仪表和监控。</p>
-<p>这个类的序列化和内置锁的行为方式一致：反序列化的锁是处于解锁状态，在序列化的时候不管当前它的状态。</p>
-<p>这个锁支持相同线程递归锁最大2147483647次。尝试超过这个限制将导致从加锁方法抛出<code>Error</code>。</p>
-<h2 id="参考资料">参考资料</h2>
-<p>JDK 1.7</p>
+              <p>Java中的引用主要有以下几种类型：
+• 强引用（StrongReference）：强引用是使用最普遍的引用。如果一个对象具有强引用，那垃圾回收器绝不会回收它。当内存空间不足，Java虚拟机宁愿抛出OutOfMemoryError错误，使程序异常终止，也不会靠随意回收具有强引用的对象来解决内存不足的问题。</p>
+<p>• 软引用（SoftReference）：如果一个对象只具有软引用，则内存空间足够，垃圾回收器就不会回收它；如果内存空间不足了，就会回收这些对象的内存。只要垃圾回收器没有回收它，该对象就可以被程序使用。软引用可用来实现内存敏感的高速缓存。软引用可以和一个引用队列（ReferenceQueue）联合使用，如果软引用所引用的对象被垃圾回收器回收，Java虚拟机就会把这个软引用加入到与之关联的引用队列中。</p>
+<p>• 弱引用（WeakReference）：弱引用与软引用的区别在于：只具有弱引用的对象拥有更短暂的生命周期。在垃圾回收器线程扫描它所管辖的内存区域的过程中，一旦发现了只具有弱引用的对象，不管当前内存空间足够与否，都会回收它的内存。不过，由于垃圾回收器是一个优先级很低的线程，因此不一定会很快发现那些只具有弱引用的对象。弱引用可以和一个引用队列（ReferenceQueue）联合使用，如果弱引用所引用的对象被垃圾回收，Java虚拟机就会把这个弱引用加入到与之关联的引用队列中。</p>
+<p>• 虚引用（PhantomReference）：“虚引用”顾名思义，就是形同虚设，与其他几种引用都不同，虚引用并不会决定对象的生命周期。如果一个对象仅持有虚引用，那么它就和没有任何引用一样，在任何时候都可能被垃圾回收器回收。</p>
+<hr>
+<p>下面主要来谈谈软引用。
+对于软引用对象本身，至少有两个强引用指向它：由应用创建的原始的强引用，还有就是JVM创建的在所引对象队列上的一个新的强引用。软引用本质上是一个比较大的、最近最久未用的对象池。获得较好性能的关键是确保它们会被及时清理。</p>
+<p>不要使用太多软引用，它们很容易填满整个堆。</p>
+<p>当问题中的所引对象会同时被几个线程使用时，应该考虑弱引用。否则，弱引用很可能会被垃圾收集器回收：只有弱引用的对象在每个GC周期都可以回收。当强引用被移除时，弱引用会立即释放。</p>
+<p>软：只要有足够内存，而且看上去有人会偶尔访问它，就留着它。
+弱：只要有其他人对这个对象感兴趣就让我知道它在哪，但是如果他们不再需要它了，就丢了，我自己会重新创建。</p>
+<p>软引用的对象通常可以存活几分钟甚至几小时，但是只要所引读写仍然存在，弱引用对象就会一直存活（下一个GC周期会清理）。</p>
+<p><strong>在Java中，集合类经常是内存泄露的根源。比如某个应用将对象放入一个HashMap对象中，但从不移除。随着时间推移，这个HashMap对象会越来越大，而且消耗堆。</strong></p>
 
             </div>
             
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://goroyal.github.io//post/readwrite-lock-in-java">
+                <a href="https://goroyal.github.io//post/abstract-class-and-interface">
                   <h3 class="post-title">
-                    Java中的ReadWriteLock
+                    抽象类和接口
                   </h3>
                 </a>
               </div>
