@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://goroyal.github.io/</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2019-06-17T14:15:48.070Z</updated>
+    <updated>2019-06-17T14:27:39.422Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://goroyal.github.io/"/>
     <link rel="self" href="https://goroyal.github.io//atom.xml"/>
@@ -219,6 +219,19 @@ email: true test@a.com
 <p>http://computerdragon.blog.51cto.com/6235984/1210969
 http://www.cnblogs.com/mandroid/archive/2011/07/18/2109829.html
 http://www.itzhai.com/java-based-notebook-annotation-annotation-introduction-and-use-custom-annotations.html</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Linux中的exit命令]]></title>
+        <id>https://goroyal.github.io//post/exit-command-in-linux</id>
+        <link href="https://goroyal.github.io//post/exit-command-in-linux">
+        </link>
+        <updated>2018-05-13T14:22:26.000Z</updated>
+        <content type="html"><![CDATA[<p>我们在linux的命令行里面会用到exit，比方说退出某个shell。在shell脚本中这个命令可以终止脚本的执行。exit后面是可以接一个数字表示退出时候的状态。</p>
+<p><code>exit(0)</code>一般表示成功结束，其他的是不成功的，如<code>exit(1)</code>。对于一些系统程序而言，这些错误编号是有含义的。</p>
+<p>直接<code>exit</code>和<code>exit $?</code>是一样的，<code>$?</code>表示上次的命令执行的结果状态</p>
+<p>参考：
+<a href="http://man.linuxde.net/exit">Linux命令大全</a></p>
 ]]></content>
     </entry>
     <entry>
@@ -443,35 +456,6 @@ final String string2 = &quot;string2&quot;;
 <p>除了实现<code>Lock</code>接口，这个类定义了大量 public 和 protected 方法来检查锁的状态。其中有一些方法只用于仪表和监控。</p>
 <p>这个类的序列化和内置锁的行为方式一致：反序列化的锁是处于解锁状态，在序列化的时候不管当前它的状态。</p>
 <p>这个锁支持相同线程递归锁最大2147483647次。尝试超过这个限制将导致从加锁方法抛出<code>Error</code>。</p>
-<h2 id="参考资料">参考资料</h2>
-<p>JDK 1.7</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Java中的ReadWriteLock]]></title>
-        <id>https://goroyal.github.io//post/readwrite-lock-in-java</id>
-        <link href="https://goroyal.github.io//post/readwrite-lock-in-java">
-        </link>
-        <updated>2015-08-06T14:10:05.000Z</updated>
-        <content type="html"><![CDATA[<p><code>ReadWriteLock</code>是<code>java.util.concurrent.locks</code>下面的接口，其内部方法结构如下：</p>
-<pre><code class="language-Java">public interface ReadWriteLock{
-	Lock readLock();
-	Lock writeLock();
-}
-</code></pre>
-<h2 id="接口说明">接口说明</h2>
-<p>一个<code>ReadWriteLock</code>维护一组关联的锁，一个用于只读的操作，另一个用来写。读锁可以被多个读线程同时持有，只要当前没有写线程。而写锁是排它的。</p>
-<p><code>ReadWriteLock</code>的所有实现必须保证<code>writeLock</code>操作的内存同步影响（在<code>Lock</code>接口中定义的），也保持关联的<code>readLock</code>的影响。也就是说，一个成功获取读锁的线程将看到写锁之前版本所做的所有更新。</p>
-<p>读写锁访问共享数据比允许一个排它锁的并发性大很多。它利用一次只有一个线程可以修改共享数据，大多数情况下任意数量可以同步读取数据的现实（所以叫读线程）。理论上，允许读写锁的使用对并发性的提高将导致比使用一个排它锁带来性能提升。在实践中，这个并发改善只有在多处理器上能够完全实现，并且只有共享数据的访问模式是合适的。</p>
-<p>读写锁与排它锁是否提高性能取决于数据被读以及被修改的频率比较，读和写操作的持续时间，以及数据的争用情况——也就是说，同一时间尝试去读或尝试去写数据的线程的数量。例如，最初填充数据的集合此后很少被修改，而且频繁被搜索（比如一个目录），这就是读写锁使用的理想选择。但是，如果更新变的频繁，那么数据花费大量时间被排它锁定，那么就很少有并发上的提升。而且，如果读操作时间太短，读写锁实现的开销（读写锁所固有的比一个排它锁更复杂）可能在执行消耗中占主要部分，尤其是很多读写锁实现仍然通过一小段代码序列化所有线程。最终，只有分析和测量才能确定使用读写锁是否适合于你的应用。</p>
-<p>尽管读写锁的基本操作是很简单，实现需要做出很多政策决定，这个将影响给定应用中的读写锁的效率。这些政策包括：</p>
-<ul>
-<li>当写线程释放写锁时，此时有读线程和写线程都在等待，确定是授权读锁还是写锁。通常倾向于给写线程，因为写操作一般比较短而且不频繁。通常不倾向于给读线程，因为如一般情况下那样如果读线程频繁写存活时间长读操作可能导致写的时间延迟。公平的讲，或者“按照顺序”的实现也是可以的。</li>
-<li>当一个读线程活跃且一个写线程等待时，确定是否有读线程请求读锁，然后授权读锁。倾向于给读线程可能使得写线程无限期延迟，而倾向于写线程可能减少并发的潜力。</li>
-<li>确定锁是否是可重入的：一个带写锁的线程能否重复获取写锁？当持有写锁的时候能否获取读锁？读锁本身是否可重入？</li>
-<li>写锁能否在不允许干预写线程的情况下降级到读锁？读锁能否升级到写锁，优先于其他等待的读线程和写线程？</li>
-</ul>
-<p>你应该在评估你应用的给定实现时考虑以上全部4点。</p>
 <h2 id="参考资料">参考资料</h2>
 <p>JDK 1.7</p>
 ]]></content>
