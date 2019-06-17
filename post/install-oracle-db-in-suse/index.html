@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>抽象类和接口 | Goroyal&#39;s blog</title>
+<title>SUSE Linux中安装Oracle数据库 | Goroyal&#39;s blog</title>
 <meta name="description" content="学习分享">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -98,38 +98,42 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">抽象类和接口</h2>
+            <h2 class="post-title">SUSE Linux中安装Oracle数据库</h2>
             <div class="post-date">2019-06-17</div>
             
             <div class="post-content">
-              <p>抽象类和接口是Java面向对象中非常重要的元素，在面向接口的编程中两者更是经常用到。面试的时候也经常会问到两者的一些区别，下面是对两者的一些总结：</p>
-<p>(1)当一个类继承了别的类的时候，这时候，只能让它去实现接口，因为Java里面只能单继承。</p>
-<p>(2)抽象类中可以定义非<code>abstract</code>的方法和变量，而且可以是非<code>public</code>的，而且抽象类中方法可以有具体内容。接口中的方法必须是<code>public</code>的，就算不写也会默认为<code>public</code>，且方法体必须为空的。接口中的变量是<code>public static final</code>类型的，其实就是常量。</p>
-<p>(3)继承了抽象类的子类只能看到抽象类中public和protected类型的变量和方法，对于非abstract的方法不需要重写。而接口中定义的所有方法必须重写，定义的常量会影响所有实现它的类，所以，一般不推荐在接口里定义常量，且接口规模应尽可能小。如果需要抽象出多个方法，不应该把这些方法都放在接口里，而是采用多个接口+接口继承的形式。这点在Effective Java里面也有提到。</p>
-<p>(4)接口是对行为的一种抽象，而抽象类是对类的抽象，包括属性、方法。继承抽象类的类往往是具有一些相似特点的类，而实现接口的类可以跨不同的域，仅仅实现了接口定义的契约。类继承抽象类像是一个”is-a”特点，类实现接口像是”like-a”特点。</p>
-<p>(5)在设计时，对接口往往是自上而下的，先定义接口行为，然后再针对其做具体实现；抽象类往往是自下而上的，我们先知道子类后才对其进行抽象出父类。</p>
-<p>(6)我们常常看到Java程序里有定义的一些空接口，那么空接口是什么作用呢？</p>
-<p>空接口的主要是用来做判断的，也就是作为一个标记。为了判断某一个类是否满足其筛选条件时可以做一个空接口，然后利用instanceof方法来判断某一类是否使用了该接口，以达到你要筛选指定类型类的需求。</p>
-<h2 id="参考资料">参考资料</h2>
-<p>Effective Java
-https://github.com/android-cn/android-discuss/issues/6</p>
+              <p>从官网下载64位rpm安装包，解压，打开terminal进入rpm安装包所在目录，输入<code>rpm -i install oralce-xe-xxx.rpm</code>
+然后会提示输入<code>/etc/init.d/oracle-xe configure</code>，按照步骤照做。
+在设置http端口的时候，默认为8080，可能会影响jboss、tomcat，可以改成8088。</p>
+<p>配置ORACLE_HOME和path:
+打开<code>/etc/bash.bashrc.local</code>，</p>
+<pre><code class="language-shell">export ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
+export PATH=$PATH:$ORACLE_HOME/bin:
+export ORACLE_SID=XE
+</code></pre>
+<p>配置结束后，在尝试sqlplus连接数据库的时候会出现密码不正确或者权限不够等问题，因为oracle express在安装的时候讲ORACLE用户作为这个软件的owner，而这个owner没有加到dba组里。
+可以输入命令<code>/etc/group</code>查看当前系统中的用户组，<code>/etc/passwd</code>查看系统中的用户。遇到一个问题就是实际上并不存在ORACLE这个用户，然后采取了一个方法，就是<code>vi /etc/group</code>强制在dba这个组加上ORACLE这个用户。
+打开新的终端，<code>su - oracle</code>从而切换到ORACLE用户，然后输入<code>groups</code>，可以查看它属于dba组。（其实挺奇怪，<code>su - oracle</code>可以切换到oracle用户，但是之前在其他地方找不到这个用户）</p>
+<p>输入<code>/etc/init.d/oracle-xe start</code>(或<code>lsnrctl start</code>)启动oracle。</p>
+<p>输入<code>sqlplus system/密码</code>，进行连接，如果说用户名或密码错误的话，可以输入<code>sqlplus / as sysdba</code>(注意，需要在ORACLE用户下)，然后建立连接后，输入<code>alter user system identified by 密码</code>;
+quit后在以<code>sqlplus system/密码</code>就能连上了。</p>
+<p>密码不正确或者权限不够等问题，应该也可以通过更改oracle安装后的目录及文件的owner来实现，这里就暂不讨论。</p>
+<p>还有可能和<code>$ORACLE_HOME/network/admin</code>下面的几个ora文件有关。附件里列出了它们。</p>
+<p>如果安装的时候忘了改http端口，可以输入如下命令：</p>
+<pre><code>sqlplus /nolog
+connect
+(input username and password)
+exec dbms_xdb.sethttpport(8088)
+</code></pre>
 
             </div>
-            
-              <div class="tag-container">
-                
-                  <a href="https://goroyal.github.io//tag/Ke7gk0EO5" class="tag">
-                    Java
-                  </a>
-                
-              </div>
             
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://goroyal.github.io//post/final-finally-finalize-in-java">
+                <a href="https://goroyal.github.io//post/abstract-class-and-interface">
                   <h3 class="post-title">
-                    Java中的final、finally和finalize
+                    抽象类和接口
                   </h3>
                 </a>
               </div>
