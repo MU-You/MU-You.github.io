@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://goroyal.github.io/</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2019-06-17T13:40:36.505Z</updated>
+    <updated>2019-06-17T13:50:46.259Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://goroyal.github.io/"/>
     <link rel="self" href="https://goroyal.github.io//atom.xml"/>
@@ -11,131 +11,84 @@
     <icon>https://goroyal.github.io//favicon.ico</icon>
     <rights>All rights reserved 2019, Goroyal&apos;s blog</rights>
     <entry>
-        <title type="html"><![CDATA[SUSE Linux中安装Oracle数据库]]></title>
-        <id>https://goroyal.github.io//post/install-oracle-db-in-suse</id>
-        <link href="https://goroyal.github.io//post/install-oracle-db-in-suse">
-        </link>
-        <updated>2019-06-17T13:34:02.000Z</updated>
-        <content type="html"><![CDATA[<p>从官网下载64位rpm安装包，解压，打开terminal进入rpm安装包所在目录，输入<code>rpm -i install oralce-xe-xxx.rpm</code>
-然后会提示输入<code>/etc/init.d/oracle-xe configure</code>，按照步骤照做。
-在设置http端口的时候，默认为8080，可能会影响jboss、tomcat，可以改成8088。</p>
-<p>配置ORACLE_HOME和path:
-打开<code>/etc/bash.bashrc.local</code>，</p>
-<pre><code class="language-shell">export ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
-export PATH=$PATH:$ORACLE_HOME/bin:
-export ORACLE_SID=XE
-</code></pre>
-<p>配置结束后，在尝试sqlplus连接数据库的时候会出现密码不正确或者权限不够等问题，因为oracle express在安装的时候讲ORACLE用户作为这个软件的owner，而这个owner没有加到dba组里。
-可以输入命令<code>/etc/group</code>查看当前系统中的用户组，<code>/etc/passwd</code>查看系统中的用户。遇到一个问题就是实际上并不存在ORACLE这个用户，然后采取了一个方法，就是<code>vi /etc/group</code>强制在dba这个组加上ORACLE这个用户。
-打开新的终端，<code>su - oracle</code>从而切换到ORACLE用户，然后输入<code>groups</code>，可以查看它属于dba组。（其实挺奇怪，<code>su - oracle</code>可以切换到oracle用户，但是之前在其他地方找不到这个用户）</p>
-<p>输入<code>/etc/init.d/oracle-xe start</code>(或<code>lsnrctl start</code>)启动oracle。</p>
-<p>输入<code>sqlplus system/密码</code>，进行连接，如果说用户名或密码错误的话，可以输入<code>sqlplus / as sysdba</code>(注意，需要在ORACLE用户下)，然后建立连接后，输入<code>alter user system identified by 密码</code>;
-quit后在以<code>sqlplus system/密码</code>就能连上了。</p>
-<p>密码不正确或者权限不够等问题，应该也可以通过更改oracle安装后的目录及文件的owner来实现，这里就暂不讨论。</p>
-<p>还有可能和<code>$ORACLE_HOME/network/admin</code>下面的几个ora文件有关。附件里列出了它们。</p>
-<p>如果安装的时候忘了改http端口，可以输入如下命令：</p>
-<pre><code>sqlplus /nolog
-connect
-(input username and password)
-exec dbms_xdb.sethttpport(8088)
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[抽象类和接口]]></title>
-        <id>https://goroyal.github.io//post/abstract-class-and-interface</id>
-        <link href="https://goroyal.github.io//post/abstract-class-and-interface">
-        </link>
-        <updated>2019-06-17T13:31:52.000Z</updated>
-        <content type="html"><![CDATA[<p>抽象类和接口是Java面向对象中非常重要的元素，在面向接口的编程中两者更是经常用到。面试的时候也经常会问到两者的一些区别，下面是对两者的一些总结：</p>
-<p>(1)当一个类继承了别的类的时候，这时候，只能让它去实现接口，因为Java里面只能单继承。</p>
-<p>(2)抽象类中可以定义非<code>abstract</code>的方法和变量，而且可以是非<code>public</code>的，而且抽象类中方法可以有具体内容。接口中的方法必须是<code>public</code>的，就算不写也会默认为<code>public</code>，且方法体必须为空的。接口中的变量是<code>public static final</code>类型的，其实就是常量。</p>
-<p>(3)继承了抽象类的子类只能看到抽象类中public和protected类型的变量和方法，对于非abstract的方法不需要重写。而接口中定义的所有方法必须重写，定义的常量会影响所有实现它的类，所以，一般不推荐在接口里定义常量，且接口规模应尽可能小。如果需要抽象出多个方法，不应该把这些方法都放在接口里，而是采用多个接口+接口继承的形式。这点在Effective Java里面也有提到。</p>
-<p>(4)接口是对行为的一种抽象，而抽象类是对类的抽象，包括属性、方法。继承抽象类的类往往是具有一些相似特点的类，而实现接口的类可以跨不同的域，仅仅实现了接口定义的契约。类继承抽象类像是一个”is-a”特点，类实现接口像是”like-a”特点。</p>
-<p>(5)在设计时，对接口往往是自上而下的，先定义接口行为，然后再针对其做具体实现；抽象类往往是自下而上的，我们先知道子类后才对其进行抽象出父类。</p>
-<p>(6)我们常常看到Java程序里有定义的一些空接口，那么空接口是什么作用呢？</p>
-<p>空接口的主要是用来做判断的，也就是作为一个标记。为了判断某一个类是否满足其筛选条件时可以做一个空接口，然后利用instanceof方法来判断某一类是否使用了该接口，以达到你要筛选指定类型类的需求。</p>
-<h2 id="参考资料">参考资料</h2>
-<p>Effective Java
-https://github.com/android-cn/android-discuss/issues/6</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Java中的final、finally和finalize]]></title>
-        <id>https://goroyal.github.io//post/final-finally-finalize-in-java</id>
-        <link href="https://goroyal.github.io//post/final-finally-finalize-in-java">
-        </link>
-        <updated>2019-06-17T13:26:38.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="final">final</h2>
-<p>final是Java里面的一个关键字，可以用来修饰成员变量、局部变量、类、方法。</p>
-<p>final修饰的类不能被继承，比方说String，Integer以及其他包装类。</p>
-<p>final修饰的方法不能被重写。</p>
-<p>final修饰的基本类型变量不可以被修改，修饰的其他类型变量的引用不能被修改。也就是说如果<code>final int a=10</code>，那么这个<code>a</code>变量以后就不能再给它赋值成别的值了。而修饰的非基本类型变量的话，该变量的引用指向的堆里面的内容是可以修改的，比如说：</p>
-<pre><code class="language-Java">final List&lt;String&gt; list = new ArrayList&lt;String&gt;();
-list.add(&quot;item1&quot;);
-list.add(&quot;item2&quot;);
-</code></pre>
-<p>上述操作是合法的。</p>
-<p>final修饰的String类型再第一次赋值之后，也不能再重新赋值了，因为不管是采用下面哪种方式创建的String对象，如果再次赋值，该对象指向的引用就会变化。</p>
-<pre><code class="language-Java">final String string1 = new String(&quot;string1&quot;);
-final String string2 = &quot;string2&quot;;
-</code></pre>
-<p>另外，匿名内部类如果需要用到外面的局部变量，该变量必须是final类型。</p>
-<p>final修饰局部变量时，局部变量必须在声明时就赋值。</p>
-<p>没有在声明时初始化的final成员变量的称为空白final变量(blank final variable)，它们必须在构造器中初始化，或者调用this()初始化。不这么做的话，编译器会报错“final变量(变量名)需要进行初始化”。</p>
-<p>接口中的声明的变量始终都是 <code>publis static final</code> 类型的。</p>
-<h2 id="finally">finally</h2>
-<p>finally用于在异常处理时处理一些收尾工作，比方说输入输出流、JDBC数据库连接打开后不管成功成功还是失败，都要将其关闭，释放资源。常用格式：</p>
-<pre><code class="language-Java">try{
-  ......
-}catch (Exception e){
-  ......
-}finally {
-  ......
-}
-</code></pre>
-<h2 id="finalize">finalize</h2>
-<p>finalize是Object类中定义的方法，用于垃圾回收。Object类中该方法的定义如下：</p>
-<pre><code class="language-Java">protected void finalize() throws Throwable { }
-</code></pre>
-<p>当对某个对象垃圾收集确定没有更多引用时被垃圾收集器调用。子类重写<code>finalize</code>方法来处理系统资源或者做其他清理工作。</p>
-<p>一般来说，finalize方法都是在Java虚拟机发现去除那些已经被执行了finalize的对象之外，没有任何活动的线程能够引用到该对象的时候调用。finalize方法可以做任何事情，包括使这个对象可以被其他进程访问；但是通常finalize的目的是在对象被真正回收之前做一些清理工作。例如，一个对象的finalize方法表示输入/输出连接可能在对象被永久回收前执行显式I/O事务来中断连接。</p>
-<p><code>Object</code>类的finalize方法不执行特别的操作，它只是简单地返回。<code>Object</code>子类可以重写这个方法。</p>
-<p>Java编程语言不保证对于任何给定的对象哪个线程将调用finalize方法，但是它保证执行finalize的线程在调用finalize方法后不会一直保持任何用户可见的同步锁。如果finalize方法中抛出一个没有catch的异常，这个异常将会被忽略并且对象的finalize将终止。</p>
-<p>在启用某个对象的 finalize 方法后，将不会执行进一步操作，直到 Java 虚拟机再次确定尚未终止的任何线程无法再通过任何方法访问此对象，其中包括由准备终止的其他对象或类执行的可能操作，在执行该操作时，对象可能被丢弃。</p>
-<p>对于任何给定的对象，finalize最多被Java虚拟机执行一次。</p>
-<p>finalize方法抛出的任何异常将导致这个对象的终结操作停止，但也会被忽略。（抛出异常后，该对象还是不可以继续操作，不会影响其他对象，直到被虚拟机回收）</p>
-<p>建议尽量避免使用它，它不是C/C++中的析构函数，而是Java诞生时为了使c/c++程序员更容易接受它所做的一个妥协。它的运行代价高昂，不确定性大，无法保证各个对对象的调用顺序。虽然注释中描述它适合做“关闭外部资源”之类的工作，这完全是对这个方法用途的一种安慰，finalize()能做的所用工作，使用try-finally或者其他方式都可以做的更好，更及时。</p>
-<h2 id="参考资源">参考资源</h2>
-<p>JDK 1.7 源码</p>
-<p>Effective Java</p>
-<p>http://www.importnew.com/7553.html</p>
-<p>http://s1099.iteye.com/blog/1447714</p>
-<p>http://www.xuebuyuan.com/813760.html</p>
-<p>http://blog.csdn.net/cyp331203/article/details/44461021</p>
-<p>http://www.debugease.com/j2se/820363.html</p>
-<p>http://www.programgo.com/article/6855606134/</p>
-]]></content>
-    </entry>
-    <entry>
         <title type="html"><![CDATA[以单元测试的角度聊聊写代码]]></title>
         <id>https://goroyal.github.io//post/wring-code-from-unit-test-side</id>
         <link href="https://goroyal.github.io//post/wring-code-from-unit-test-side">
         </link>
-        <updated>2019-06-17T12:25:28.000Z</updated>
+        <updated>2019-05-24T12:25:28.000Z</updated>
         <content type="html"><![CDATA[<p>单元测试，也就是对代码较细粒度单元的测试，一般就是测某个方法或函数。说到单元测试，基本上每个开发者都不陌生，时不时会听到“测试覆盖率太低了！”，然后“We need to increase our code coverage!”。经常出bug？好好准备测试吧。</p>
+<h2 id="1-为什么要提高覆盖率">1. 为什么要提高覆盖率？</h2>
 <p>覆盖率为什么这么重要？我们每次修改代码之后都不希望把原有可用的功能搞出问题，如果没有足够的测试覆盖，开发者就没有足够的信心去交付新代码。测试覆盖率高的话，就可以用机器自动去跑高效率地去验证，在覆盖不到的地方需要人工去验证。所以当覆盖率很低的时候，人工需要一遍又一遍的去验证已有的功能，还要去验证新加的功能是否符合预期，这个真的会崩溃。开发者自己去做的话，八成会偷懒抑或是觉得自己改的范围影响不到那么多测得乐观。如果让测试工程师去做，那么需要领导们考虑开发跟测试的比例了。</p>
 <p>测试覆盖率不完全是看单元测试，还包括更高层次的集成测试、系统测试。当然了，如果单元测试没写多少，指望粒度更粗层次更高的其他测试，你会非常痛苦的。单元测试的2个优势：跑得快、容易定位问题。</p>
 <p>上面说了这么多，就是在强调单元测试覆盖率一定要尽可能高，每个单元测试职责一定要尽可能单一简单。单元测试覆盖无非就是代码行覆盖、分支覆盖，单元测试职责单一简单是说单元测试不要试图测某个方法的所有可能性，多写几个，这样出了问题能根据测试名字迅速找到为什么什么用例失败了以及被测方法的哪行可能有问题。</p>
+<h2 id="2-单元测试为何难写">2. 单元测试为何难写？</h2>
 <p>你可能听说过“测试驱动开发”，就是先写测试、后写代码，这个要求在写代码之前先好好分析需求、细化用例，把各个用例的测试写出来，每次改动代码都要求让尽可能多的测试结果为绿（成功），直到最后所有测试都绿了，那么代码的功能上也基本没问题了。这个可以了解下，有兴趣多看看这方面拓展一下。</p>
-<p>为什么单元测试覆盖率往往上不去？因为有时候真的不好写。什么样的代码不好写单元测试： 被测方法传入了比较复杂的类的对象参数（不是依赖接口），当我要测这个方法，我就要去new依赖的那个对象，但是那个对象又依赖其他的，我又要接着new……，可能这个方法还没开始测，光创建它依赖的东西就写了一大堆测试代码。 被测方法传入了某个对象作为参数，调用的复杂方法（不是依赖接口），这个方法有多复杂？可能它也跟上面一样也要new很多个对象才能跑起来，或者它调用了外部服务（网络、数据库等等）。简直没法测。 被测方法自己内部创建了一些复杂对象、或者这个方法所属对象的实例创建了一些复杂对象，往往可能是外部有依赖的，比如对文件系统、数据库、网络等有调用。 被测方法自己内部引用了static变量 被测方法自己内部引用了单例对象 被测方法调用了复杂的static方法，无法mock、无法用桩 被测方法是一个static方法，它可能依赖一个或多个static变量，这个变量还会被其他static方法修改，很难保证当前测试的独立性，包括它本身作为生产代码都是有坑的 被测方法传入了对象参数，考虑用桩了，但是发现那个类或者方法是final的，无法继承重写（如果是C#语言，sealed类无法被继承，无override关键字的方法不能被重写） 被测方法本身太长了，很难面面俱到，或者是单元测试出了错之后不好定位是哪行代码引起的问题</p>
-<p>单元测试应该聚焦于被测方法本身的行为，而不是被测方法所依赖的其他对象的行为。外部环境有依赖的代码应该尽可能少，并且尽量去调用接口，而不是具体的类。我们经常会听到“面向接口编程”，这个用了之后，写单元测试真的是非常爽。单元测试里面会用mock库或者自己去创建简单的类去模拟某个方法的行为，接口约定根据输入会产生什么样的输出，对于调用接口的方法而言不必去关心具体的实现是什么。Java里有著名的Mockito，C#里有Moq，用起来如行云流水一般。</p>
-<p>方法或者类构造器里面自己创建的对象不能太复杂，复杂了你就没法测了。可以考虑调用该对象的接口，将它作为输入参数，那么就可以用上面说的方式去测了。</p>
-<p>个人理解，static方法要尽可能做到纯函数话，也就是说一样的输入参数，随便什么情况下调用都应该给一样的输出。这其实就要求static这样的静态方法不要依赖不可控的static变量。如果做不到，尽量缩小它的使用范围吧……普通的实例方法调用static方法尽可能只调用简单的，没事别调用public的static变量，调用不受控制的static变量简直是给自己找麻烦，不可测是一方面，运行时被别的代码改掉的话就是灾难了。</p>
-<p>当被测方法太长的时候，实际上就意味着方法要拆了，便于理解和维护。可以正常的拆，比如新建方法、新建类，也可以花哨地拆。有些人写了一堆if、else语句，如果是创建对象相关的，是否可以考虑工厂模式了？如果if、else里面是比较长的逻辑，可以考虑用策略模式。而如果是普通的前后累积的代码很长，要不试试责任链模式？当拆完之后，原本的非常长的不好测的方法变成若干个易测的小方法。覆盖率自然就上去了。</p>
-<p>当每层代码都经过单元测试确保自己这层没问题之后，整个逻辑的链条其实问题不大了。覆盖率不是简简单单为了覆盖而覆盖，单元测试都要有断言，就是如果跟测试目的产生不一致的结果这个测试必须显示失败，否则光数据好看是没用的。单元测试也不可能做到100%覆盖，但是可以尽可能做得高，覆盖不到的地方再通过集成测试或者系统层面的测试去做。至于做不到100%覆盖的原因，比如代码里有对外部依赖的地方，再怎么抽离，总有地方需要去初始化。那么对于这个情况，尽可能把这个对外依赖范围缩小，其他地方用的时候传递接口。</p>
+<p>为什么单元测试覆盖率往往上不去？因为有时候真的不好写。什么样的代码不好写单元测试：</p>
+<ol>
+<li>被测方法传入了比较复杂的类的对象参数（不是依赖接口），当我要测这个方法，我就要去new依赖的那个对象，但是那个对象又依赖其他的，我又要接着new……，可能这个方法还没开始测，光创建它依赖的东西就写了一大堆测试代码。</li>
+<li>被测方法传入了某个对象作为参数，调用的复杂方法（不是依赖接口），这个方法有多复杂？可能它也跟上面一样也要new很多个对象才能跑起来，或者它调用了外部服务（网络、数据库等等）。简直没法测。</li>
+<li>被测方法自己内部创建了一些复杂对象、或者这个方法所属对象的实例创建了一些复杂对象，往往可能是外部有依赖的，比如对文件系统、数据库、网络等有调用。</li>
+<li>被测方法自己内部引用了static变量。</li>
+<li>被测方法自己内部引用了单例对象。</li>
+<li>被测方法调用了复杂的static方法，无法mock、无法用桩。</li>
+<li>被测方法是一个static方法，它可能依赖一个或多个static变量，这个变量还会被其他static方法修改，很难保证当前测试的独立性，包括它本身作为生产代码都是有坑的。</li>
+<li>被测方法传入了对象参数，考虑用桩了，但是发现那个类或者方法是final的，无法继承重写（如果是C#语言，sealed类无法被继承，无override关键字的方法不能被重写）。</li>
+<li>被测方法本身太长了，很难面面俱到，或者是单元测试出了错之后不好定位是哪行代码引起的问题</li>
+</ol>
+<h2 id="3-如何写好单元测试">3. 如何写好单元测试</h2>
+<p><strong>单元测试应该聚焦于被测方法本身的行为</strong>，而不是被测方法所依赖的其他对象的行为。外部环境有依赖的代码应该尽可能少，并且尽量去调用接口，而不是具体的类。我们经常会听到“面向接口编程”，这个用了之后，写单元测试真的是非常爽。单元测试里面会用mock库或者自己去创建简单的类去模拟某个方法的行为，接口约定根据输入会产生什么样的输出，对于调用接口的方法而言不必去关心具体的实现是什么。Java里有著名的Mockito，C#里有Moq，用起来如行云流水一般。</p>
+<p><strong>方法或者类构造器里面自己创建的对象不能太复杂</strong>，复杂了你就没法测了。可以考虑调用该对象的接口，将它作为输入参数，那么就可以用上面说的方式去测了。</p>
+<p>个人理解，<strong>static方法要尽可能做到纯函数化</strong>，也就是说一样的输入参数，随便什么情况下调用都应该给一样的输出。这其实就要求static这样的静态方法不要依赖不可控的static变量。如果做不到，尽量缩小它的使用范围吧……普通的实例方法调用static方法尽可能只调用简单的，没事别调用public的static变量，调用不受控制的static变量简直是给自己找麻烦，不可测是一方面，运行时被别的代码改掉的话就是灾难了。</p>
+<p><strong>当被测方法太长的时候，实际上就意味着方法要拆了</strong>，便于理解和维护。可以正常的拆，比如新建方法、新建类，也可以花哨地拆。有些人写了一堆if、else语句，如果是创建对象相关的，是否可以考虑工厂模式了？如果if、else里面是比较长的逻辑，可以考虑用策略模式。而如果是普通的前后累积的代码很长，要不试试责任链模式？当拆完之后，原本的非常长的不好测的方法变成若干个易测的小方法。覆盖率自然就上去了。</p>
+<h2 id="4-结语">4. 结语</h2>
+<p>当每层代码都经过单元测试确保自己这层没问题之后，整个逻辑的链条其实问题不大了。覆盖率不是简简单单为了覆盖而覆盖，单元测试都要有断言，就是如果跟测试目的产生不一致的结果这个测试必须显示失败，否则光数据好看是没用的。<strong>单元测试也不可能做到100%覆盖，但是可以尽可能做得高</strong>，覆盖不到的地方再通过集成测试或者系统层面的测试去做。至于做不到100%覆盖的原因，比如代码里有对外部依赖的地方，再怎么抽离，总有地方需要去初始化。那么对于这个情况，尽可能把这个对外依赖范围缩小，其他地方用的时候传递接口。</p>
 <p>关于面向接口编程和减少耦合，还可以了解下依赖注入，能帮助解耦调用模块和具体实现类模块。</p>
 <p>为了代码可扩展性高、良好设计、易测试，可能会出现一个复杂业务逻辑的代码一层套一层的情况，一个逻辑看完可能经历了若干个类，这也是人们常常吐槽的Java这种语言的一个“啰嗦”之处。这个我也没有什么更好的想法，如果你有，可以分享一下。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[HTTP 响应状态码]]></title>
+        <id>https://goroyal.github.io//post/http-response-code</id>
+        <link href="https://goroyal.github.io//post/http-response-code">
+        </link>
+        <updated>2019-04-06T12:14:38.000Z</updated>
+        <content type="html"><![CDATA[<p>目前HTTP在Web开发中被广泛使用，REST (Representational State Transfer) 很多人应该或多或少都知道些。当然了，比较熟悉的可能主要是GET、POST方法。这篇文章不是介绍REST的定义和如何创建符合REST风格的API，而是讲讲在Web开发中通用的不同HTTP响应状态码的含义。在普通网站开发、分布式集群开发、团队协作方面，如果采用了HTTP作为组件之间交互的协议，遵守通用的响应状态码是很有必要的（一是有充分的信息量、二是避免歧义）。</p>
+<p>HTTP响应状态共有5大类，分别是数字1、2、3、4、5开头。</p>
+<p>1XX</p>
+<p>信息性状态码，表示接收的请求正在处理。</p>
+<p>100：说明收到了请求的初始部分，请客户端继续。发送了这个状态码之后，服务器在收到请求之后必须进行响应
+101：说明服务器正在根据客户端的指定，将协议切换成Update 首部所列的协议
+2XX</p>
+<p>成功状态码，表示请求正常处理完毕</p>
+<p>200：OK，实体的主体部分包含了所请求的资源。（正常请求很多是这种状态）
+201： Created，表示创建资源成功，响应的实体主体部分中应该包含各种引用了已创建的资源的URL，Location 首部包含的则是最具体的引用。（REST里面，POST或者PUT常常返回这样的状态）
+202， Accepted， 请求已被接受，但服务器还未对其执行任何动作。不能保证服务器会完成这个请求；这只是意味着接受请求时，它看起来是有效的。
+204：No Content，响应不包含实体的主体部分，通常在更新服务器上资源的时候成功的情况下不要求返回实体内容就会产生这个状态码。
+206：Partial Content，成功执行了一个部分或Range（范围）请求。
+3XX</p>
+<p>重定向状态码，表示需要进行附加操作以完成请求。</p>
+<p>301：Moved Permanently，永久性重定向，表示请求的资源被分配了新的URI，以后应使用资源现在所指的URI。
+302：Found，临时性重定向，表示请求的资源被分配了新的URI，希望用户本次使用新的URI访问。
+303：See Other，表示请求对应的资源存在这另一个URI，应使用GET方法定向获取请求的资源。
+304：Not Modified，表示客户端发送附带条件的请求时，服务器端允许请求访问资源，但未满足条件。304状态码返回时不包含响应的主体部分（附带条件指：If-Match、If-Modified-Since、If-None-Match、If-Range、If-Unmodified-Since中任一首部）。304表明了客户端中所请求资源的缓存仍然是有效的,也就是说该资源从上次缓存到现在并没有被修改过.条件请求可以在确保客户端的资源是最新的同时避免因每次都请求完整资源给服务器带来的性能问题。另一种情况是,如果服务器认为客户端缓存的资源已经过期了，那么服务器就会返回HTTP/200 OK响应，响应体就是该资源当前最新的内容。客户端收到200响应后，就会用新的响应体覆盖掉旧的缓存资源。
+305：Use Proxy， 用来说明必须通过一个代理来访问资源；代理的位置由Location首部给出。很重要的一点是，客户端是相对某个特定资源来解析这条响应的，不能假定所有请求，甚至所有对持有所请求资源的服务器的请求都通过这个代理进行。如果客户端错误地让代理介入了某条请求，可能会引发破坏性的行为，而且会造成安全漏洞。
+307：Temporary Redirect，临时重定向，与302有相同的含义。尽管302标准禁止POST变幻成GET，实际大家并未遵守。307会遵照浏览器标准，不会从POST变为GET，但是对于处理响应时的行为每种浏览器可能出现不同的情况。
+4XX</p>
+<p>客户端错误状态码，表示服务器无法处理请求。</p>
+<p>400：Bad Request， 用于告知客户端它发送了一个错误的请求，比方说请求体不符合预先定义的规则
+401：Unauthorized，表示发送的请求需要有通过HTTP认证的认证信息，若之前已进行过请求，则表示认证失败。返回含有401的响应必须包含一个适用于被请求资源的WWW-Authenticate手部质询用户信息。
+403：Forbidden，表明请求资源的访问被服务器拒绝了。
+404：Not Found，用于说明服务器无法找到请求的URL所对应的资源。
+405：Method Not Allowed，发起的请求中带有所请求的URL 不支持的方法时，使用此状态码。应该在响应中包含Allow 首部，以告知客户端对所请求的资源可以使用哪些方法。
+406：Not Acceptable，客户端可以指定参数来说明它们愿意接收什么类型的实体。服务器没有与客户端可接受的URL 相匹配的资源时，使用此代码。
+413： Request Entity Too Large， 客户端发送的实体主体部分比服务器能够或者希望处理的要大时，返回此状态码。
+429：Too Many Requests，表示客户端在给定时间范围内发送了太多请求。
+5XX</p>
+<p>服务器错误状态码，表示服务器处理请求出错</p>
+<p>500：Intenernal Server Error，服务器在执行请求时发生了错误
+501：Not Implemented，客户端发起的请求超出服务器的能力范围（比如，使用了服务器不支持的请求方法）
+502：Bad Gateway， 作为代理或网关使用的服务器从请求响应链的下一条链路上收到了一条伪响应（比如，它无法连接到其父网关）。
+503：Service Unavailable 服务器暂时处于超负载或正在进行停机维护，现在无法处理请求。如果事先得知解除以上状况所需时间，最好写入Retry-After首部字段返回给客户端。</p>
 ]]></content>
     </entry>
     <entry>
@@ -143,7 +96,7 @@ final String string2 = &quot;string2&quot;;
         <id>https://goroyal.github.io//post/java-annotation</id>
         <link href="https://goroyal.github.io//post/java-annotation">
         </link>
-        <updated>2019-06-17T12:17:45.000Z</updated>
+        <updated>2019-02-06T12:17:45.000Z</updated>
         <content type="html"><![CDATA[<h2 id="概念">概念</h2>
 <p>注解，也就是Annotation，是Java 5 开始引入的特征，它提供了一种安全的类似注释的机制，用来将任何的信息或元数据与程序元素（类、方法、属性等）进行关联。
 Annotation通过Java反射机制来访问注解信息，相关类根据这些信息决定对这些程序元素采用什么行为。Java语言解释器在工作时会忽略这些注解，因此注解在JVM中是“不起作用”的，只能通过配套工具对这些注解类型的信息进行访问和处理。
@@ -268,48 +221,110 @@ http://www.itzhai.com/java-based-notebook-annotation-annotation-introduction-and
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[HTTP 响应状态码]]></title>
-        <id>https://goroyal.github.io//post/http-response-code</id>
-        <link href="https://goroyal.github.io//post/http-response-code">
+        <title type="html"><![CDATA[SUSE Linux中安装Oracle数据库]]></title>
+        <id>https://goroyal.github.io//post/install-oracle-db-in-suse</id>
+        <link href="https://goroyal.github.io//post/install-oracle-db-in-suse">
         </link>
-        <updated>2019-06-17T12:14:38.000Z</updated>
-        <content type="html"><![CDATA[<p>目前HTTP在Web开发中被广泛使用，REST (Representational State Transfer) 很多人应该或多或少都知道些。当然了，比较熟悉的可能主要是GET、POST方法。这篇文章不是介绍REST的定义和如何创建符合REST风格的API，而是讲讲在Web开发中通用的不同HTTP响应状态码的含义。在普通网站开发、分布式集群开发、团队协作方面，如果采用了HTTP作为组件之间交互的协议，遵守通用的响应状态码是很有必要的（一是有充分的信息量、二是避免歧义）。</p>
-<p>HTTP响应状态共有5大类，分别是数字1、2、3、4、5开头。</p>
-<p>1XX</p>
-<p>信息性状态码，表示接收的请求正在处理。</p>
-<p>100：说明收到了请求的初始部分，请客户端继续。发送了这个状态码之后，服务器在收到请求之后必须进行响应
-101：说明服务器正在根据客户端的指定，将协议切换成Update 首部所列的协议
-2XX</p>
-<p>成功状态码，表示请求正常处理完毕</p>
-<p>200：OK，实体的主体部分包含了所请求的资源。（正常请求很多是这种状态）
-201： Created，表示创建资源成功，响应的实体主体部分中应该包含各种引用了已创建的资源的URL，Location 首部包含的则是最具体的引用。（REST里面，POST或者PUT常常返回这样的状态）
-202， Accepted， 请求已被接受，但服务器还未对其执行任何动作。不能保证服务器会完成这个请求；这只是意味着接受请求时，它看起来是有效的。
-204：No Content，响应不包含实体的主体部分，通常在更新服务器上资源的时候成功的情况下不要求返回实体内容就会产生这个状态码。
-206：Partial Content，成功执行了一个部分或Range（范围）请求。
-3XX</p>
-<p>重定向状态码，表示需要进行附加操作以完成请求。</p>
-<p>301：Moved Permanently，永久性重定向，表示请求的资源被分配了新的URI，以后应使用资源现在所指的URI。
-302：Found，临时性重定向，表示请求的资源被分配了新的URI，希望用户本次使用新的URI访问。
-303：See Other，表示请求对应的资源存在这另一个URI，应使用GET方法定向获取请求的资源。
-304：Not Modified，表示客户端发送附带条件的请求时，服务器端允许请求访问资源，但未满足条件。304状态码返回时不包含响应的主体部分（附带条件指：If-Match、If-Modified-Since、If-None-Match、If-Range、If-Unmodified-Since中任一首部）。304表明了客户端中所请求资源的缓存仍然是有效的,也就是说该资源从上次缓存到现在并没有被修改过.条件请求可以在确保客户端的资源是最新的同时避免因每次都请求完整资源给服务器带来的性能问题。另一种情况是,如果服务器认为客户端缓存的资源已经过期了，那么服务器就会返回HTTP/200 OK响应，响应体就是该资源当前最新的内容。客户端收到200响应后，就会用新的响应体覆盖掉旧的缓存资源。
-305：Use Proxy， 用来说明必须通过一个代理来访问资源；代理的位置由Location首部给出。很重要的一点是，客户端是相对某个特定资源来解析这条响应的，不能假定所有请求，甚至所有对持有所请求资源的服务器的请求都通过这个代理进行。如果客户端错误地让代理介入了某条请求，可能会引发破坏性的行为，而且会造成安全漏洞。
-307：Temporary Redirect，临时重定向，与302有相同的含义。尽管302标准禁止POST变幻成GET，实际大家并未遵守。307会遵照浏览器标准，不会从POST变为GET，但是对于处理响应时的行为每种浏览器可能出现不同的情况。
-4XX</p>
-<p>客户端错误状态码，表示服务器无法处理请求。</p>
-<p>400：Bad Request， 用于告知客户端它发送了一个错误的请求，比方说请求体不符合预先定义的规则
-401：Unauthorized，表示发送的请求需要有通过HTTP认证的认证信息，若之前已进行过请求，则表示认证失败。返回含有401的响应必须包含一个适用于被请求资源的WWW-Authenticate手部质询用户信息。
-403：Forbidden，表明请求资源的访问被服务器拒绝了。
-404：Not Found，用于说明服务器无法找到请求的URL所对应的资源。
-405：Method Not Allowed，发起的请求中带有所请求的URL 不支持的方法时，使用此状态码。应该在响应中包含Allow 首部，以告知客户端对所请求的资源可以使用哪些方法。
-406：Not Acceptable，客户端可以指定参数来说明它们愿意接收什么类型的实体。服务器没有与客户端可接受的URL 相匹配的资源时，使用此代码。
-413： Request Entity Too Large， 客户端发送的实体主体部分比服务器能够或者希望处理的要大时，返回此状态码。
-429：Too Many Requests，表示客户端在给定时间范围内发送了太多请求。
-5XX</p>
-<p>服务器错误状态码，表示服务器处理请求出错</p>
-<p>500：Intenernal Server Error，服务器在执行请求时发生了错误
-501：Not Implemented，客户端发起的请求超出服务器的能力范围（比如，使用了服务器不支持的请求方法）
-502：Bad Gateway， 作为代理或网关使用的服务器从请求响应链的下一条链路上收到了一条伪响应（比如，它无法连接到其父网关）。
-503：Service Unavailable 服务器暂时处于超负载或正在进行停机维护，现在无法处理请求。如果事先得知解除以上状况所需时间，最好写入Retry-After首部字段返回给客户端。</p>
+        <updated>2018-04-06T13:34:02.000Z</updated>
+        <content type="html"><![CDATA[<p>从官网下载64位rpm安装包，解压，打开terminal进入rpm安装包所在目录，输入<code>rpm -i install oralce-xe-xxx.rpm</code>
+然后会提示输入<code>/etc/init.d/oracle-xe configure</code>，按照步骤照做。
+在设置http端口的时候，默认为8080，可能会影响jboss、tomcat，可以改成8088。</p>
+<p>配置ORACLE_HOME和path:
+打开<code>/etc/bash.bashrc.local</code>，</p>
+<pre><code class="language-shell">export ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
+export PATH=$PATH:$ORACLE_HOME/bin:
+export ORACLE_SID=XE
+</code></pre>
+<p>配置结束后，在尝试sqlplus连接数据库的时候会出现密码不正确或者权限不够等问题，因为oracle express在安装的时候讲ORACLE用户作为这个软件的owner，而这个owner没有加到dba组里。
+可以输入命令<code>/etc/group</code>查看当前系统中的用户组，<code>/etc/passwd</code>查看系统中的用户。遇到一个问题就是实际上并不存在ORACLE这个用户，然后采取了一个方法，就是<code>vi /etc/group</code>强制在dba这个组加上ORACLE这个用户。
+打开新的终端，<code>su - oracle</code>从而切换到ORACLE用户，然后输入<code>groups</code>，可以查看它属于dba组。（其实挺奇怪，<code>su - oracle</code>可以切换到oracle用户，但是之前在其他地方找不到这个用户）</p>
+<p>输入<code>/etc/init.d/oracle-xe start</code>(或<code>lsnrctl start</code>)启动oracle。</p>
+<p>输入<code>sqlplus system/密码</code>，进行连接，如果说用户名或密码错误的话，可以输入<code>sqlplus / as sysdba</code>(注意，需要在ORACLE用户下)，然后建立连接后，输入<code>alter user system identified by 密码</code>;
+quit后在以<code>sqlplus system/密码</code>就能连上了。</p>
+<p>密码不正确或者权限不够等问题，应该也可以通过更改oracle安装后的目录及文件的owner来实现，这里就暂不讨论。</p>
+<p>还有可能和<code>$ORACLE_HOME/network/admin</code>下面的几个ora文件有关。附件里列出了它们。</p>
+<p>如果安装的时候忘了改http端口，可以输入如下命令：</p>
+<pre><code>sqlplus /nolog
+connect
+(input username and password)
+exec dbms_xdb.sethttpport(8088)
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[抽象类和接口]]></title>
+        <id>https://goroyal.github.io//post/abstract-class-and-interface</id>
+        <link href="https://goroyal.github.io//post/abstract-class-and-interface">
+        </link>
+        <updated>2017-10-14T13:31:52.000Z</updated>
+        <content type="html"><![CDATA[<p>抽象类和接口是Java面向对象中非常重要的元素，在面向接口的编程中两者更是经常用到。面试的时候也经常会问到两者的一些区别，下面是对两者的一些总结：</p>
+<p>(1)当一个类继承了别的类的时候，这时候，只能让它去实现接口，因为Java里面只能单继承。</p>
+<p>(2)抽象类中可以定义非<code>abstract</code>的方法和变量，而且可以是非<code>public</code>的，而且抽象类中方法可以有具体内容。接口中的方法必须是<code>public</code>的，就算不写也会默认为<code>public</code>，且方法体必须为空的。接口中的变量是<code>public static final</code>类型的，其实就是常量。</p>
+<p>(3)继承了抽象类的子类只能看到抽象类中public和protected类型的变量和方法，对于非abstract的方法不需要重写。而接口中定义的所有方法必须重写，定义的常量会影响所有实现它的类，所以，一般不推荐在接口里定义常量，且接口规模应尽可能小。如果需要抽象出多个方法，不应该把这些方法都放在接口里，而是采用多个接口+接口继承的形式。这点在Effective Java里面也有提到。</p>
+<p>(4)接口是对行为的一种抽象，而抽象类是对类的抽象，包括属性、方法。继承抽象类的类往往是具有一些相似特点的类，而实现接口的类可以跨不同的域，仅仅实现了接口定义的契约。类继承抽象类像是一个”is-a”特点，类实现接口像是”like-a”特点。</p>
+<p>(5)在设计时，对接口往往是自上而下的，先定义接口行为，然后再针对其做具体实现；抽象类往往是自下而上的，我们先知道子类后才对其进行抽象出父类。</p>
+<p>(6)我们常常看到Java程序里有定义的一些空接口，那么空接口是什么作用呢？</p>
+<p>空接口的主要是用来做判断的，也就是作为一个标记。为了判断某一个类是否满足其筛选条件时可以做一个空接口，然后利用instanceof方法来判断某一类是否使用了该接口，以达到你要筛选指定类型类的需求。</p>
+<h2 id="参考资料">参考资料</h2>
+<p>Effective Java
+https://github.com/android-cn/android-discuss/issues/6</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Java中的final、finally和finalize]]></title>
+        <id>https://goroyal.github.io//post/final-finally-finalize-in-java</id>
+        <link href="https://goroyal.github.io//post/final-finally-finalize-in-java">
+        </link>
+        <updated>2017-05-03T13:26:38.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="final">final</h2>
+<p>final是Java里面的一个关键字，可以用来修饰成员变量、局部变量、类、方法。</p>
+<p>final修饰的类不能被继承，比方说String，Integer以及其他包装类。</p>
+<p>final修饰的方法不能被重写。</p>
+<p>final修饰的基本类型变量不可以被修改，修饰的其他类型变量的引用不能被修改。也就是说如果<code>final int a=10</code>，那么这个<code>a</code>变量以后就不能再给它赋值成别的值了。而修饰的非基本类型变量的话，该变量的引用指向的堆里面的内容是可以修改的，比如说：</p>
+<pre><code class="language-Java">final List&lt;String&gt; list = new ArrayList&lt;String&gt;();
+list.add(&quot;item1&quot;);
+list.add(&quot;item2&quot;);
+</code></pre>
+<p>上述操作是合法的。</p>
+<p>final修饰的String类型再第一次赋值之后，也不能再重新赋值了，因为不管是采用下面哪种方式创建的String对象，如果再次赋值，该对象指向的引用就会变化。</p>
+<pre><code class="language-Java">final String string1 = new String(&quot;string1&quot;);
+final String string2 = &quot;string2&quot;;
+</code></pre>
+<p>另外，匿名内部类如果需要用到外面的局部变量，该变量必须是final类型。</p>
+<p>final修饰局部变量时，局部变量必须在声明时就赋值。</p>
+<p>没有在声明时初始化的final成员变量的称为空白final变量(blank final variable)，它们必须在构造器中初始化，或者调用this()初始化。不这么做的话，编译器会报错“final变量(变量名)需要进行初始化”。</p>
+<p>接口中的声明的变量始终都是 <code>publis static final</code> 类型的。</p>
+<h2 id="finally">finally</h2>
+<p>finally用于在异常处理时处理一些收尾工作，比方说输入输出流、JDBC数据库连接打开后不管成功成功还是失败，都要将其关闭，释放资源。常用格式：</p>
+<pre><code class="language-Java">try{
+  ......
+}catch (Exception e){
+  ......
+}finally {
+  ......
+}
+</code></pre>
+<h2 id="finalize">finalize</h2>
+<p>finalize是Object类中定义的方法，用于垃圾回收。Object类中该方法的定义如下：</p>
+<pre><code class="language-Java">protected void finalize() throws Throwable { }
+</code></pre>
+<p>当对某个对象垃圾收集确定没有更多引用时被垃圾收集器调用。子类重写<code>finalize</code>方法来处理系统资源或者做其他清理工作。</p>
+<p>一般来说，finalize方法都是在Java虚拟机发现去除那些已经被执行了finalize的对象之外，没有任何活动的线程能够引用到该对象的时候调用。finalize方法可以做任何事情，包括使这个对象可以被其他进程访问；但是通常finalize的目的是在对象被真正回收之前做一些清理工作。例如，一个对象的finalize方法表示输入/输出连接可能在对象被永久回收前执行显式I/O事务来中断连接。</p>
+<p><code>Object</code>类的finalize方法不执行特别的操作，它只是简单地返回。<code>Object</code>子类可以重写这个方法。</p>
+<p>Java编程语言不保证对于任何给定的对象哪个线程将调用finalize方法，但是它保证执行finalize的线程在调用finalize方法后不会一直保持任何用户可见的同步锁。如果finalize方法中抛出一个没有catch的异常，这个异常将会被忽略并且对象的finalize将终止。</p>
+<p>在启用某个对象的 finalize 方法后，将不会执行进一步操作，直到 Java 虚拟机再次确定尚未终止的任何线程无法再通过任何方法访问此对象，其中包括由准备终止的其他对象或类执行的可能操作，在执行该操作时，对象可能被丢弃。</p>
+<p>对于任何给定的对象，finalize最多被Java虚拟机执行一次。</p>
+<p>finalize方法抛出的任何异常将导致这个对象的终结操作停止，但也会被忽略。（抛出异常后，该对象还是不可以继续操作，不会影响其他对象，直到被虚拟机回收）</p>
+<p>建议尽量避免使用它，它不是C/C++中的析构函数，而是Java诞生时为了使c/c++程序员更容易接受它所做的一个妥协。它的运行代价高昂，不确定性大，无法保证各个对对象的调用顺序。虽然注释中描述它适合做“关闭外部资源”之类的工作，这完全是对这个方法用途的一种安慰，finalize()能做的所用工作，使用try-finally或者其他方式都可以做的更好，更及时。</p>
+<h2 id="参考资源">参考资源</h2>
+<p>JDK 1.7 源码</p>
+<p>Effective Java</p>
+<p>http://www.importnew.com/7553.html</p>
+<p>http://s1099.iteye.com/blog/1447714</p>
+<p>http://www.xuebuyuan.com/813760.html</p>
+<p>http://blog.csdn.net/cyp331203/article/details/44461021</p>
+<p>http://www.debugease.com/j2se/820363.html</p>
+<p>http://www.programgo.com/article/6855606134/</p>
 ]]></content>
     </entry>
 </feed>
