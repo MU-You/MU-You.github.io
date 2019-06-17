@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://goroyal.github.io//favicon.ico?v=1560777954780">
+<link rel="shortcut icon" href="https://goroyal.github.io//favicon.ico?v=1560778048014">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://goroyal.github.io//styles/main.css">
 
@@ -30,7 +30,7 @@
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://goroyal.github.io/">
-        <img src="https://goroyal.github.io//images/avatar.png?v=1560777954780" class="site-logo">
+        <img src="https://goroyal.github.io//images/avatar.png?v=1560778048014" class="site-logo">
         <h1 class="site-title">Goroyal&#39;s blog</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -92,6 +92,31 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <h2 class="current-tag">标签: Java</h2>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://goroyal.github.io//post/final-finally-finalize-in-java">
+                  <h2 class="post-title">Java中的final、finally和finalize</h2>
+                </a>
+                <div class="post-date">
+                  2019-06-17
+                </div>
+                <div class="post-abstract">
+                  <h2 id="final">final</h2>
+<p>final是Java里面的一个关键字，可以用来修饰成员变量、局部变量、类、方法。</p>
+<p>final修饰的类不能被继承，比方说String，Integer以及其他包装类。</p>
+<p>final修饰的方法不能被重写。</p>
+<p>final修饰的基本类型变量不可以被修改，修饰的其他类型变量的引用不能被修改。也就是说如果<code>final int a=10</code>，那么这个<code>a</code>变量以后就不能再给它赋值成别的值了。而修饰的非基本类型变量的话，该变量的引用指向的堆里面的内容是可以修改的，比如说：</p>
+<pre><code class="language-Java">final List&lt;String&gt; list = new ArrayList&lt;String&gt;();
+list.add(&quot;item1&quot;);
+list.add(&quot;item2&quot;);
+</code></pre>
+<p>上述操作是合法的。</p>
+
+                </div>
+              </div>
+              
+            </article>
           
             <article class="post-item">
               <div class="left">
