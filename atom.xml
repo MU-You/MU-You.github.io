@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://goroyal.github.io/</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2019-06-17T14:27:39.422Z</updated>
+    <updated>2019-06-17T14:34:24.864Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://goroyal.github.io/"/>
     <link rel="self" href="https://goroyal.github.io//atom.xml"/>
@@ -285,6 +285,46 @@ https://github.com/android-cn/android-discuss/issues/6</p>
 ]]></content>
     </entry>
     <entry>
+        <title type="html"><![CDATA[Ubuntu中给Dash创建图标]]></title>
+        <id>https://goroyal.github.io//post/add-icon-to-ubuntu-dash</id>
+        <link href="https://goroyal.github.io//post/add-icon-to-ubuntu-dash">
+        </link>
+        <updated>2017-05-21T14:29:09.000Z</updated>
+        <content type="html"><![CDATA[<p>我们建设以创建 Eclipse 程序图标为例</p>
+<ul>
+<li>进入图标存放目录|：<code>cd /usr/share/applications</code></li>
+<li>创建文件并编辑：<code>sudo gedit eclipse.desktop</code></li>
+</ul>
+<pre><code>[Desktop Entry]
+Name=eclipse
+Name[zh_CN]=eclipse
+Comment=eclipse Client
+Exec=/usr/programa/tools/eclipse/eclipse
+Icon=/usr/programa/tools/eclipse/icon.xpm
+Terminal=false
+Type=Application
+Categories=Application;
+Encoding=UTF-8
+StartupNotify=true
+</code></pre>
+<p>重点参数说明（注意：路径使用完整路径）</p>
+<ul>
+<li>Name 为你想要显示在 Launcher 中的名称</li>
+<li>Comment 为说明。</li>
+<li>Exec 为程序执行位置</li>
+<li>Icon 为图标所在路径</li>
+</ul>
+<p>最后，打开 Dash，在顶部搜索框搜索 eclipse，此时你应该能搜到它，先单击试一下看能不能打开，如果可以打开，拖到该图标启动器上，下次就可以直接从启动器打开了</p>
+<p><strong>资料</strong></p>
+<ul>
+<li><a href="http://my.oschina.net/Obahua/blog/110612">Ubuntu 将 Sublime Text 添加到 Launcher 和其它方式 原
+</a></li>
+<li><a href="http://www.cnblogs.com/enein/articles/2818864.html">Ubuntu 12.10 程序图标放到启动器</a></li>
+<li><a href="http://blog.chinaunix.net/uid-26404477-id-3462663.html">向Ubuntu Dash中添加图标</a>\</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[Java中的final、finally和finalize]]></title>
         <id>https://goroyal.github.io//post/final-finally-finalize-in-java</id>
         <link href="https://goroyal.github.io//post/final-finally-finalize-in-java">
@@ -425,39 +465,6 @@ final String string2 = &quot;string2&quot;;
 </code></pre>
 <p><strong>参考资料：</strong></p>
 <p><a href="https://hecpv.wordpress.com/2014/10/16/how-to-solve-ora-28001-the-password-has-expired/">https://hecpv.wordpress.com/2014/10/16/how-to-solve-ora-28001-the-password-has-expired/</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Java中的可重入锁ReetrantLock]]></title>
-        <id>https://goroyal.github.io//post/reetrantlock-in-java</id>
-        <link href="https://goroyal.github.io//post/reetrantlock-in-java">
-        </link>
-        <updated>2015-08-28T14:11:36.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="类说明">类说明</h2>
-<p><code>ReetrantLock</code>是一个可重入排它<code>Lock</code>，和使用<code>synchronized</code>方法和语句的隐式监视器锁有着相同的基本行为和语义，但是有着扩展性能。</p>
-<p><code>ReentrantLock</code>由上次成功加锁但是还没有解锁的线程所持有。在锁没有被其他线程持有时，一个线程调用<code>lock</code>将返回成功获取锁。如果当前线程已经持有锁那么该方法将立即返回。这个可以使用方法<code>isHeldByCurrentThread</code>和<code>getHoldCount</code>检查。</p>
-<p>这个类的构造器接收一个可选的公平性参数。当设为 true 时，在争用的情况下，锁倾向于授权给等待时间最长的线程。另外，这个锁不保证任何特定访问顺序。使用被多个线程访问的公平锁的程序将呈现比使用默认设置的情况较低的总吞吐量（也就是变慢了，通常是慢很多），但是在获取锁和保证不饥饿的时间上有较小的方差。</p>
-<p>公平锁可以保证锁的获取按照FIFO原则，而代价是进行大量的线程切换。非公平性锁虽然可能造成线程饥饿，但是较少线程切换，保证了很大的吞吐量。</p>
-<p>同样需要注意的是，不计时的<code>tryLock()</code>方法不赞成公平设置。如果锁是可用的它将成功获得锁，而不管其他线程是否正在等待。</p>
-<p>建议实践时永远在<code>lock</code>后面立即跟上一个<code>try</code>块，大多数典型的在构造之前/之后的情况是：</p>
-<pre><code class="language-java">class X{
-	private final ReentrantLock lock = new ReentrantLock();
-	//...
-	public void m(){
-		lock.lock(); // block until condition holds
-		try{
-			// ... method body
-		} finally {
-			lock.unlock();
-		}
-	}
-}
-</code></pre>
-<p>除了实现<code>Lock</code>接口，这个类定义了大量 public 和 protected 方法来检查锁的状态。其中有一些方法只用于仪表和监控。</p>
-<p>这个类的序列化和内置锁的行为方式一致：反序列化的锁是处于解锁状态，在序列化的时候不管当前它的状态。</p>
-<p>这个锁支持相同线程递归锁最大2147483647次。尝试超过这个限制将导致从加锁方法抛出<code>Error</code>。</p>
-<h2 id="参考资料">参考资料</h2>
-<p>JDK 1.7</p>
 ]]></content>
     </entry>
 </feed>

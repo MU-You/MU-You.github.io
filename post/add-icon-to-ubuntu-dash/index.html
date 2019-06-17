@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>抽象类和接口 | Goroyal&#39;s blog</title>
+<title>Ubuntu中给Dash创建图标 | Goroyal&#39;s blog</title>
 <meta name="description" content="学习分享">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -98,38 +98,51 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">抽象类和接口</h2>
-            <div class="post-date">2017-10-14</div>
+            <h2 class="post-title">Ubuntu中给Dash创建图标</h2>
+            <div class="post-date">2017-05-21</div>
             
             <div class="post-content">
-              <p>抽象类和接口是Java面向对象中非常重要的元素，在面向接口的编程中两者更是经常用到。面试的时候也经常会问到两者的一些区别，下面是对两者的一些总结：</p>
-<p>(1)当一个类继承了别的类的时候，这时候，只能让它去实现接口，因为Java里面只能单继承。</p>
-<p>(2)抽象类中可以定义非<code>abstract</code>的方法和变量，而且可以是非<code>public</code>的，而且抽象类中方法可以有具体内容。接口中的方法必须是<code>public</code>的，就算不写也会默认为<code>public</code>，且方法体必须为空的。接口中的变量是<code>public static final</code>类型的，其实就是常量。</p>
-<p>(3)继承了抽象类的子类只能看到抽象类中public和protected类型的变量和方法，对于非abstract的方法不需要重写。而接口中定义的所有方法必须重写，定义的常量会影响所有实现它的类，所以，一般不推荐在接口里定义常量，且接口规模应尽可能小。如果需要抽象出多个方法，不应该把这些方法都放在接口里，而是采用多个接口+接口继承的形式。这点在Effective Java里面也有提到。</p>
-<p>(4)接口是对行为的一种抽象，而抽象类是对类的抽象，包括属性、方法。继承抽象类的类往往是具有一些相似特点的类，而实现接口的类可以跨不同的域，仅仅实现了接口定义的契约。类继承抽象类像是一个”is-a”特点，类实现接口像是”like-a”特点。</p>
-<p>(5)在设计时，对接口往往是自上而下的，先定义接口行为，然后再针对其做具体实现；抽象类往往是自下而上的，我们先知道子类后才对其进行抽象出父类。</p>
-<p>(6)我们常常看到Java程序里有定义的一些空接口，那么空接口是什么作用呢？</p>
-<p>空接口的主要是用来做判断的，也就是作为一个标记。为了判断某一个类是否满足其筛选条件时可以做一个空接口，然后利用instanceof方法来判断某一类是否使用了该接口，以达到你要筛选指定类型类的需求。</p>
-<h2 id="参考资料">参考资料</h2>
-<p>Effective Java
-https://github.com/android-cn/android-discuss/issues/6</p>
+              <p>我们建设以创建 Eclipse 程序图标为例</p>
+<ul>
+<li>进入图标存放目录|：<code>cd /usr/share/applications</code></li>
+<li>创建文件并编辑：<code>sudo gedit eclipse.desktop</code></li>
+</ul>
+<pre><code>[Desktop Entry]
+Name=eclipse
+Name[zh_CN]=eclipse
+Comment=eclipse Client
+Exec=/usr/programa/tools/eclipse/eclipse
+Icon=/usr/programa/tools/eclipse/icon.xpm
+Terminal=false
+Type=Application
+Categories=Application;
+Encoding=UTF-8
+StartupNotify=true
+</code></pre>
+<p>重点参数说明（注意：路径使用完整路径）</p>
+<ul>
+<li>Name 为你想要显示在 Launcher 中的名称</li>
+<li>Comment 为说明。</li>
+<li>Exec 为程序执行位置</li>
+<li>Icon 为图标所在路径</li>
+</ul>
+<p>最后，打开 Dash，在顶部搜索框搜索 eclipse，此时你应该能搜到它，先单击试一下看能不能打开，如果可以打开，拖到该图标启动器上，下次就可以直接从启动器打开了</p>
+<p><strong>资料</strong></p>
+<ul>
+<li><a href="http://my.oschina.net/Obahua/blog/110612">Ubuntu 将 Sublime Text 添加到 Launcher 和其它方式 原
+</a></li>
+<li><a href="http://www.cnblogs.com/enein/articles/2818864.html">Ubuntu 12.10 程序图标放到启动器</a></li>
+<li><a href="http://blog.chinaunix.net/uid-26404477-id-3462663.html">向Ubuntu Dash中添加图标</a>\</li>
+</ul>
 
             </div>
-            
-              <div class="tag-container">
-                
-                  <a href="https://goroyal.github.io//tag/Ke7gk0EO5" class="tag">
-                    Java
-                  </a>
-                
-              </div>
             
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://goroyal.github.io//post/add-icon-to-ubuntu-dash">
+                <a href="https://goroyal.github.io//post/final-finally-finalize-in-java">
                   <h3 class="post-title">
-                    Ubuntu中给Dash创建图标
+                    Java中的final、finally和finalize
                   </h3>
                 </a>
               </div>
