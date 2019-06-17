@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://goroyal.github.io/</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2019-06-17T14:01:52.550Z</updated>
+    <updated>2019-06-17T14:09:38.813Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://goroyal.github.io/"/>
     <link rel="self" href="https://goroyal.github.io//atom.xml"/>
@@ -326,6 +326,62 @@ final String string2 = &quot;string2&quot;;
 <p>http://blog.csdn.net/cyp331203/article/details/44461021</p>
 <p>http://www.debugease.com/j2se/820363.html</p>
 <p>http://www.programgo.com/article/6855606134/</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Oracle用户密码过期解决]]></title>
+        <id>https://goroyal.github.io//post/handle-password-expire-in-oracle</id>
+        <link href="https://goroyal.github.io//post/handle-password-expire-in-oracle">
+        </link>
+        <updated>2015-12-02T14:08:57.000Z</updated>
+        <summary type="html"><![CDATA[<p>Oracle的用户密码默认是有一定的有效期限，前一阵子有提示密码快过期但是没理睬，于是等过期之后就无法用那个用户名连接oracle数据库了。</p>
+<p>首先看看服务器里面的数据库连接配置使用了哪些用户名和密码，然后进入oracle用system用户连接，接下来，执行下面的SQL语句查看当前数据库中所有用户的状态：</p>
+<pre><code class="language-sql">SELECT USERNAME,ACCOUNT_STATUS FROM DBA_USERS;
+</code></pre>
+]]></summary>
+        <content type="html"><![CDATA[<p>Oracle的用户密码默认是有一定的有效期限，前一阵子有提示密码快过期但是没理睬，于是等过期之后就无法用那个用户名连接oracle数据库了。</p>
+<p>首先看看服务器里面的数据库连接配置使用了哪些用户名和密码，然后进入oracle用system用户连接，接下来，执行下面的SQL语句查看当前数据库中所有用户的状态：</p>
+<pre><code class="language-sql">SELECT USERNAME,ACCOUNT_STATUS FROM DBA_USERS;
+</code></pre>
+<!--more-->
+<p>查询结果类似这样：</p>
+<table>
+<thead>
+<tr>
+<th>USERNAME</th>
+<th>ACCOUNT_STATUS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TEST1</td>
+<td>OPEN</td>
+</tr>
+<tr>
+<td>TEST2</td>
+<td>LOCKED</td>
+</tr>
+<tr>
+<td>TEST3</td>
+<td>EXPIRED &amp;LOCKED</td>
+</tr>
+<tr>
+<td>SYSTEM</td>
+<td>LOCKER</td>
+</tr>
+</tbody>
+</table>
+<p>如果嫌密码总是会过期比较麻烦的话，可以执行下面的SQL语句，让密码生命周期不受限制：</p>
+<pre><code class="language-sql">ALTER PROFILE DEFAULT LIMIT PASSWORD_LIFE_TIME UNLIMITED;
+</code></pre>
+<p>针对已经过期的用户，如TEST3，需要重置它的密码（如密码设为test3）：</p>
+<pre><code class="language-sql">ALTER USER TEST3 IDENTIFIED BY test3;
+</code></pre>
+<p>然后解除用户的锁定，</p>
+<pre><code class="language-sql">ALTER USER TEST3 ACCOUNT UNLOCK;
+</code></pre>
+<p><strong>参考资料：</strong></p>
+<p><a href="https://hecpv.wordpress.com/2014/10/16/how-to-solve-ora-28001-the-password-has-expired/">https://hecpv.wordpress.com/2014/10/16/how-to-solve-ora-28001-the-password-has-expired/</a></p>
 ]]></content>
     </entry>
 </feed>
