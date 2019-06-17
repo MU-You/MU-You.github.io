@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://goroyal.github.io/</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2019-06-17T14:43:01.325Z</updated>
+    <updated>2019-06-17T14:48:48.218Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://goroyal.github.io/"/>
     <link rel="self" href="https://goroyal.github.io//atom.xml"/>
@@ -238,7 +238,17 @@ http://www.itzhai.com/java-based-notebook-annotation-annotation-introduction-and
         </link>
         <updated>2018-05-13T14:22:26.000Z</updated>
         <content type="html"><![CDATA[<p>我们在linux的命令行里面会用到exit，比方说退出某个shell。在shell脚本中这个命令可以终止脚本的执行。exit后面是可以接一个数字表示退出时候的状态。</p>
-<p><code>exit(0)</code>一般表示成功结束，其他的是不成功的，如<code>exit(1)</code>。对于一些系统程序而言，这些错误编号是有含义的。</p>
+<p><code>exit(0)</code>一般表示成功结束，其他的是不成功的，如<code>exit(1)</code>。对于一些系统程序而言，这些错误编号是有含义的：</p>
+<ul>
+<li>1　　　　　　　　  一般性未知错误</li>
+<li>2　　　　　　　　  不适合的shell命令</li>
+<li>126 　　　　　　　命令不可执行</li>
+<li>127 　　　　　　　没找到命令</li>
+<li>128 　　　　　　　无效的退出参数</li>
+<li>128+x 　　　　　　与Linux信号x相关的严重错误</li>
+<li>130 　　　　　　　通过Ctrl+C终止的命令</li>
+<li>255 　　　　　　　正常范围之外的退出状态码</li>
+</ul>
 <p>直接<code>exit</code>和<code>exit $?</code>是一样的，<code>$?</code>表示上次的命令执行的结果状态</p>
 <p>参考：
 <a href="http://man.linuxde.net/exit">Linux命令大全</a></p>
