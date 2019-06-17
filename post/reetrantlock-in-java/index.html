@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>Oracle用户密码过期解决 | Goroyal&#39;s blog</title>
+<title>Java中的可重入锁ReetrantLock | Goroyal&#39;s blog</title>
 <meta name="description" content="学习分享">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -98,62 +98,44 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">Oracle用户密码过期解决</h2>
-            <div class="post-date">2015-12-02</div>
+            <h2 class="post-title">Java中的可重入锁ReetrantLock</h2>
+            <div class="post-date">2015-08-28</div>
             
             <div class="post-content">
-              <p>Oracle的用户密码默认是有一定的有效期限，前一阵子有提示密码快过期但是没理睬，于是等过期之后就无法用那个用户名连接oracle数据库了。</p>
-<p>首先看看服务器里面的数据库连接配置使用了哪些用户名和密码，然后进入oracle用system用户连接，接下来，执行下面的SQL语句查看当前数据库中所有用户的状态：</p>
-<pre><code class="language-sql">SELECT USERNAME,ACCOUNT_STATUS FROM DBA_USERS;
+              <h2 id="类说明">类说明</h2>
+<p><code>ReetrantLock</code>是一个可重入排它<code>Lock</code>，和使用<code>synchronized</code>方法和语句的隐式监视器锁有着相同的基本行为和语义，但是有着扩展性能。</p>
+<p><code>ReentrantLock</code>由上次成功加锁但是还没有解锁的线程所持有。在锁没有被其他线程持有时，一个线程调用<code>lock</code>将返回成功获取锁。如果当前线程已经持有锁那么该方法将立即返回。这个可以使用方法<code>isHeldByCurrentThread</code>和<code>getHoldCount</code>检查。</p>
+<p>这个类的构造器接收一个可选的公平性参数。当设为 true 时，在争用的情况下，锁倾向于授权给等待时间最长的线程。另外，这个锁不保证任何特定访问顺序。使用被多个线程访问的公平锁的程序将呈现比使用默认设置的情况较低的总吞吐量（也就是变慢了，通常是慢很多），但是在获取锁和保证不饥饿的时间上有较小的方差。</p>
+<p>公平锁可以保证锁的获取按照FIFO原则，而代价是进行大量的线程切换。非公平性锁虽然可能造成线程饥饿，但是较少线程切换，保证了很大的吞吐量。</p>
+<p>同样需要注意的是，不计时的<code>tryLock()</code>方法不赞成公平设置。如果锁是可用的它将成功获得锁，而不管其他线程是否正在等待。</p>
+<p>建议实践时永远在<code>lock</code>后面立即跟上一个<code>try</code>块，大多数典型的在构造之前/之后的情况是：</p>
+<pre><code class="language-java">class X{
+	private final ReentrantLock lock = new ReentrantLock();
+	//...
+	public void m(){
+		lock.lock(); // block until condition holds
+		try{
+			// ... method body
+		} finally {
+			lock.unlock();
+		}
+	}
+}
 </code></pre>
-<!--more-->
-<p>查询结果类似这样：</p>
-<table>
-<thead>
-<tr>
-<th>USERNAME</th>
-<th>ACCOUNT_STATUS</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>TEST1</td>
-<td>OPEN</td>
-</tr>
-<tr>
-<td>TEST2</td>
-<td>LOCKED</td>
-</tr>
-<tr>
-<td>TEST3</td>
-<td>EXPIRED &amp;LOCKED</td>
-</tr>
-<tr>
-<td>SYSTEM</td>
-<td>LOCKER</td>
-</tr>
-</tbody>
-</table>
-<p>如果嫌密码总是会过期比较麻烦的话，可以执行下面的SQL语句，让密码生命周期不受限制：</p>
-<pre><code class="language-sql">ALTER PROFILE DEFAULT LIMIT PASSWORD_LIFE_TIME UNLIMITED;
-</code></pre>
-<p>针对已经过期的用户，如TEST3，需要重置它的密码（如密码设为test3）：</p>
-<pre><code class="language-sql">ALTER USER TEST3 IDENTIFIED BY test3;
-</code></pre>
-<p>然后解除用户的锁定，</p>
-<pre><code class="language-sql">ALTER USER TEST3 ACCOUNT UNLOCK;
-</code></pre>
-<p><strong>参考资料：</strong></p>
-<p><a href="https://hecpv.wordpress.com/2014/10/16/how-to-solve-ora-28001-the-password-has-expired/">https://hecpv.wordpress.com/2014/10/16/how-to-solve-ora-28001-the-password-has-expired/</a></p>
+<p>除了实现<code>Lock</code>接口，这个类定义了大量 public 和 protected 方法来检查锁的状态。其中有一些方法只用于仪表和监控。</p>
+<p>这个类的序列化和内置锁的行为方式一致：反序列化的锁是处于解锁状态，在序列化的时候不管当前它的状态。</p>
+<p>这个锁支持相同线程递归锁最大2147483647次。尝试超过这个限制将导致从加锁方法抛出<code>Error</code>。</p>
+<h2 id="参考资料">参考资料</h2>
+<p>JDK 1.7</p>
 
             </div>
             
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://goroyal.github.io//post/reetrantlock-in-java">
+                <a href="https://goroyal.github.io//post/readwrite-lock-in-java">
                   <h3 class="post-title">
-                    Java中的可重入锁ReetrantLock
+                    Java中的ReadWriteLock
                   </h3>
                 </a>
               </div>
