@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://goroyal.github.io/</id>
+    <title>Goroyal&apos;s blog</title>
+    <updated>2019-06-17T13:24:44.257Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://goroyal.github.io/"/>
+    <link rel="self" href="https://goroyal.github.io//atom.xml"/>
+    <subtitle>学习分享</subtitle>
+    <logo>https://goroyal.github.io//images/avatar.png</logo>
+    <icon>https://goroyal.github.io//favicon.ico</icon>
+    <rights>All rights reserved 2019, Goroyal&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[以单元测试的角度聊聊写代码]]></title>
+        <id>https://goroyal.github.io//post/wring-code-from-unit-test-side</id>
+        <link href="https://goroyal.github.io//post/wring-code-from-unit-test-side">
+        </link>
+        <updated>2019-06-17T12:25:28.000Z</updated>
+        <content type="html"><![CDATA[<p>单元测试，也就是对代码较细粒度单元的测试，一般就是测某个方法或函数。说到单元测试，基本上每个开发者都不陌生，时不时会听到“测试覆盖率太低了！”，然后“We need to increase our code coverage!”。经常出bug？好好准备测试吧。</p>
+<p>覆盖率为什么这么重要？我们每次修改代码之后都不希望把原有可用的功能搞出问题，如果没有足够的测试覆盖，开发者就没有足够的信心去交付新代码。测试覆盖率高的话，就可以用机器自动去跑高效率地去验证，在覆盖不到的地方需要人工去验证。所以当覆盖率很低的时候，人工需要一遍又一遍的去验证已有的功能，还要去验证新加的功能是否符合预期，这个真的会崩溃。开发者自己去做的话，八成会偷懒抑或是觉得自己改的范围影响不到那么多测得乐观。如果让测试工程师去做，那么需要领导们考虑开发跟测试的比例了。</p>
+<p>测试覆盖率不完全是看单元测试，还包括更高层次的集成测试、系统测试。当然了，如果单元测试没写多少，指望粒度更粗层次更高的其他测试，你会非常痛苦的。单元测试的2个优势：跑得快、容易定位问题。</p>
+<p>上面说了这么多，就是在强调单元测试覆盖率一定要尽可能高，每个单元测试职责一定要尽可能单一简单。单元测试覆盖无非就是代码行覆盖、分支覆盖，单元测试职责单一简单是说单元测试不要试图测某个方法的所有可能性，多写几个，这样出了问题能根据测试名字迅速找到为什么什么用例失败了以及被测方法的哪行可能有问题。</p>
+<p>你可能听说过“测试驱动开发”，就是先写测试、后写代码，这个要求在写代码之前先好好分析需求、细化用例，把各个用例的测试写出来，每次改动代码都要求让尽可能多的测试结果为绿（成功），直到最后所有测试都绿了，那么代码的功能上也基本没问题了。这个可以了解下，有兴趣多看看这方面拓展一下。</p>
+<p>为什么单元测试覆盖率往往上不去？因为有时候真的不好写。什么样的代码不好写单元测试： 被测方法传入了比较复杂的类的对象参数（不是依赖接口），当我要测这个方法，我就要去new依赖的那个对象，但是那个对象又依赖其他的，我又要接着new……，可能这个方法还没开始测，光创建它依赖的东西就写了一大堆测试代码。 被测方法传入了某个对象作为参数，调用的复杂方法（不是依赖接口），这个方法有多复杂？可能它也跟上面一样也要new很多个对象才能跑起来，或者它调用了外部服务（网络、数据库等等）。简直没法测。 被测方法自己内部创建了一些复杂对象、或者这个方法所属对象的实例创建了一些复杂对象，往往可能是外部有依赖的，比如对文件系统、数据库、网络等有调用。 被测方法自己内部引用了static变量 被测方法自己内部引用了单例对象 被测方法调用了复杂的static方法，无法mock、无法用桩 被测方法是一个static方法，它可能依赖一个或多个static变量，这个变量还会被其他static方法修改，很难保证当前测试的独立性，包括它本身作为生产代码都是有坑的 被测方法传入了对象参数，考虑用桩了，但是发现那个类或者方法是final的，无法继承重写（如果是C#语言，sealed类无法被继承，无override关键字的方法不能被重写） 被测方法本身太长了，很难面面俱到，或者是单元测试出了错之后不好定位是哪行代码引起的问题</p>
+<p>单元测试应该聚焦于被测方法本身的行为，而不是被测方法所依赖的其他对象的行为。外部环境有依赖的代码应该尽可能少，并且尽量去调用接口，而不是具体的类。我们经常会听到“面向接口编程”，这个用了之后，写单元测试真的是非常爽。单元测试里面会用mock库或者自己去创建简单的类去模拟某个方法的行为，接口约定根据输入会产生什么样的输出，对于调用接口的方法而言不必去关心具体的实现是什么。Java里有著名的Mockito，C#里有Moq，用起来如行云流水一般。</p>
+<p>方法或者类构造器里面自己创建的对象不能太复杂，复杂了你就没法测了。可以考虑调用该对象的接口，将它作为输入参数，那么就可以用上面说的方式去测了。</p>
+<p>个人理解，static方法要尽可能做到纯函数话，也就是说一样的输入参数，随便什么情况下调用都应该给一样的输出。这其实就要求static这样的静态方法不要依赖不可控的static变量。如果做不到，尽量缩小它的使用范围吧……普通的实例方法调用static方法尽可能只调用简单的，没事别调用public的static变量，调用不受控制的static变量简直是给自己找麻烦，不可测是一方面，运行时被别的代码改掉的话就是灾难了。</p>
+<p>当被测方法太长的时候，实际上就意味着方法要拆了，便于理解和维护。可以正常的拆，比如新建方法、新建类，也可以花哨地拆。有些人写了一堆if、else语句，如果是创建对象相关的，是否可以考虑工厂模式了？如果if、else里面是比较长的逻辑，可以考虑用策略模式。而如果是普通的前后累积的代码很长，要不试试责任链模式？当拆完之后，原本的非常长的不好测的方法变成若干个易测的小方法。覆盖率自然就上去了。</p>
+<p>当每层代码都经过单元测试确保自己这层没问题之后，整个逻辑的链条其实问题不大了。覆盖率不是简简单单为了覆盖而覆盖，单元测试都要有断言，就是如果跟测试目的产生不一致的结果这个测试必须显示失败，否则光数据好看是没用的。单元测试也不可能做到100%覆盖，但是可以尽可能做得高，覆盖不到的地方再通过集成测试或者系统层面的测试去做。至于做不到100%覆盖的原因，比如代码里有对外部依赖的地方，再怎么抽离，总有地方需要去初始化。那么对于这个情况，尽可能把这个对外依赖范围缩小，其他地方用的时候传递接口。</p>
+<p>关于面向接口编程和减少耦合，还可以了解下依赖注入，能帮助解耦调用模块和具体实现类模块。</p>
+<p>为了代码可扩展性高、良好设计、易测试，可能会出现一个复杂业务逻辑的代码一层套一层的情况，一个逻辑看完可能经历了若干个类，这也是人们常常吐槽的Java这种语言的一个“啰嗦”之处。这个我也没有什么更好的想法，如果你有，可以分享一下。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Java中的注解]]></title>
+        <id>https://goroyal.github.io//post/java-annotation</id>
+        <link href="https://goroyal.github.io//post/java-annotation">
+        </link>
+        <updated>2019-06-17T12:17:45.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="概念">概念</h2>
+<p>注解，也就是Annotation，是Java 5 开始引入的特征，它提供了一种安全的类似注释的机制，用来将任何的信息或元数据与程序元素（类、方法、属性等）进行关联。
+Annotation通过Java反射机制来访问注解信息，相关类根据这些信息决定对这些程序元素采用什么行为。Java语言解释器在工作时会忽略这些注解，因此注解在JVM中是“不起作用”的，只能通过配套工具对这些注解类型的信息进行访问和处理。
+在软件框架或者工具中常常用到注解，比如Struts，JUnit，TestNG，Spring等。</p>
+<h2 id="定义注解">定义注解</h2>
+<p>注解使用关键字<code>@interface</code>定义，而不是<code>interface</code>。所有注解都是继承的<code>java.lang.annotation.Annotation</code>接口，但是如果直接创建一个interface继承<code>java.lang.annotation.Annotation</code>接口并不是定义一个注解类型。
+创建的注解类型中可以定义常量、静态成员，也可以定义方法。但是这些方法的声明里必须是无参数、无抛出异常的。方法的返回值必须为primitive类型（包括<code>String</code>类型）、<code>Class</code>类型、枚举类型、注解类型中的一个或者以上之一组成的一维数组。方法的后面可以用default和一个值来表示这个方法的默认返回值，注意，默认值不能设为null。只有返回值是<code>Class</code>的方法可以在注解类型中使用泛型，因为该方法能够将各种类型通过类转换变成<code>Class</code>。
+举一个定义注解的例子：</p>
+<pre><code class="language-java">public @interface Property{
+    boolean nullable default false;
+    String value default &quot;&quot;;
+}
+
+public class User{
+    @Property(value = &quot;林雷&quot;)
+    private String userName;
+}
+</code></pre>
+<p>如以上先定义了一个注解类型<code>@Property</code>，然后定义一个Bean，也就是User类，其中有个userName的属性，对其用<code>@Property</code>注解进行了标记，那么也就是说userName被标记为值为“林雷”，而且它是不可空的，<code>@Property</code>后面括号里用等号连接的是个赋值操作，等号左边的内容实际上就是注解中定义的方法，等号右边的内容就是让注解中对应的方法返回一个什么样的值，如果不定义的话就采用注解里设的默认值。可以定义多个，以逗号隔开。</p>
+<h2 id="三种标准注解">三种标准注解</h2>
+<p>从Java 5开始就已经自带了三种标准注解，如下：</p>
+<h3 id="override">@Override</h3>
+<pre><code class="language-java">@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.SOURCE)
+public @interface Override {
+}
+</code></pre>
+<p><code>@Override</code>是一种标记型注解。表示当前的方法定义覆盖了父类中的方法，起到断言作用，方法签名必须相同（即方法名、参数类型、参数顺序、参数个数都一样），否则无法通过编译。这个注解常用作试图覆盖父类方法而又写错了方法名时的一个保障性校验。</p>
+<h3 id="deprecated">@Deprecated</h3>
+<pre><code class="language-java">@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(value={CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE})
+public @interface Deprecated {
+}
+</code></pre>
+<p><code>@Deprecated</code>是一种标记型注解。对不应该再使用的程序元素添加该注解，当调用被注解的方法时，在编译器会显示提示信息不鼓励使用被这个注解了的程序元素。
+注意，该注解与JavaDoc注释中的<code>@deprecated</code>标记是有区别的：前者是用于Java编译器识别的，而后者是在生成文档时被JavaDoc识别。</p>
+<h3 id="suppresswarnings">@SuppressWarnings</h3>
+<pre><code class="language-java">@Target({TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE})
+@Retention(RetentionPolicy.SOURCE)
+public @interface SuppressWarnings {
+    String[] value();
+}
+</code></pre>
+<p>此注解能告诉Java编译器关闭对类、方法及成员变量的警告。有时编译时会提出一些警告，对于这些警告有的隐藏着Bug，有的是无法避免的，对于某些不想看到的警告信息，可以通过这个注解来屏蔽。<code>@SuppressWarning</code>不是一个marker annotation。它有一个类型为<code>String[]</code>的成员，这个成员的值为被禁止的警告名。对于javac编译器来讲，被-Xlint选项有效的警告名也同样对<code>@SuppressWarings</code>有效，同时编译器忽略掉无法识别的警告名。</p>
+<h2 id="四种元注解">四种元注解</h2>
+<h3 id="target">@Target</h3>
+<p>表示注解可以用在什么地方，它的值是ElementType枚举中的枚举类型：
+CONSTRUCTOR 构造器声明；
+FIELD 域声明；
+METHOD 方法声明；
+TYPE 类、接口或enum声明；
+PARAMETER 参数声明；
+LOCAL_VARIABLE 局部变量声明；
+ANNOTATION_TYPE 注释类型声明
+PACKAGE 包声明</p>
+<h3 id="retention">@Retention</h3>
+<p>表示需要在什么级别保存该注解信息。设值时需要提供java.lang.annotation.RetentionPolicy中的枚举类型。</p>
+<pre><code class="language-java">public enum RetentionPolicy{
+    SOURCE, //编译程序处理完Annotation信息后就完成任务
+    CLASS, //编译程序将Annotation储存于class中，但会被虚拟机丢弃，@Retention默认是Class级别
+    RUNTIME //编译程序将Annotation储存于class中，虚拟机在运行期也保留注解，可以通过反射机制读取注解信息
+}
+</code></pre>
+<h3 id="documented">@Documented</h3>
+<p>将此注解包含到Javadoc中。</p>
+<h3 id="inherited">@Inherited</h3>
+<p>允许子类继承父类的注解。</p>
+<hr>
+<p>在自定义注解的时候可以综合使用这四个元注解定义自己定义的注解的作用范围等信息。</p>
+<h2 id="通过反射加载注解">通过反射加载注解</h2>
+<p>还用之前举的例子，下面简单写个通过反射获得注解信息的例子。
+先定义注解：</p>
+<pre><code class="language-java">import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Property {
+    boolean nullable() default false;
+
+    String value() default &quot;&quot;;
+}
+</code></pre>
+<p>定义POJO Bean：</p>
+<pre><code class="language-java">public class User {
+
+    @Property(value = &quot;李雷&quot;)
+    private String username;
+
+    @Property(nullable = true, value = &quot;test@a.com&quot;)
+    private String email;
+}
+</code></pre>
+<p>接下来就是获取这个注解了：</p>
+<pre><code class="language-java">import java.lang.reflect.Field;
+
+public class AnnotationTest {
+    public static void main(String[] args){
+        //获取User类的Class实例
+        Class&lt;?&gt; clazz = User.class;
+        //获取这个类的所有属性
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields){
+            //判断这个属性中是否有Property注解
+            if (field.isAnnotationPresent(Property.class)){
+                Property property = field.getAnnotation(Property.class);
+                System.out.println(field.getName()+&quot;: &quot;+property.nullable()+&quot; &quot;+property.value());
+            }
+        }
+    }
+}
+</code></pre>
+<p>运行之后结果为：</p>
+<pre><code>username: false 李雷
+email: true test@a.com
+</code></pre>
+<p>从上面的结果也可以看到，即使类中的属性定义为private类型，也可以通过注解对其进行标记赋值，这个方法在Spring等框架中常常使用。</p>
+<h2 id="参考资料">参考资料</h2>
+<p>http://computerdragon.blog.51cto.com/6235984/1210969
+http://www.cnblogs.com/mandroid/archive/2011/07/18/2109829.html
+http://www.itzhai.com/java-based-notebook-annotation-annotation-introduction-and-use-custom-annotations.html</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[HTTP 响应状态码]]></title>
+        <id>https://goroyal.github.io//post/http-response-code</id>
+        <link href="https://goroyal.github.io//post/http-response-code">
+        </link>
+        <updated>2019-06-17T12:14:38.000Z</updated>
+        <summary type="html"><![CDATA[<p>目前HTTP在Web开发中被广泛使用，REST (Representational State Transfer) 很多人应该或多或少都知道些。当然了，比较熟悉的可能主要是GET、POST方法。这篇文章不是介绍REST的定义和如何创建符合REST风格的API，而是讲讲在Web开发中通用的不同HTTP响应状态码的含义。在普通网站开发、分布式集群开发、团队协作方面，如果采用了HTTP作为组件之间交互的协议，遵守通用的响应状态码是很有必要的（一是有充分的信息量、二是避免歧义）。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>目前HTTP在Web开发中被广泛使用，REST (Representational State Transfer) 很多人应该或多或少都知道些。当然了，比较熟悉的可能主要是GET、POST方法。这篇文章不是介绍REST的定义和如何创建符合REST风格的API，而是讲讲在Web开发中通用的不同HTTP响应状态码的含义。在普通网站开发、分布式集群开发、团队协作方面，如果采用了HTTP作为组件之间交互的协议，遵守通用的响应状态码是很有必要的（一是有充分的信息量、二是避免歧义）。</p>
+<!-- more -->
+<p>HTTP响应状态共有5大类，分别是数字1、2、3、4、5开头。</p>
+<p>1XX</p>
+<p>信息性状态码，表示接收的请求正在处理。</p>
+<p>100：说明收到了请求的初始部分，请客户端继续。发送了这个状态码之后，服务器在收到请求之后必须进行响应
+101：说明服务器正在根据客户端的指定，将协议切换成Update 首部所列的协议
+2XX</p>
+<p>成功状态码，表示请求正常处理完毕</p>
+<p>200：OK，实体的主体部分包含了所请求的资源。（正常请求很多是这种状态）
+201： Created，表示创建资源成功，响应的实体主体部分中应该包含各种引用了已创建的资源的URL，Location 首部包含的则是最具体的引用。（REST里面，POST或者PUT常常返回这样的状态）
+202， Accepted， 请求已被接受，但服务器还未对其执行任何动作。不能保证服务器会完成这个请求；这只是意味着接受请求时，它看起来是有效的。
+204：No Content，响应不包含实体的主体部分，通常在更新服务器上资源的时候成功的情况下不要求返回实体内容就会产生这个状态码。
+206：Partial Content，成功执行了一个部分或Range（范围）请求。
+3XX</p>
+<p>重定向状态码，表示需要进行附加操作以完成请求。</p>
+<p>301：Moved Permanently，永久性重定向，表示请求的资源被分配了新的URI，以后应使用资源现在所指的URI。
+302：Found，临时性重定向，表示请求的资源被分配了新的URI，希望用户本次使用新的URI访问。
+303：See Other，表示请求对应的资源存在这另一个URI，应使用GET方法定向获取请求的资源。
+304：Not Modified，表示客户端发送附带条件的请求时，服务器端允许请求访问资源，但未满足条件。304状态码返回时不包含响应的主体部分（附带条件指：If-Match、If-Modified-Since、If-None-Match、If-Range、If-Unmodified-Since中任一首部）。304表明了客户端中所请求资源的缓存仍然是有效的,也就是说该资源从上次缓存到现在并没有被修改过.条件请求可以在确保客户端的资源是最新的同时避免因每次都请求完整资源给服务器带来的性能问题。另一种情况是,如果服务器认为客户端缓存的资源已经过期了，那么服务器就会返回HTTP/200 OK响应，响应体就是该资源当前最新的内容。客户端收到200响应后，就会用新的响应体覆盖掉旧的缓存资源。
+305：Use Proxy， 用来说明必须通过一个代理来访问资源；代理的位置由Location首部给出。很重要的一点是，客户端是相对某个特定资源来解析这条响应的，不能假定所有请求，甚至所有对持有所请求资源的服务器的请求都通过这个代理进行。如果客户端错误地让代理介入了某条请求，可能会引发破坏性的行为，而且会造成安全漏洞。
+307：Temporary Redirect，临时重定向，与302有相同的含义。尽管302标准禁止POST变幻成GET，实际大家并未遵守。307会遵照浏览器标准，不会从POST变为GET，但是对于处理响应时的行为每种浏览器可能出现不同的情况。
+4XX</p>
+<p>客户端错误状态码，表示服务器无法处理请求。</p>
+<p>400：Bad Request， 用于告知客户端它发送了一个错误的请求，比方说请求体不符合预先定义的规则
+401：Unauthorized，表示发送的请求需要有通过HTTP认证的认证信息，若之前已进行过请求，则表示认证失败。返回含有401的响应必须包含一个适用于被请求资源的WWW-Authenticate手部质询用户信息。
+403：Forbidden，表明请求资源的访问被服务器拒绝了。
+404：Not Found，用于说明服务器无法找到请求的URL所对应的资源。
+405：Method Not Allowed，发起的请求中带有所请求的URL 不支持的方法时，使用此状态码。应该在响应中包含Allow 首部，以告知客户端对所请求的资源可以使用哪些方法。
+406：Not Acceptable，客户端可以指定参数来说明它们愿意接收什么类型的实体。服务器没有与客户端可接受的URL 相匹配的资源时，使用此代码。
+413： Request Entity Too Large， 客户端发送的实体主体部分比服务器能够或者希望处理的要大时，返回此状态码。
+429：Too Many Requests，表示客户端在给定时间范围内发送了太多请求。
+5XX</p>
+<p>服务器错误状态码，表示服务器处理请求出错</p>
+<p>500：Intenernal Server Error，服务器在执行请求时发生了错误
+501：Not Implemented，客户端发起的请求超出服务器的能力范围（比如，使用了服务器不支持的请求方法）
+502：Bad Gateway， 作为代理或网关使用的服务器从请求响应链的下一条链路上收到了一条伪响应（比如，它无法连接到其父网关）。
+503：Service Unavailable 服务器暂时处于超负载或正在进行停机维护，现在无法处理请求。如果事先得知解除以上状况所需时间，最好写入Retry-After首部字段返回给客户端。</p>
+]]></content>
+    </entry>
+</feed>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>以单元测试的角度聊聊写代码 | Goroyal&#39;s blog</title>
+<meta name="description" content="学习分享">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://goroyal.github.io//favicon.ico?v=1560777877174">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://goroyal.github.io//styles/main.css">
+
+
+  
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/disqusjs@1.1/dist/disqusjs.css" />
+  
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://goroyal.github.io/">
+        <img src="https://goroyal.github.io//images/avatar.png?v=1560777877174" class="site-logo">
+        <h1 class="site-title">Goroyal&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      学习分享
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://goroyal.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">以单元测试的角度聊聊写代码</h2>
+            <div class="post-date">2019-06-17</div>
+            
+            <div class="post-content">
+              <p>单元测试，也就是对代码较细粒度单元的测试，一般就是测某个方法或函数。说到单元测试，基本上每个开发者都不陌生，时不时会听到“测试覆盖率太低了！”，然后“We need to increase our code coverage!”。经常出bug？好好准备测试吧。</p>
+<p>覆盖率为什么这么重要？我们每次修改代码之后都不希望把原有可用的功能搞出问题，如果没有足够的测试覆盖，开发者就没有足够的信心去交付新代码。测试覆盖率高的话，就可以用机器自动去跑高效率地去验证，在覆盖不到的地方需要人工去验证。所以当覆盖率很低的时候，人工需要一遍又一遍的去验证已有的功能，还要去验证新加的功能是否符合预期，这个真的会崩溃。开发者自己去做的话，八成会偷懒抑或是觉得自己改的范围影响不到那么多测得乐观。如果让测试工程师去做，那么需要领导们考虑开发跟测试的比例了。</p>
+<p>测试覆盖率不完全是看单元测试，还包括更高层次的集成测试、系统测试。当然了，如果单元测试没写多少，指望粒度更粗层次更高的其他测试，你会非常痛苦的。单元测试的2个优势：跑得快、容易定位问题。</p>
+<p>上面说了这么多，就是在强调单元测试覆盖率一定要尽可能高，每个单元测试职责一定要尽可能单一简单。单元测试覆盖无非就是代码行覆盖、分支覆盖，单元测试职责单一简单是说单元测试不要试图测某个方法的所有可能性，多写几个，这样出了问题能根据测试名字迅速找到为什么什么用例失败了以及被测方法的哪行可能有问题。</p>
+<p>你可能听说过“测试驱动开发”，就是先写测试、后写代码，这个要求在写代码之前先好好分析需求、细化用例，把各个用例的测试写出来，每次改动代码都要求让尽可能多的测试结果为绿（成功），直到最后所有测试都绿了，那么代码的功能上也基本没问题了。这个可以了解下，有兴趣多看看这方面拓展一下。</p>
+<p>为什么单元测试覆盖率往往上不去？因为有时候真的不好写。什么样的代码不好写单元测试： 被测方法传入了比较复杂的类的对象参数（不是依赖接口），当我要测这个方法，我就要去new依赖的那个对象，但是那个对象又依赖其他的，我又要接着new……，可能这个方法还没开始测，光创建它依赖的东西就写了一大堆测试代码。 被测方法传入了某个对象作为参数，调用的复杂方法（不是依赖接口），这个方法有多复杂？可能它也跟上面一样也要new很多个对象才能跑起来，或者它调用了外部服务（网络、数据库等等）。简直没法测。 被测方法自己内部创建了一些复杂对象、或者这个方法所属对象的实例创建了一些复杂对象，往往可能是外部有依赖的，比如对文件系统、数据库、网络等有调用。 被测方法自己内部引用了static变量 被测方法自己内部引用了单例对象 被测方法调用了复杂的static方法，无法mock、无法用桩 被测方法是一个static方法，它可能依赖一个或多个static变量，这个变量还会被其他static方法修改，很难保证当前测试的独立性，包括它本身作为生产代码都是有坑的 被测方法传入了对象参数，考虑用桩了，但是发现那个类或者方法是final的，无法继承重写（如果是C#语言，sealed类无法被继承，无override关键字的方法不能被重写） 被测方法本身太长了，很难面面俱到，或者是单元测试出了错之后不好定位是哪行代码引起的问题</p>
+<p>单元测试应该聚焦于被测方法本身的行为，而不是被测方法所依赖的其他对象的行为。外部环境有依赖的代码应该尽可能少，并且尽量去调用接口，而不是具体的类。我们经常会听到“面向接口编程”，这个用了之后，写单元测试真的是非常爽。单元测试里面会用mock库或者自己去创建简单的类去模拟某个方法的行为，接口约定根据输入会产生什么样的输出，对于调用接口的方法而言不必去关心具体的实现是什么。Java里有著名的Mockito，C#里有Moq，用起来如行云流水一般。</p>
+<p>方法或者类构造器里面自己创建的对象不能太复杂，复杂了你就没法测了。可以考虑调用该对象的接口，将它作为输入参数，那么就可以用上面说的方式去测了。</p>
+<p>个人理解，static方法要尽可能做到纯函数话，也就是说一样的输入参数，随便什么情况下调用都应该给一样的输出。这其实就要求static这样的静态方法不要依赖不可控的static变量。如果做不到，尽量缩小它的使用范围吧……普通的实例方法调用static方法尽可能只调用简单的，没事别调用public的static变量，调用不受控制的static变量简直是给自己找麻烦，不可测是一方面，运行时被别的代码改掉的话就是灾难了。</p>
+<p>当被测方法太长的时候，实际上就意味着方法要拆了，便于理解和维护。可以正常的拆，比如新建方法、新建类，也可以花哨地拆。有些人写了一堆if、else语句，如果是创建对象相关的，是否可以考虑工厂模式了？如果if、else里面是比较长的逻辑，可以考虑用策略模式。而如果是普通的前后累积的代码很长，要不试试责任链模式？当拆完之后，原本的非常长的不好测的方法变成若干个易测的小方法。覆盖率自然就上去了。</p>
+<p>当每层代码都经过单元测试确保自己这层没问题之后，整个逻辑的链条其实问题不大了。覆盖率不是简简单单为了覆盖而覆盖，单元测试都要有断言，就是如果跟测试目的产生不一致的结果这个测试必须显示失败，否则光数据好看是没用的。单元测试也不可能做到100%覆盖，但是可以尽可能做得高，覆盖不到的地方再通过集成测试或者系统层面的测试去做。至于做不到100%覆盖的原因，比如代码里有对外部依赖的地方，再怎么抽离，总有地方需要去初始化。那么对于这个情况，尽可能把这个对外依赖范围缩小，其他地方用的时候传递接口。</p>
+<p>关于面向接口编程和减少耦合，还可以了解下依赖注入，能帮助解耦调用模块和具体实现类模块。</p>
+<p>为了代码可扩展性高、良好设计、易测试，可能会出现一个复杂业务逻辑的代码一层套一层的情况，一个逻辑看完可能经历了若干个类，这也是人们常常吐槽的Java这种语言的一个“啰嗦”之处。这个我也没有什么更好的想法，如果你有，可以分享一下。</p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://goroyal.github.io//post/java-annotation">
+                  <h3 class="post-title">
+                    Java中的注解
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+
+              
+                <div id="disqus_thread" data-aos="fade-in"></div>
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+  
+
+  
+    <script src="https://unpkg.com/disqusjs@1.1/dist/disqus.js"></script>
+    <script>
+
+    var options = {
+      shortname: 'jiavwen',
+      apikey: '',
+    }
+    if ('') {
+      options.api = ''
+    }
+    var dsqjs = new DisqusJS(options)
+
+    </script>
+  
+
+
+
+
+  </body>
+</html>

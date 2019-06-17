@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Java中的注解 | Goroyal&#39;s blog</title>
+<meta name="description" content="学习分享">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://goroyal.github.io//favicon.ico?v=1560777877174">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://goroyal.github.io//styles/main.css">
+
+
+  
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/disqusjs@1.1/dist/disqusjs.css" />
+  
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://goroyal.github.io/">
+        <img src="https://goroyal.github.io//images/avatar.png?v=1560777877174" class="site-logo">
+        <h1 class="site-title">Goroyal&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      学习分享
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://goroyal.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Java中的注解</h2>
+            <div class="post-date">2019-06-17</div>
+            
+            <div class="post-content">
+              <h2 id="概念">概念</h2>
+<p>注解，也就是Annotation，是Java 5 开始引入的特征，它提供了一种安全的类似注释的机制，用来将任何的信息或元数据与程序元素（类、方法、属性等）进行关联。
+Annotation通过Java反射机制来访问注解信息，相关类根据这些信息决定对这些程序元素采用什么行为。Java语言解释器在工作时会忽略这些注解，因此注解在JVM中是“不起作用”的，只能通过配套工具对这些注解类型的信息进行访问和处理。
+在软件框架或者工具中常常用到注解，比如Struts，JUnit，TestNG，Spring等。</p>
+<h2 id="定义注解">定义注解</h2>
+<p>注解使用关键字<code>@interface</code>定义，而不是<code>interface</code>。所有注解都是继承的<code>java.lang.annotation.Annotation</code>接口，但是如果直接创建一个interface继承<code>java.lang.annotation.Annotation</code>接口并不是定义一个注解类型。
+创建的注解类型中可以定义常量、静态成员，也可以定义方法。但是这些方法的声明里必须是无参数、无抛出异常的。方法的返回值必须为primitive类型（包括<code>String</code>类型）、<code>Class</code>类型、枚举类型、注解类型中的一个或者以上之一组成的一维数组。方法的后面可以用default和一个值来表示这个方法的默认返回值，注意，默认值不能设为null。只有返回值是<code>Class</code>的方法可以在注解类型中使用泛型，因为该方法能够将各种类型通过类转换变成<code>Class</code>。
+举一个定义注解的例子：</p>
+<pre><code class="language-java">public @interface Property{
+    boolean nullable default false;
+    String value default &quot;&quot;;
+}
+
+public class User{
+    @Property(value = &quot;林雷&quot;)
+    private String userName;
+}
+</code></pre>
+<p>如以上先定义了一个注解类型<code>@Property</code>，然后定义一个Bean，也就是User类，其中有个userName的属性，对其用<code>@Property</code>注解进行了标记，那么也就是说userName被标记为值为“林雷”，而且它是不可空的，<code>@Property</code>后面括号里用等号连接的是个赋值操作，等号左边的内容实际上就是注解中定义的方法，等号右边的内容就是让注解中对应的方法返回一个什么样的值，如果不定义的话就采用注解里设的默认值。可以定义多个，以逗号隔开。</p>
+<h2 id="三种标准注解">三种标准注解</h2>
+<p>从Java 5开始就已经自带了三种标准注解，如下：</p>
+<h3 id="override">@Override</h3>
+<pre><code class="language-java">@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.SOURCE)
+public @interface Override {
+}
+</code></pre>
+<p><code>@Override</code>是一种标记型注解。表示当前的方法定义覆盖了父类中的方法，起到断言作用，方法签名必须相同（即方法名、参数类型、参数顺序、参数个数都一样），否则无法通过编译。这个注解常用作试图覆盖父类方法而又写错了方法名时的一个保障性校验。</p>
+<h3 id="deprecated">@Deprecated</h3>
+<pre><code class="language-java">@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(value={CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE})
+public @interface Deprecated {
+}
+</code></pre>
+<p><code>@Deprecated</code>是一种标记型注解。对不应该再使用的程序元素添加该注解，当调用被注解的方法时，在编译器会显示提示信息不鼓励使用被这个注解了的程序元素。
+注意，该注解与JavaDoc注释中的<code>@deprecated</code>标记是有区别的：前者是用于Java编译器识别的，而后者是在生成文档时被JavaDoc识别。</p>
+<h3 id="suppresswarnings">@SuppressWarnings</h3>
+<pre><code class="language-java">@Target({TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE})
+@Retention(RetentionPolicy.SOURCE)
+public @interface SuppressWarnings {
+    String[] value();
+}
+</code></pre>
+<p>此注解能告诉Java编译器关闭对类、方法及成员变量的警告。有时编译时会提出一些警告，对于这些警告有的隐藏着Bug，有的是无法避免的，对于某些不想看到的警告信息，可以通过这个注解来屏蔽。<code>@SuppressWarning</code>不是一个marker annotation。它有一个类型为<code>String[]</code>的成员，这个成员的值为被禁止的警告名。对于javac编译器来讲，被-Xlint选项有效的警告名也同样对<code>@SuppressWarings</code>有效，同时编译器忽略掉无法识别的警告名。</p>
+<h2 id="四种元注解">四种元注解</h2>
+<h3 id="target">@Target</h3>
+<p>表示注解可以用在什么地方，它的值是ElementType枚举中的枚举类型：
+CONSTRUCTOR 构造器声明；
+FIELD 域声明；
+METHOD 方法声明；
+TYPE 类、接口或enum声明；
+PARAMETER 参数声明；
+LOCAL_VARIABLE 局部变量声明；
+ANNOTATION_TYPE 注释类型声明
+PACKAGE 包声明</p>
+<h3 id="retention">@Retention</h3>
+<p>表示需要在什么级别保存该注解信息。设值时需要提供java.lang.annotation.RetentionPolicy中的枚举类型。</p>
+<pre><code class="language-java">public enum RetentionPolicy{
+    SOURCE, //编译程序处理完Annotation信息后就完成任务
+    CLASS, //编译程序将Annotation储存于class中，但会被虚拟机丢弃，@Retention默认是Class级别
+    RUNTIME //编译程序将Annotation储存于class中，虚拟机在运行期也保留注解，可以通过反射机制读取注解信息
+}
+</code></pre>
+<h3 id="documented">@Documented</h3>
+<p>将此注解包含到Javadoc中。</p>
+<h3 id="inherited">@Inherited</h3>
+<p>允许子类继承父类的注解。</p>
+<hr>
+<p>在自定义注解的时候可以综合使用这四个元注解定义自己定义的注解的作用范围等信息。</p>
+<h2 id="通过反射加载注解">通过反射加载注解</h2>
+<p>还用之前举的例子，下面简单写个通过反射获得注解信息的例子。
+先定义注解：</p>
+<pre><code class="language-java">import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Property {
+    boolean nullable() default false;
+
+    String value() default &quot;&quot;;
+}
+</code></pre>
+<p>定义POJO Bean：</p>
+<pre><code class="language-java">public class User {
+
+    @Property(value = &quot;李雷&quot;)
+    private String username;
+
+    @Property(nullable = true, value = &quot;test@a.com&quot;)
+    private String email;
+}
+</code></pre>
+<p>接下来就是获取这个注解了：</p>
+<pre><code class="language-java">import java.lang.reflect.Field;
+
+public class AnnotationTest {
+    public static void main(String[] args){
+        //获取User类的Class实例
+        Class&lt;?&gt; clazz = User.class;
+        //获取这个类的所有属性
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields){
+            //判断这个属性中是否有Property注解
+            if (field.isAnnotationPresent(Property.class)){
+                Property property = field.getAnnotation(Property.class);
+                System.out.println(field.getName()+&quot;: &quot;+property.nullable()+&quot; &quot;+property.value());
+            }
+        }
+    }
+}
+</code></pre>
+<p>运行之后结果为：</p>
+<pre><code>username: false 李雷
+email: true test@a.com
+</code></pre>
+<p>从上面的结果也可以看到，即使类中的属性定义为private类型，也可以通过注解对其进行标记赋值，这个方法在Spring等框架中常常使用。</p>
+<h2 id="参考资料">参考资料</h2>
+<p>http://computerdragon.blog.51cto.com/6235984/1210969
+http://www.cnblogs.com/mandroid/archive/2011/07/18/2109829.html
+http://www.itzhai.com/java-based-notebook-annotation-annotation-introduction-and-use-custom-annotations.html</p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://goroyal.github.io//post/http-response-code">
+                  <h3 class="post-title">
+                    HTTP 响应状态码
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+
+              
+                <div id="disqus_thread" data-aos="fade-in"></div>
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+  
+
+  
+    <script src="https://unpkg.com/disqusjs@1.1/dist/disqus.js"></script>
+    <script>
+
+    var options = {
+      shortname: 'jiavwen',
+      apikey: '',
+    }
+    if ('') {
+      options.api = ''
+    }
+    var dsqjs = new DisqusJS(options)
+
+    </script>
+  
+
+
+
+
+  </body>
+</html>
