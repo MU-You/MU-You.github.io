@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>Java中的可重入锁ReetrantLock | Goroyal&#39;s blog</title>
+<title>发布！软件的设计与部署 | Goroyal&#39;s blog</title>
 <meta name="description" content="学习分享">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -98,44 +98,41 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">Java中的可重入锁ReetrantLock</h2>
-            <div class="post-date">2015-08-28</div>
+            <h2 class="post-title">发布！软件的设计与部署</h2>
+            <div class="post-date">2016-06-11</div>
             
             <div class="post-content">
-              <h2 id="类说明">类说明</h2>
-<p><code>ReetrantLock</code>是一个可重入排它<code>Lock</code>，和使用<code>synchronized</code>方法和语句的隐式监视器锁有着相同的基本行为和语义，但是有着扩展性能。</p>
-<p><code>ReentrantLock</code>由上次成功加锁但是还没有解锁的线程所持有。在锁没有被其他线程持有时，一个线程调用<code>lock</code>将返回成功获取锁。如果当前线程已经持有锁那么该方法将立即返回。这个可以使用方法<code>isHeldByCurrentThread</code>和<code>getHoldCount</code>检查。</p>
-<p>这个类的构造器接收一个可选的公平性参数。当设为 true 时，在争用的情况下，锁倾向于授权给等待时间最长的线程。另外，这个锁不保证任何特定访问顺序。使用被多个线程访问的公平锁的程序将呈现比使用默认设置的情况较低的总吞吐量（也就是变慢了，通常是慢很多），但是在获取锁和保证不饥饿的时间上有较小的方差。</p>
-<p>公平锁可以保证锁的获取按照FIFO原则，而代价是进行大量的线程切换。非公平性锁虽然可能造成线程饥饿，但是较少线程切换，保证了很大的吞吐量。</p>
-<p>同样需要注意的是，不计时的<code>tryLock()</code>方法不赞成公平设置。如果锁是可用的它将成功获得锁，而不管其他线程是否正在等待。</p>
-<p>建议实践时永远在<code>lock</code>后面立即跟上一个<code>try</code>块，大多数典型的在构造之前/之后的情况是：</p>
-<pre><code class="language-java">class X{
-	private final ReentrantLock lock = new ReentrantLock();
-	//...
-	public void m(){
-		lock.lock(); // block until condition holds
-		try{
-			// ... method body
-		} finally {
-			lock.unlock();
-		}
-	}
-}
-</code></pre>
-<p>除了实现<code>Lock</code>接口，这个类定义了大量 public 和 protected 方法来检查锁的状态。其中有一些方法只用于仪表和监控。</p>
-<p>这个类的序列化和内置锁的行为方式一致：反序列化的锁是处于解锁状态，在序列化的时候不管当前它的状态。</p>
-<p>这个锁支持相同线程递归锁最大2147483647次。尝试超过这个限制将导致从加锁方法抛出<code>Error</code>。</p>
-<h2 id="参考资料">参考资料</h2>
-<p>JDK 1.7</p>
+              <h1 id="笔记">笔记</h1>
+<p>早期决策对系统的最终形态影响最大，最初的决策最难以更改。这个时候团队对软件的最终结构最无知，但必须要做出某些不可更改的决策。</p>
+<p>敏捷强调及早发布并持续改进，意味着软件可以尽快投入使用，因为软件投入使用是唯一得知软件如何响应真实世界刺激的途径。</p>
+<p>发布1.0版是软件生命的开始，而不是项目的结束。1.0版发布后，你的生活质量取决于你在这个重要里程碑之前所做的选择。</p>
+<p>对于那些还没有被取消或废弃的系统来说，系统的运营时间要远远多于开发时间，靠承担经常性运营成本来避免一次性成本，是没有意义的。</p>
+<p>宕机后恢复服务是优先级最高的任务。重大事故之后的管理认知和管理事故本身同样重要。</p>
+<p>系统寿命受到的主要威胁是内存泄露和数据疯涨。</p>
+<p>有条墨菲定律，只要你不针对某种失效情况特别做测试，它一定会发生。</p>
+<p>最初的触发点，裂痕扩散的方式和损坏的结果，并称为故障模式。</p>
+<p>代码耦合得越紧，代码错误扩散的机会也越大。反之，代码越松散，就如同减震器一样越能消除而非扩大这种错误的影响。</p>
+<p>考虑下面各种可能存在的冲击和压力：</p>
+<ul>
+<li>如果我不启动连接？</li>
+<li>如果连接需要10分钟？</li>
+<li>如果已经连接，那它如何断开连接？</li>
+<li>如果已经连接，而我却不能得到另一端的任何响应？</li>
+<li>如果需要2分钟来回应我的查询请求？</li>
+<li>如果同时有10000个请求？</li>
+<li>如果网络陷入蠕虫的攻击而瘫痪，而我要将关于SQLException异常发生的错误信息写入日志时，我的磁盘已满？</li>
+</ul>
+<p>网络永远是不可靠的，超时是让你放弃等待你认为不会到来的响应的一种简单机制。设置合理的超时可以隔离故障，在其他系统、子系统或设备中的问题不会成为你的问题。所有阻塞线程的资源池都应设置一个超时，以确保不管资源最后是否可用，线程都可以被解除阻塞。如果不这么做，就可能会永远等待了。</p>
+<p>电路中的保险丝，自己先失效，从而控制整体失效。但是有人自己使用高电流低电阻的保险丝，从而不起到保险作用。软件系统中也可以使用断路器来保护。检测过度使用，然后先失效（跳闸），可以再重新设置恢复系统使用。</p>
 
             </div>
             
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://goroyal.github.io//post/readwrite-lock-in-java">
+                <a href="https://goroyal.github.io//post/handle-password-expire-in-oracle">
                   <h3 class="post-title">
-                    Java中的ReadWriteLock
+                    Oracle用户密码过期解决
                   </h3>
                 </a>
               </div>
