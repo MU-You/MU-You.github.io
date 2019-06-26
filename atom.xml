@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://goroyal.github.io/</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2019-06-26T16:52:55.334Z</updated>
+    <updated>2019-06-26T16:53:15.759Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://goroyal.github.io/"/>
     <link rel="self" href="https://goroyal.github.io//atom.xml"/>
@@ -17,6 +17,8 @@
         </link>
         <updated>2019-06-26T16:51:40.000Z</updated>
         <content type="html"><![CDATA[<p>纯函数是一种特殊的函数，给它相同的输入永远会得到相同的输出，而且没有任何可观察的副作用。</p>
+<hr>
+<p>占位符，待更。</p>
 ]]></content>
     </entry>
     <entry>
