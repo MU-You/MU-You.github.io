@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://goroyal.github.io/</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2019-06-26T16:45:13.986Z</updated>
+    <updated>2019-06-26T16:48:35.878Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://goroyal.github.io/"/>
     <link rel="self" href="https://goroyal.github.io//atom.xml"/>
@@ -327,9 +327,11 @@ http://www.itzhai.com/java-based-notebook-annotation-annotation-introduction-and
 </ul>
 <p>不带数字直接<code>exit</code>，脚本的退出状态码就由脚本里面最后执行的命令来决定（即exit之前的命令）。</p>
 <p>至于<code>exit $?</code>，它和<code>exit</code>是一样的作用。</p>
-<p>参考：
-<a href="http://man.linuxde.net/exit">Linux命令大全</a>
-<a href="https://www.ixdba.net/docs/shell/exit-status.html">退出和退出状态码</a></p>
+<p>参考：</p>
+<ul>
+<li><a href="http://man.linuxde.net/exit">Linux命令大全</a></li>
+<li><a href="https://www.ixdba.net/docs/shell/exit-status.html">退出和退出状态码</a></li>
+</ul>
 ]]></content>
     </entry>
     <entry>
