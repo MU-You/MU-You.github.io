@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://goroyal.github.io/</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2019-06-26T16:50:09.642Z</updated>
+    <updated>2019-06-26T16:52:55.334Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://goroyal.github.io/"/>
     <link rel="self" href="https://goroyal.github.io//atom.xml"/>
@@ -10,6 +10,15 @@
     <logo>https://goroyal.github.io//images/avatar.png</logo>
     <icon>https://goroyal.github.io//favicon.ico</icon>
     <rights>All rights reserved 2019, Goroyal&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[纯函数]]></title>
+        <id>https://goroyal.github.io//post/pure-function</id>
+        <link href="https://goroyal.github.io//post/pure-function">
+        </link>
+        <updated>2019-06-26T16:51:40.000Z</updated>
+        <content type="html"><![CDATA[<p>纯函数是一种特殊的函数，给它相同的输入永远会得到相同的输出，而且没有任何可观察的副作用。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[管理多个Java版本]]></title>
         <id>https://goroyal.github.io//post/manage-multiple-java-versions</id>
@@ -404,46 +413,6 @@ exec dbms_xdb.sethttpport(8088)
 <h2 id="参考资料">参考资料</h2>
 <p>Effective Java
 https://github.com/android-cn/android-discuss/issues/6</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Ubuntu中给Dash创建图标]]></title>
-        <id>https://goroyal.github.io//post/add-icon-to-ubuntu-dash</id>
-        <link href="https://goroyal.github.io//post/add-icon-to-ubuntu-dash">
-        </link>
-        <updated>2017-05-21T14:29:09.000Z</updated>
-        <content type="html"><![CDATA[<p>我们建设以创建 Eclipse 程序图标为例</p>
-<ul>
-<li>进入图标存放目录|：<code>cd /usr/share/applications</code></li>
-<li>创建文件并编辑：<code>sudo gedit eclipse.desktop</code></li>
-</ul>
-<pre><code>[Desktop Entry]
-Name=eclipse
-Name[zh_CN]=eclipse
-Comment=eclipse Client
-Exec=/usr/programa/tools/eclipse/eclipse
-Icon=/usr/programa/tools/eclipse/icon.xpm
-Terminal=false
-Type=Application
-Categories=Application;
-Encoding=UTF-8
-StartupNotify=true
-</code></pre>
-<p>重点参数说明（注意：路径使用完整路径）</p>
-<ul>
-<li>Name 为你想要显示在 Launcher 中的名称</li>
-<li>Comment 为说明。</li>
-<li>Exec 为程序执行位置</li>
-<li>Icon 为图标所在路径</li>
-</ul>
-<p>最后，打开 Dash，在顶部搜索框搜索 eclipse，此时你应该能搜到它，先单击试一下看能不能打开，如果可以打开，拖到该图标启动器上，下次就可以直接从启动器打开了</p>
-<p><strong>资料</strong></p>
-<ul>
-<li><a href="http://my.oschina.net/Obahua/blog/110612">Ubuntu 将 Sublime Text 添加到 Launcher 和其它方式 原
-</a></li>
-<li><a href="http://www.cnblogs.com/enein/articles/2818864.html">Ubuntu 12.10 程序图标放到启动器</a></li>
-<li><a href="http://blog.chinaunix.net/uid-26404477-id-3462663.html">向Ubuntu Dash中添加图标</a>\</li>
-</ul>
 ]]></content>
     </entry>
 </feed>
