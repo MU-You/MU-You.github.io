@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="keywords" content="Goroyal technical blog">
+<meta name="description" content="学习分享">
+<meta name="theme-color" content="#000">
+<title>Goroyal&#39;s blog</title>
+<link rel="shortcut icon" href="/favicon.ico?v=1590076906184">
+<link rel="stylesheet" href="/media/css/gemini.css">
+<link rel="stylesheet" href="/media/fonts/font-awesome.css">
+<link
+  href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Rosario:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext"
+  rel="stylesheet" type="text/css">
+
+<link href="/media/hljs/styles/androidstudio.css"
+  rel="stylesheet">
+
+<link rel="stylesheet" href="/styles/main.css">
+
+<script src="/media/hljs/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.0/velocity.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.0/velocity.ui.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+  integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+  integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+  integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"></script>
+
+
+
+
+
+</head>
+
+<body>
+  <div class="head-top-line"></div>
+  <div class="header-box">
+    
+<div class="gemini">
+  <header class="header  ">
+    <div class="blog-header box-shadow-wrapper bg-color " id="header">
+      <div class="nav-toggle" id="nav_toggle">
+        <div class="toggle-box">
+          <div class="line line-top"></div>
+          <div class="line line-center"></div>
+          <div class="line line-bottom"></div>
+        </div>
+      </div>
+      <div class="site-meta">       
+        <div class="site-title">
+          
+            <a href="/" class="brand">
+              <span>Goroyal&#39;s blog</span>
+            </a>  
+          
+        </div>
+        
+          <p class="subtitle">学习分享</p>
+        
+      </div>
+      <nav class="site-nav" id="site_nav">
+        <ul id="nav_ul">
+          
+            
+            
+              
+            
+            <li class="nav-item ">
+              
+              
+                <a href="/" target="_self">
+                  <i class="fa fa-home"></i> 首页
+                </a>
+              
+            </li>
+          
+            
+            
+              
+            
+            <li class="nav-item ">
+              
+              
+                <a href="/archives/" target="_self">
+                  <i class="fa fa-archive"></i> 归档
+                </a>
+              
+            </li>
+          
+            
+            
+              
+            
+            <li class="nav-item ">
+              
+              
+                <a href="/tags/" target="_self">
+                  <i class="fa fa-tags"></i> 标签
+                </a>
+              
+            </li>
+          
+            
+            
+              
+            
+            <li class="nav-item ">
+              
+              
+                <a href="/post/about/" target="_self">
+                  <i class="fa fa-user"></i> 关于
+                </a>
+              
+            </li>
+          
+          
+            
+              <li class="nav-item ">
+                <a href="/friends/" target="_blank">
+                  
+                    <i class="fa fa-address-book"></i> 友情链接
+                  
+                </a>
+              </li>
+            
+          
+          
+            <li id="fa_search" class="nav-item">
+              <a href="javascript:void(0);">
+                <i class="fa fa-search"></i> <span class="language" data-lan="search">搜索</span>
+              </a>
+            </li>
+          
+        </ul>
+      </nav>
+    </div>
+  </header>
+</div>
+
+<script type="text/javascript"> 
+ 
+  let showNav = true;
+
+  let navToggle = document.querySelector('#nav_toggle'),
+  siteNav = document.querySelector('#site_nav');
+  
+  function navClick() {
+    let sideBar = document.querySelector('.sidebar');
+    let navUl = document.querySelector('#nav_ul');
+    navToggle.classList.toggle('nav-toggle-active');
+    siteNav.classList.toggle('nav-menu-active');
+    if (siteNav.classList.contains('nav-menu-active')) {
+      siteNav.style = "height: " + (navUl.children.length * 42) +"px !important";
+    } else {
+      siteNav.style = "";
+    }
+  }
+
+  navToggle.addEventListener('click',navClick);  
+</script>
+  </div>
+  <div class="main-continer">
+    
+    <div
+      class="section-layout gemini ">
+      <div class="section-layout-wrapper">
+        <div id="sidebarMeta" class="sidebar">
+    
+<div class="sidebar-wrapper box-shadow-wrapper bg-color">
+  <div class="sidebar-item">
+    <img class="site-author-image right-motion" src="/images/avatar.png"/>
+    <p class="site-author-name">© 2017-2020</p>
+    
+  </div>
+  <div class="sidebar-item side-item-stat right-motion">
+    <div class="sidebar-item-box">
+      <a href="/archives/">
+        
+        <span class="site-item-stat-count">17</span>
+        <span class="site-item-stat-name language" data-lan="article">文章</span>
+      </a>
+    </div>
+    <div class="sidebar-item-box">
+      <a href="">
+        <span class="site-item-stat-count">5</span>
+        <span class="site-item-stat-name language" data-lan="category">分类</span>
+      </a>
+    </div>
+    <div class="sidebar-item-box">
+      <a href="/tags/">
+        <span class="site-item-stat-count">5</span>
+        <span class="site-item-stat-name language" data-lan="tag">标签</span>
+      </a>
+    </div>
+  </div>
+  
+    
+  
+  
+
+
+</div>
+</div>
+<script>
+  let sidebarMeta = document.querySelector('#sidebarMeta');
+  let scheme = 'gemini';
+  let sidebarWrapper = document.querySelector('.sidebar-wrapper');
+  if (sidebarMeta && (scheme === 'pisces' || scheme === 'gemini')) {
+    document.addEventListener('scroll', function(e) {
+      if (document.scrollingElement.scrollTop > parseInt(sidebarMeta.style.marginTop) + 10) {
+        sidebarWrapper.classList.add('home-sidebar-fixed')
+      } else {
+        sidebarWrapper.classList.remove('home-sidebar-fixed')
+      }
+    });
+  }
+  </script>
+        <div class="section-box gemini box-shadow-wrapper">
+          <section class="friends-section bg-color slide-down-in">
+            <div class="firends-box">
+              <h1 class="firends-title" itemprop="name headline">友情链接</h1>
+              
+              
+              <a href="https://thinkbucket.cn" target="_blank">
+                <div class="firends-item">
+                  <img src="https://cosmos-x.oss-cn-hangzhou.aliyuncs.com/docsite-logo-white-mode.png" />
+                  <div class="right">
+                    <div class="top">
+                      ThinkBucket
+                    </div>
+                    <div class="bottom">
+                      
+                    </div>
+                  </div>
+                </div>
+              </a>
+              
+              
+            </div>
+            <hr>
+            <div style="text-align:center">
+              <span class="with-love">
+                <i class="fa fa-heart"></i>
+              </span>
+              <span class="language" data-lan="leave-message">留言添加友链</span>
+              <span class="with-love">
+                <i class="fa fa-heart"></i>
+              </span>
+            </div>
+            <hr>
+            <div class="friends-note">
+              <p><strong class="language" data-lan="format">友链格式：</strong></p>
+              <ul>
+                <li><span class="language" data-lan="site-name">网站名称：</span>Goroyal&#39;s blog</li>
+                <li><span class="language" data-lan="site-link">网站地址：</span><a href="https://goroyal.github.io/" data-pjax-state="">https://goroyal.github.io/</a></li>
+                <li><span class="language" data-lan="site-desc">网站描述：</span>学习分享</li>
+                <li><span class="language" data-lan="site-img">网站头像：</span>
+                  <a href="https://goroyal.github.io//images/avatar.png">https://goroyal.github.io//images/avatar.png</a>
+                </li>
+              </ul>
+            </div>
+            
+  
+    
+    
+      <link rel="stylesheet" href="https://unpkg.com/disqusjs@1.1/dist/disqusjs.css">
+<script src="https://unpkg.com/disqusjs@1.1/dist/disqus.js"></script>
+
+<div id="disqus_thread"></div>
+
+<script>
+  var options = {
+    shortname: 'jiavwen',
+    apikey: '',
+  }
+  if ('') {
+    options.api = ''
+  }
+  var dsqjs = new DisqusJS(options)
+</script>
+    
+  
+
+          </section>
+        </div>
+      </div>
+    </div>
+    <div class="footer-box">
+  <footer class="footer">
+    <div class="copyright">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | © 2019-2020 Theme By <a href="https://github.com/hsxyhao/gridea-theme-next" target="_blank">HsxyHao</a>
+    </div>
+    <div class="poweredby">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+  </footer>
+  
+  
+  <div class="gemini back-to-top" id="back_to_top">
+    <i class="fa fa-arrow-up"></i>
+    
+    <span class="scrollpercent">
+      <span id="back_to_top_text">0</span>%
+    </span>
+    
+  </div>
+  
+  
+  
+</div>
+<script>
+
+  let sideBarOpen = 'sidebar-open';
+  let body = document.body;
+  let back2Top = document.querySelector('#back_to_top'),
+  back2TopText = document.querySelector('#back_to_top_text'),
+  drawerBox = document.querySelector('#drawer_box'),
+  rightSideBar = document.querySelector('.sidebar'),
+  viewport = document.querySelector('body');
+
+  function scrollAnimation(currentY, targetY) {
+   
+    let needScrollTop = targetY - currentY
+    let _currentY = currentY
+    setTimeout(() => {
+      const dist = Math.ceil(needScrollTop / 10)
+      _currentY += dist
+      window.scrollTo(_currentY, currentY)
+      if (needScrollTop > 10 || needScrollTop < -10) {
+        scrollAnimation(_currentY, targetY)
+      } else {
+        window.scrollTo(_currentY, targetY)
+      }
+    }, 1)
+  }
+
+  back2Top.addEventListener("click", function(e) {
+    scrollAnimation(document.scrollingElement.scrollTop, 0);
+    e.stopPropagation();
+    return false;
+  });
+  
+  window.addEventListener('scroll', function(e) {
+    let percent = document.scrollingElement.scrollTop / (document.scrollingElement.scrollHeight - document.scrollingElement.clientHeight) * 100;
+    if (percent > 1 && !back2Top.classList.contains('back-top-active')) {
+      back2Top.classList.add('back-top-active');
+    }
+    if (percent == 0) {
+      back2Top.classList.remove('back-top-active');
+    }
+    if (back2TopText) {
+      back2TopText.textContent = Math.floor(percent);
+    }
+  });
+
+  
+  let hasCacu = false;
+  window.onresize = function() {
+    if (window.width > 991) {
+      calcuHeight();
+    } else {
+      hasCacu = false;
+    }
+  }
+
+  function calcuHeight() {
+    // 动态调整站点概览高度
+    if (!hasCacu && back2Top.classList.contains('pisces') || back2Top.classList.contains('gemini')) {
+      let sideBar = document.querySelector('.sidebar');
+      let navUl = document.querySelector('#site_nav');
+      sideBar.style = 'margin-top:' + (navUl.offsetHeight + navUl.offsetTop + 15) + 'px;';
+      hasCacu = true;
+    }
+  }
+  calcuHeight();
+  
+  let open = false, MOTION_TIME = 300, RIGHT_MOVE_DIS = '320px';
+
+  if (drawerBox) {
+    let rightMotions = document.querySelectorAll('.right-motion');
+    let right = drawerBox.classList.contains('right');
+
+    let transitionDir = right ? "transition.slideRightIn" : "transition.slideLeftIn";
+
+    let openProp, closeProp;
+    if (right) {
+      openProp = {
+        paddingRight: RIGHT_MOVE_DIS 
+      };
+      closeProp = {
+        paddingRight: '0px'
+      };
+    } else {
+      openProp = {
+        paddingLeft: RIGHT_MOVE_DIS 
+      };
+      closeProp = {
+        paddingLeft: '0px'
+      };
+    }
+
+    drawerBox.onclick = function() {
+      open = !open;
+      window.Velocity(rightSideBar, 'stop');
+      window.Velocity(viewport, 'stop');
+      window.Velocity(rightMotions, 'stop');
+      if (open) {
+        window.Velocity(rightSideBar, {
+          width: RIGHT_MOVE_DIS
+        }, {
+          duration: MOTION_TIME,
+          begin: function() {
+            window.Velocity(rightMotions, transitionDir,{ });
+          }
+        })
+        window.Velocity(viewport, openProp,{
+          duration: MOTION_TIME
+        });
+      } else {
+        window.Velocity(rightSideBar, {
+          width: '0px'
+        }, {
+          duration: MOTION_TIME,
+          begin: function() {
+            window.Velocity(rightMotions, {
+              opacity: 0
+            });
+          }
+        })
+        window.Velocity(viewport, closeProp ,{
+          duration: MOTION_TIME
+        });
+      }
+      for (let i = 0; i < drawerBox.children.length; i++) {
+        drawerBox.children[i].classList.toggle('muse-line');
+      }
+      drawerBox.classList.toggle(sideBarOpen);
+    }
+  }
+
+  // 链接跳转
+  let newWindow = 'false'
+  if (newWindow === 'true') {
+    let links = document.querySelectorAll('.post-body a')
+    links.forEach(item => {
+      if (!item.classList.contains('btn')) {
+        item.setAttribute("target","_blank");
+      }
+    })
+  }
+
+  let faSearch = document.querySelector('#fa_search');
+  faSearch.addEventListener('click', function() {
+    document.querySelector('#search_mask').style = ''
+  })
+
+  // 代码高亮
+  hljs.initHighlightingOnLoad();
+
+</script>
+  </div>
+</body>
+
+  <div class="search-mask" id="search_mask" style="display: none;">
+  <div class="search-box">
+    <div class="search-title">
+      <i class="fa fa-search"></i>
+      <div class="input-box">
+        <input id="search" type="text" class="language" data-lan="search" placeholder="搜索">
+      </div>
+      <i id="close" class="fa fa-times-circle"></i>
+    </div>
+    <div class="stat-box">
+      <span id="stat_count">0</span><span class="language" data-lan="stat">条相关条目，使用了</span><span id="stat_times">0</span><span class="language" data-lan="stat-time">毫秒</span>
+      <hr>
+    </div>
+    <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/linux-redirect-dev-null/"" data-c="
+          &lt;p&gt;在 Linux 的 shell 命令或者脚本中，我们经常看到这样的命令：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;2&amp;gt; /dev/null
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这是何意？&lt;/p&gt;
+ &lt;!-- more --&gt; 
+&lt;h2 id=&#34;linux-进程&#34;&gt;Linux 进程&lt;/h2&gt;
+&lt;p&gt;以 bash 为例，shell 中执行一个命令时，其实是由 bash shell fork 出一个子进程，然后在这个子进程中运行相应的命令，直至退出。Linux 里的进程的数据结构如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-C&#34;&gt;struct task_struct {
+	// 进程状态
+	long state;
+	// 虚拟内存结构体
+	struct mm_struct *mm;
+	// 进程号
+	pid_t pid;
+	// 指向父进程的指针
+	struct task_struct __rcu *parent;
+	// 子进程列表
+	struct list_head children;
+	// 存放文件系统信息的指针
+	struct fs_struct *fs;
+	// 一个数组，包含该进程打开的文件指针
+	struct files_struct *files;
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;task_struct&lt;/code&gt; 就是 Linux 对于一个进程的描述，也可以称之为进程描述符。其中的 &lt;code&gt;files&lt;/code&gt; 指针指向一个数组，表示当前进程打开的所有文件。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;每个进程被创建时，&lt;code&gt;files&lt;/code&gt; 指向的数组前三位被填入默认值，分别指向标准输入流、标准输出流、标准错误流。我们常说的「文件描述符」就是指这个文件指针数组的索引，所以程序的文件描述符默认情况下 0 是输入，1 是输出，2 是错误。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;:::&lt;strong&gt;tip&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Linux 中的所有设备都是抽象成文件的，设备可以当作文件一样读和写。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;重定向&#34;&gt;重定向&lt;/h2&gt;
+&lt;p&gt;Linux shell 里通过 &lt;code&gt;&amp;gt;&lt;/code&gt;、&lt;code&gt;&amp;lt;&lt;/code&gt;进行输出、输入的重定向。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;&amp;gt;&lt;/code&gt;：将 shell 命令的输出指向某个地方，可以是文件，也可以是内存里的某个变量。比如 &lt;code&gt;ls -l &amp;gt; file.txt&lt;/code&gt; 就是把当前路径下的文件信息保存到 file.txt 文本中，如果没有这个重定向，它会将结果输出到显示器屏幕上。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;&lt;/code&gt;：从某个地方读取内容作为 shell 命令的输入，可以是文件，也可以是内存里的某个变量。比如 &lt;code&gt;{command} &amp;lt; file.txt&lt;/code&gt;，如果没有这个重定向，它会从键盘读取输入。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;此外，shell 还可以通过 &lt;code&gt;|&lt;/code&gt; 将前一个命令的输出作为下一个命令的输入，比如：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;# 在命令历史中找到包含 ssh 字符串的命令
+history | grep ssh
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;2-devnull&#34;&gt;2&amp;gt; /dev/null&lt;/h2&gt;
+&lt;p&gt;通过上面的章节可以知道，&lt;code&gt;2&lt;/code&gt; 表示标准错误，&lt;code&gt;&amp;gt;&lt;/code&gt; 表示将标准错误重定向到某个地方。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;/dev/null&lt;/code&gt; 是一个特殊文件，在Unix系统中称为 null 设备。 通俗地说，它也称为比特桶（bit bucket，也译作比特垃圾桶）或黑洞（blackhole），因为它会立即丢弃写入其中的任何内容，并且在读取时仅返回文件结束EOF。&lt;/p&gt;
+&lt;p&gt;所以这个命令合起来就是将忽略执行命令产生的错误。比如：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;# 删除当前路径下的folder目录，如果不存在则忽略错误
+rm -r folder 2&amp;gt; /dev/null
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;:::&lt;strong&gt;caution&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;2&lt;/code&gt;和&lt;code&gt;&amp;gt;&lt;/code&gt;之间不能有空格&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://bash.cyberciti.biz/guide/What_is_a_Process%3F&#34;&gt;What is a Process?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/labuladong/fucking-algorithm/blob/master/%E6%8A%80%E6%9C%AF/linux%E8%BF%9B%E7%A8%8B.md&#34;&gt;Linux的进程、线程、文件描述符是什么&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zh.wikipedia.org/wiki//dev/null&#34;&gt;维基百科：/dev/null&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+">Linux 中的 2> /dev/null</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/oop-and-pure-function/"" data-c="
+          &lt;p&gt;在面向对象编程里面，我们常常对现实世界建模抽象成一个个类，然后创建它们的对象，通过对象的方法行为去描述逻辑。&lt;/p&gt;
+&lt;p&gt;纯函数是一种特殊的函数，给它相同的输入永远会得到相同的输出，而且没有任何可观察的副作用。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;占位符，待更。&lt;/p&gt;
+&lt;p&gt;https://llh911001.gitbooks.io/mostly-adequate-guide-chinese/content/ch3.html#%E8%BF%BD%E6%B1%82%E2%80%9C%E7%BA%AF%E2%80%9D%E7%9A%84%E7%90%86%E7%94%B1&lt;br&gt;
+https://www.jiqizhixin.com/articles/2018-10-22-15&lt;/p&gt;
+">面向对象编程与纯函数</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/manage-multiple-java-versions/"" data-c="
+          &lt;p&gt;自从Oracle宣布Java开始收费之后，越来越多的人会考虑从&lt;a href=&#34;https://openjdk.java.net/install/&#34;&gt;Open JDK&lt;/a&gt;下载安装Java环境。可能自己机器上也会同时并存好几个Java版本，本文以macOS为例介绍一下如何从Open JDK安装并进行管理多版本。&lt;/p&gt;
+&lt;h2 id=&#34;下载安装&#34;&gt;下载安装&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;curl -O https://download.java.net/java/GA/jdk12/33/GPL/openjdk-12_osx-x64_bin.tar.gz 
+tar xvf openjdk-12_osx-x64_bin.tar.gz
+
+# 解压后文件夹比如名为jdk-12.jdk，移动到macOS管理的JVM目录中去
+sudo mv jdk-12.jdk /Library/Java/JavaVirtualMachines
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;此时，可以输入如下命令查看本机上有几种Java版本：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;/usr/libexec/java_home -V
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;比如生成如下内容：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Matching Java Virtual Machines (2):
+    12, x86_64:	&amp;quot;OpenJDK 12&amp;quot;	/Library/Java/JavaVirtualMachines/jdk-12.jdk/Contents/Home
+    1.7.0_76, x86_64:	&amp;quot;Java SE 7&amp;quot;	/Library/Java/JavaVirtualMachines/jdk1.7.0_76.jdk/Contents/Home
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;也可以输入小写v参数查看具体的版本信息，比如查刚刚下载的Java 12：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;/usr/libexec/java_home -v 12
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;会显示&lt;code&gt;/Library/Java/JavaVirtualMachines/jdk-12.jdk/Contents/Home&lt;/code&gt;，这个就是它的Java Home。那么就能通过export设置当前的JAVA_HOME环境变量了。比如：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;export JAVA_HOME=`/usr/libexec/java_home -v 12`
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;便利管理多版本&#34;&gt;便利管理多版本&lt;/h2&gt;
+&lt;p&gt;Linux或者macOS都有bash或者其他shell，以bash为例，bash在每个用户目录下都有&lt;code&gt;.bashrc&lt;/code&gt;文件用于配置用户相关的环境变量（如果没有可以自己创建），可以在该文件下面写如下代码：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;# type &#39;java7&#39; at command prompt to switch to java 7
+function java7() {
+    export JAVA_HOME=`/usr/libexec/java_home -v 1.7`
+    echo &amp;quot;JAVA_HOME is $JAVA_HOME&amp;quot;
+    java -version
+}
+
+# type &#39;java12&#39; at command prompt to switch to java 12
+function java12() {
+    export JAVA_HOME=`/usr/libexec/java_home -v 12`
+    echo &amp;quot;JAVA_HOME is $JAVA_HOME&amp;quot;
+    java -version
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;保存之后，输入命令&lt;code&gt;source .bashrc&lt;/code&gt;，然后可以通过命令&lt;code&gt;java12&lt;/code&gt;或者&lt;code&gt;java7&lt;/code&gt;来便捷切换所使用的Java版本。&lt;/p&gt;
+">管理多个Java版本</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/Try with closable resources/"" data-c="
+          &lt;p&gt;以前，拿到一个closable资源后，如果对它操作，都要先用try包起来，最后一定要在finally里面关掉：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;Closable resource = xxx; //此处为得到这个resource的逻辑
+try {
+	// 处理逻辑
+} finally {
+	if (resource != null) {
+		try {
+			resource.close();
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;自从Java 7之后，根据官方文档&lt;a href=&#34;http://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html&#34;&gt;tryResouceClose&lt;/a&gt;，任何实现了&lt;code&gt;java.lang.AutoClosable&lt;/code&gt;，以及&lt;code&gt;java.io.Closable&lt;/code&gt;接口的对象都可以在这段代码结束之后被关掉：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;try (Closable resource = xxx) {
+	// 处理逻辑
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;.NET里面也有个类似的用法，C#里面一般实现了IDisposable接口的对象在使用时最好结束后调用它的dispose方法，也可以使用using的方式来帮助回收：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-csharp&#34;&gt;using (IDisposable resource = xxx) {
+	// 处理逻辑
+}
+&lt;/code&gt;&lt;/pre&gt;
+">Try with closable resources</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/wring-code-from-unit-test-side/"" data-c="
+          &lt;p&gt;单元测试，也就是对代码较细粒度单元的测试，一般就是测某个方法或函数。说到单元测试，基本上每个开发者都不陌生，时不时会听到“测试覆盖率太低了！”，然后“We need to increase our code coverage!”。经常出bug？好好准备测试吧。&lt;/p&gt;
+&lt;h2 id=&#34;1-为什么要提高覆盖率&#34;&gt;1. 为什么要提高覆盖率？&lt;/h2&gt;
+&lt;p&gt;覆盖率为什么这么重要？我们每次修改代码之后都不希望把原有可用的功能搞出问题，如果没有足够的测试覆盖，开发者就没有足够的信心去交付新代码。测试覆盖率高的话，就可以用机器自动去跑高效率地去验证，在覆盖不到的地方需要人工去验证。所以当覆盖率很低的时候，人工需要一遍又一遍的去验证已有的功能，还要去验证新加的功能是否符合预期，这个真的会崩溃。开发者自己去做的话，八成会偷懒抑或是觉得自己改的范围影响不到那么多测得乐观。如果让测试工程师去做，那么需要领导们考虑开发跟测试的比例了。&lt;/p&gt;
+&lt;p&gt;测试覆盖率不完全是看单元测试，还包括更高层次的集成测试、系统测试。当然了，如果单元测试没写多少，指望粒度更粗层次更高的其他测试，你会非常痛苦的。单元测试的2个优势：跑得快、容易定位问题。&lt;/p&gt;
+&lt;p&gt;上面说了这么多，就是在强调单元测试覆盖率一定要尽可能高，每个单元测试职责一定要尽可能单一简单。单元测试覆盖无非就是代码行覆盖、分支覆盖，单元测试职责单一简单是说单元测试不要试图测某个方法的所有可能性，多写几个，这样出了问题能根据测试名字迅速找到为什么什么用例失败了以及被测方法的哪行可能有问题。&lt;/p&gt;
+&lt;h2 id=&#34;2-单元测试为何难写&#34;&gt;2. 单元测试为何难写？&lt;/h2&gt;
+&lt;p&gt;你可能听说过“测试驱动开发”，就是先写测试、后写代码，这个要求在写代码之前先好好分析需求、细化用例，把各个用例的测试写出来，每次改动代码都要求让尽可能多的测试结果为绿（成功），直到最后所有测试都绿了，那么代码的功能上也基本没问题了。这个可以了解下，有兴趣多看看这方面拓展一下。&lt;br&gt;
+&lt;img src=&#34;https://goroyal.github.io//post-images/1560780095750.png&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;p&gt;为什么单元测试覆盖率往往上不去？因为有时候真的不好写。什么样的代码不好写单元测试：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;被测方法传入了比较复杂的类的对象参数（不是依赖接口），当我要测这个方法，我就要去new依赖的那个对象，但是那个对象又依赖其他的，我又要接着new……，可能这个方法还没开始测，光创建它依赖的东西就写了一大堆测试代码。&lt;/li&gt;
+&lt;li&gt;被测方法传入了某个对象作为参数，调用的复杂方法（不是依赖接口），这个方法有多复杂？可能它也跟上面一样也要new很多个对象才能跑起来，或者它调用了外部服务（网络、数据库等等）。简直没法测。&lt;/li&gt;
+&lt;li&gt;被测方法自己内部创建了一些复杂对象、或者这个方法所属对象的实例创建了一些复杂对象，往往可能是外部有依赖的，比如对文件系统、数据库、网络等有调用。&lt;/li&gt;
+&lt;li&gt;被测方法自己内部引用了static变量。&lt;/li&gt;
+&lt;li&gt;被测方法自己内部引用了单例对象。&lt;/li&gt;
+&lt;li&gt;被测方法调用了复杂的static方法，无法mock、无法用桩。&lt;/li&gt;
+&lt;li&gt;被测方法是一个static方法，它可能依赖一个或多个static变量，这个变量还会被其他static方法修改，很难保证当前测试的独立性，包括它本身作为生产代码都是有坑的。&lt;/li&gt;
+&lt;li&gt;被测方法传入了对象参数，考虑用桩了，但是发现那个类或者方法是final的，无法继承重写（如果是C#语言，sealed类无法被继承，无override关键字的方法不能被重写）。&lt;/li&gt;
+&lt;li&gt;被测方法本身太长了，很难面面俱到，或者是单元测试出了错之后不好定位是哪行代码引起的问题&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;3-如何写好单元测试&#34;&gt;3. 如何写好单元测试&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;单元测试应该聚焦于被测方法本身的行为&lt;/strong&gt;，而不是被测方法所依赖的其他对象的行为。外部环境有依赖的代码应该尽可能少，并且尽量去调用接口，而不是具体的类。我们经常会听到“面向接口编程”，这个用了之后，写单元测试真的是非常爽。单元测试里面会用mock库或者自己去创建简单的类去模拟某个方法的行为，接口约定根据输入会产生什么样的输出，对于调用接口的方法而言不必去关心具体的实现是什么。Java里有著名的Mockito，C#里有Moq，用起来如行云流水一般。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;方法或者类构造器里面自己创建的对象不能太复杂&lt;/strong&gt;，复杂了你就没法测了。可以考虑调用该对象的接口，将它作为输入参数，那么就可以用上面说的方式去测了。&lt;/p&gt;
+&lt;p&gt;个人理解，&lt;strong&gt;static方法要尽可能做到纯函数化&lt;/strong&gt;，也就是说一样的输入参数，随便什么情况下调用都应该给一样的输出。这其实就要求static这样的静态方法不要依赖不可控的static变量。如果做不到，尽量缩小它的使用范围吧……普通的实例方法调用static方法尽可能只调用简单的，没事别调用public的static变量，调用不受控制的static变量简直是给自己找麻烦，不可测是一方面，运行时被别的代码改掉的话就是灾难了。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;当被测方法太长的时候，实际上就意味着方法要拆了&lt;/strong&gt;，便于理解和维护。可以正常的拆，比如新建方法、新建类，也可以花哨地拆。有些人写了一堆if、else语句，如果是创建对象相关的，是否可以考虑工厂模式了？如果if、else里面是比较长的逻辑，可以考虑用策略模式。而如果是普通的前后累积的代码很长，要不试试责任链模式？当拆完之后，原本的非常长的不好测的方法变成若干个易测的小方法。覆盖率自然就上去了。&lt;/p&gt;
+&lt;h2 id=&#34;4-结语&#34;&gt;4. 结语&lt;/h2&gt;
+&lt;p&gt;当每层代码都经过单元测试确保自己这层没问题之后，整个逻辑的链条其实问题不大了。覆盖率不是简简单单为了覆盖而覆盖，单元测试都要有断言，就是如果跟测试目的产生不一致的结果这个测试必须显示失败，否则光数据好看是没用的。&lt;strong&gt;单元测试也不可能做到100%覆盖，但是可以尽可能做得高&lt;/strong&gt;，覆盖不到的地方再通过集成测试或者系统层面的测试去做。至于做不到100%覆盖的原因，比如代码里有对外部依赖的地方，再怎么抽离，总有地方需要去初始化。那么对于这个情况，尽可能把这个对外依赖范围缩小，其他地方用的时候传递接口。&lt;/p&gt;
+&lt;p&gt;关于面向接口编程和减少耦合，还可以了解下依赖注入，能帮助解耦调用模块和具体实现类模块。&lt;/p&gt;
+&lt;p&gt;为了代码可扩展性高、良好设计、易测试，可能会出现一个复杂业务逻辑的代码一层套一层的情况，一个逻辑看完可能经历了若干个类，这也是人们常常吐槽的Java这种语言的一个“啰嗦”之处。这个我也没有什么更好的想法，如果你有，可以分享一下。&lt;/p&gt;
+">以单元测试的角度聊聊写代码</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/http-response-code/"" data-c="
+          &lt;p&gt;目前HTTP在Web开发中被广泛使用，REST (Representational State Transfer) 很多人应该或多或少都知道些。当然了，比较熟悉的可能主要是GET、POST方法。这篇文章不是介绍REST的定义和如何创建符合REST风格的API，而是讲讲在Web开发中通用的不同HTTP响应状态码的含义。在普通网站开发、分布式集群开发、团队协作方面，如果采用了HTTP作为组件之间交互的协议，遵守通用的响应状态码是很有必要的（一是有充分的信息量、二是避免歧义）。&lt;/p&gt;
+&lt;p&gt;HTTP响应状态共有5大类，分别是数字1、2、3、4、5开头。&lt;/p&gt;
+&lt;h2 id=&#34;1xx&#34;&gt;1XX&lt;/h2&gt;
+&lt;p&gt;信息性状态码，表示接收的请求正在处理。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;100：说明收到了请求的初始部分，请客户端继续。发送了这个状态码之后，服务器在收到请求之后必须进行响应&lt;/li&gt;
+&lt;li&gt;101：说明服务器正在根据客户端的指定，将协议切换成Update 首部所列的协议&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;2xx&#34;&gt;2XX&lt;/h2&gt;
+&lt;p&gt;成功状态码，表示请求正常处理完毕&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;200：OK，实体的主体部分包含了所请求的资源。（正常请求很多是这种状态）&lt;/li&gt;
+&lt;li&gt;201： Created，表示创建资源成功，响应的实体主体部分中应该包含各种引用了已创建的资源的URL，Location 首部包含的则是最具体的引用。（REST里面，POST或者PUT常常返回这样的状态）&lt;/li&gt;
+&lt;li&gt;202， Accepted， 请求已被接受，但服务器还未对其执行任何动作。不能保证服务器会完成这个请求；这只是意味着接受请求时，它看起来是有效的。&lt;/li&gt;
+&lt;li&gt;204：No Content，响应不包含实体的主体部分，通常在更新服务器上资源的时候成功的情况下不要求返回实体内容就会产生这个状态码。&lt;/li&gt;
+&lt;li&gt;206：Partial Content，成功执行了一个部分或Range（范围）请求。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;3xx&#34;&gt;3XX&lt;/h2&gt;
+&lt;p&gt;重定向状态码，表示需要进行附加操作以完成请求。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;301：Moved Permanently，永久性重定向，表示请求的资源被分配了新的URI，以后应使用资源现在所指的URI。&lt;/li&gt;
+&lt;li&gt;302：Found，临时性重定向，表示请求的资源被分配了新的URI，希望用户本次使用新的URI访问。&lt;/li&gt;
+&lt;li&gt;303：See Other，表示请求对应的资源存在这另一个URI，应使用GET方法定向获取请求的资源。&lt;/li&gt;
+&lt;li&gt;304：Not Modified，表示客户端发送附带条件的请求时，服务器端允许请求访问资源，但未满足条件。304状态码返回时不包含响应的主体部分（附带条件指：If-Match、If-Modified-Since、If-None-Match、If-Range、If-Unmodified-Since中任一首部）。304表明了客户端中所请求资源的缓存仍然是有效的,也就是说该资源从上次缓存到现在并没有被修改过.条件请求可以在确保客户端的资源是最新的同时避免因每次都请求完整资源给服务器带来的性能问题。另一种情况是,如果服务器认为客户端缓存的资源已经过期了，那么服务器就会返回HTTP/200 OK响应，响应体就是该资源当前最新的内容。客户端收到200响应后，就会用新的响应体覆盖掉旧的缓存资源。&lt;/li&gt;
+&lt;li&gt;305：Use Proxy， 用来说明必须通过一个代理来访问资源；代理的位置由Location首部给出。很重要的一点是，客户端是相对某个特定资源来解析这条响应的，不能假定所有请求，甚至所有对持有所请求资源的服务器的请求都通过这个代理进行。如果客户端错误地让代理介入了某条请求，可能会引发破坏性的行为，而且会造成安全漏洞。&lt;/li&gt;
+&lt;li&gt;307：Temporary Redirect，临时重定向，与302有相同的含义。尽管302标准禁止POST变幻成GET，实际大家并未遵守。307会遵照浏览器标准，不会从POST变为GET，但是对于处理响应时的行为每种浏览器可能出现不同的情况。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;4xx&#34;&gt;4XX&lt;/h2&gt;
+&lt;p&gt;客户端错误状态码，表示服务器无法处理请求。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;400：Bad Request， 用于告知客户端它发送了一个错误的请求，比方说请求体不符合预先定义的规则&lt;/li&gt;
+&lt;li&gt;401：Unauthorized，表示发送的请求需要有通过HTTP认证的认证信息，若之前已进行过请求，则表示认证失败。返回含有401的响应必须包含一个适用于被请求资源的WWW-Authenticate手部质询用户信息。&lt;/li&gt;
+&lt;li&gt;403：Forbidden，表明请求资源的访问被服务器拒绝了。&lt;/li&gt;
+&lt;li&gt;404：Not Found，用于说明服务器无法找到请求的URL所对应的资源。&lt;/li&gt;
+&lt;li&gt;405：Method Not Allowed，发起的请求中带有所请求的URL 不支持的方法时，使用此状态码。应该在响应中包含Allow 首部，以告知客户端对所请求的资源可以使用哪些方法。&lt;/li&gt;
+&lt;li&gt;406：Not Acceptable，客户端可以指定参数来说明它们愿意接收什么类型的实体。服务器没有与客户端可接受的URL 相匹配的资源时，使用此代码。&lt;/li&gt;
+&lt;li&gt;413： Request Entity Too Large， 客户端发送的实体主体部分比服务器能够或者希望处理的要大时，返回此状态码。&lt;/li&gt;
+&lt;li&gt;429：Too Many Requests，表示客户端在给定时间范围内发送了太多请求。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;5xx&#34;&gt;5XX&lt;/h2&gt;
+&lt;p&gt;服务器错误状态码，表示服务器处理请求出错&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;500：Intenernal Server Error，服务器在执行请求时发生了错误&lt;/li&gt;
+&lt;li&gt;501：Not Implemented，客户端发起的请求超出服务器的能力范围（比如，使用了服务器不支持的请求方法）&lt;/li&gt;
+&lt;li&gt;502：Bad Gateway， 作为代理或网关使用的服务器从请求响应链的下一条链路上收到了一条伪响应（比如，它无法连接到其父网关）。&lt;/li&gt;
+&lt;li&gt;503：Service Unavailable 服务器暂时处于超负载或正在进行停机维护，现在无法处理请求。如果事先得知解除以上状况所需时间，最好写入Retry-After首部字段返回给客户端。&lt;/li&gt;
+&lt;/ul&gt;
+">HTTP 响应状态码</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/java-annotation/"" data-c="
+          &lt;h2 id=&#34;概念&#34;&gt;概念&lt;/h2&gt;
+&lt;p&gt;注解，也就是Annotation，是Java 5 开始引入的特征，它提供了一种安全的类似注释的机制，用来将任何的信息或元数据与程序元素（类、方法、属性等）进行关联。&lt;br&gt;
+Annotation通过Java反射机制来访问注解信息，相关类根据这些信息决定对这些程序元素采用什么行为。Java语言解释器在工作时会忽略这些注解，因此注解在JVM中是“不起作用”的，只能通过配套工具对这些注解类型的信息进行访问和处理。&lt;br&gt;
+在软件框架或者工具中常常用到注解，比如Struts，JUnit，TestNG，Spring等。&lt;/p&gt;
+&lt;h2 id=&#34;定义注解&#34;&gt;定义注解&lt;/h2&gt;
+&lt;p&gt;注解使用关键字&lt;code&gt;@interface&lt;/code&gt;定义，而不是&lt;code&gt;interface&lt;/code&gt;。所有注解都是继承的&lt;code&gt;java.lang.annotation.Annotation&lt;/code&gt;接口，但是如果直接创建一个interface继承&lt;code&gt;java.lang.annotation.Annotation&lt;/code&gt;接口并不是定义一个注解类型。&lt;br&gt;
+创建的注解类型中可以定义常量、静态成员，也可以定义方法。但是这些方法的声明里必须是无参数、无抛出异常的。方法的返回值必须为primitive类型（包括&lt;code&gt;String&lt;/code&gt;类型）、&lt;code&gt;Class&lt;/code&gt;类型、枚举类型、注解类型中的一个或者以上之一组成的一维数组。方法的后面可以用default和一个值来表示这个方法的默认返回值，注意，默认值不能设为null。只有返回值是&lt;code&gt;Class&lt;/code&gt;的方法可以在注解类型中使用泛型，因为该方法能够将各种类型通过类转换变成&lt;code&gt;Class&lt;/code&gt;。&lt;br&gt;
+举一个定义注解的例子：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public @interface Property{
+    boolean nullable default false;
+    String value default &amp;quot;&amp;quot;;
+}
+
+public class User{
+    @Property(value = &amp;quot;林雷&amp;quot;)
+    private String userName;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如以上先定义了一个注解类型&lt;code&gt;@Property&lt;/code&gt;，然后定义一个Bean，也就是User类，其中有个userName的属性，对其用&lt;code&gt;@Property&lt;/code&gt;注解进行了标记，那么也就是说userName被标记为值为“林雷”，而且它是不可空的，&lt;code&gt;@Property&lt;/code&gt;后面括号里用等号连接的是个赋值操作，等号左边的内容实际上就是注解中定义的方法，等号右边的内容就是让注解中对应的方法返回一个什么样的值，如果不定义的话就采用注解里设的默认值。可以定义多个，以逗号隔开。&lt;/p&gt;
+&lt;h2 id=&#34;三种标准注解&#34;&gt;三种标准注解&lt;/h2&gt;
+&lt;p&gt;从Java 5开始就已经自带了三种标准注解，如下：&lt;/p&gt;
+&lt;h3 id=&#34;override&#34;&gt;@Override&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.SOURCE)
+public @interface Override {
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;@Override&lt;/code&gt;是一种标记型注解。表示当前的方法定义覆盖了父类中的方法，起到断言作用，方法签名必须相同（即方法名、参数类型、参数顺序、参数个数都一样），否则无法通过编译。这个注解常用作试图覆盖父类方法而又写错了方法名时的一个保障性校验。&lt;/p&gt;
+&lt;h3 id=&#34;deprecated&#34;&gt;@Deprecated&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(value={CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE})
+public @interface Deprecated {
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;@Deprecated&lt;/code&gt;是一种标记型注解。对不应该再使用的程序元素添加该注解，当调用被注解的方法时，在编译器会显示提示信息不鼓励使用被这个注解了的程序元素。&lt;br&gt;
+注意，该注解与JavaDoc注释中的&lt;code&gt;@deprecated&lt;/code&gt;标记是有区别的：前者是用于Java编译器识别的，而后者是在生成文档时被JavaDoc识别。&lt;/p&gt;
+&lt;h3 id=&#34;suppresswarnings&#34;&gt;@SuppressWarnings&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Target({TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE})
+@Retention(RetentionPolicy.SOURCE)
+public @interface SuppressWarnings {
+    String[] value();
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;此注解能告诉Java编译器关闭对类、方法及成员变量的警告。有时编译时会提出一些警告，对于这些警告有的隐藏着Bug，有的是无法避免的，对于某些不想看到的警告信息，可以通过这个注解来屏蔽。&lt;code&gt;@SuppressWarning&lt;/code&gt;不是一个marker annotation。它有一个类型为&lt;code&gt;String[]&lt;/code&gt;的成员，这个成员的值为被禁止的警告名。对于javac编译器来讲，被-Xlint选项有效的警告名也同样对&lt;code&gt;@SuppressWarings&lt;/code&gt;有效，同时编译器忽略掉无法识别的警告名。&lt;/p&gt;
+&lt;h2 id=&#34;四种元注解&#34;&gt;四种元注解&lt;/h2&gt;
+&lt;h3 id=&#34;target&#34;&gt;@Target&lt;/h3&gt;
+&lt;p&gt;表示注解可以用在什么地方，它的值是ElementType枚举中的枚举类型：&lt;br&gt;
+CONSTRUCTOR 构造器声明；&lt;br&gt;
+FIELD 域声明；&lt;br&gt;
+METHOD 方法声明；&lt;br&gt;
+TYPE 类、接口或enum声明；&lt;br&gt;
+PARAMETER 参数声明；&lt;br&gt;
+LOCAL_VARIABLE 局部变量声明；&lt;br&gt;
+ANNOTATION_TYPE 注释类型声明&lt;br&gt;
+PACKAGE 包声明&lt;/p&gt;
+&lt;h3 id=&#34;retention&#34;&gt;@Retention&lt;/h3&gt;
+&lt;p&gt;表示需要在什么级别保存该注解信息。设值时需要提供java.lang.annotation.RetentionPolicy中的枚举类型。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public enum RetentionPolicy{
+    SOURCE, //编译程序处理完Annotation信息后就完成任务
+    CLASS, //编译程序将Annotation储存于class中，但会被虚拟机丢弃，@Retention默认是Class级别
+    RUNTIME //编译程序将Annotation储存于class中，虚拟机在运行期也保留注解，可以通过反射机制读取注解信息
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;documented&#34;&gt;@Documented&lt;/h3&gt;
+&lt;p&gt;将此注解包含到Javadoc中。&lt;/p&gt;
+&lt;h3 id=&#34;inherited&#34;&gt;@Inherited&lt;/h3&gt;
+&lt;p&gt;允许子类继承父类的注解。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;在自定义注解的时候可以综合使用这四个元注解定义自己定义的注解的作用范围等信息。&lt;/p&gt;
+&lt;h2 id=&#34;通过反射加载注解&#34;&gt;通过反射加载注解&lt;/h2&gt;
+&lt;p&gt;还用之前举的例子，下面简单写个通过反射获得注解信息的例子。&lt;br&gt;
+先定义注解：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Property {
+    boolean nullable() default false;
+
+    String value() default &amp;quot;&amp;quot;;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;定义POJO Bean：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public class User {
+
+    @Property(value = &amp;quot;李雷&amp;quot;)
+    private String username;
+
+    @Property(nullable = true, value = &amp;quot;test@a.com&amp;quot;)
+    private String email;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;接下来就是获取这个注解了：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;import java.lang.reflect.Field;
+
+public class AnnotationTest {
+    public static void main(String[] args){
+        //获取User类的Class实例
+        Class&amp;lt;?&amp;gt; clazz = User.class;
+        //获取这个类的所有属性
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields){
+            //判断这个属性中是否有Property注解
+            if (field.isAnnotationPresent(Property.class)){
+                Property property = field.getAnnotation(Property.class);
+                System.out.println(field.getName()+&amp;quot;: &amp;quot;+property.nullable()+&amp;quot; &amp;quot;+property.value());
+            }
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;运行之后结果为：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;username: false 李雷
+email: true test@a.com
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;从上面的结果也可以看到，即使类中的属性定义为private类型，也可以通过注解对其进行标记赋值，这个方法在Spring等框架中常常使用。&lt;/p&gt;
+&lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
+&lt;p&gt;http://computerdragon.blog.51cto.com/6235984/1210969&lt;br&gt;
+http://www.cnblogs.com/mandroid/archive/2011/07/18/2109829.html&lt;br&gt;
+http://www.itzhai.com/java-based-notebook-annotation-annotation-introduction-and-use-custom-annotations.html&lt;/p&gt;
+">Java中的注解</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/exit-command-in-linux/"" data-c="
+          &lt;p&gt;我们在linux的命令行里面会用到exit，比方说退出某个shell。在shell脚本中这个命令可以终止脚本的执行。exit后面是可以接一个数字表示退出时候的状态。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;exit(0)&lt;/code&gt;一般表示成功结束，其他的是不成功的，如&lt;code&gt;exit(1)&lt;/code&gt;。对于一些系统程序而言，这些错误编号是有含义的：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;1　　　　　　　　  一般性未知错误&lt;/li&gt;
+&lt;li&gt;2　　　　　　　　  不适合的shell命令&lt;/li&gt;
+&lt;li&gt;126 　　　　　　　命令不可执行&lt;/li&gt;
+&lt;li&gt;127 　　　　　　　没找到命令&lt;/li&gt;
+&lt;li&gt;128 　　　　　　　无效的退出参数&lt;/li&gt;
+&lt;li&gt;128+x 　　　　　　与Linux信号x相关的严重错误&lt;/li&gt;
+&lt;li&gt;130 　　　　　　　通过Ctrl+C终止的命令&lt;/li&gt;
+&lt;li&gt;255 　　　　　　　正常范围之外的退出状态码&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;不带数字直接&lt;code&gt;exit&lt;/code&gt;，脚本的退出状态码就由脚本里面最后执行的命令来决定（即exit之前的命令）。&lt;/p&gt;
+&lt;p&gt;至于&lt;code&gt;exit $?&lt;/code&gt;，它和&lt;code&gt;exit&lt;/code&gt;是一样的作用。&lt;/p&gt;
+&lt;p&gt;参考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://man.linuxde.net/exit&#34;&gt;Linux命令大全&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.ixdba.net/docs/shell/exit-status.html&#34;&gt;退出和退出状态码&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+">Linux中的exit命令</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/install-oracle-db-in-suse/"" data-c="
+          &lt;p&gt;从官网下载64位rpm安装包，解压，打开terminal进入rpm安装包所在目录，输入&lt;code&gt;rpm -i install oralce-xe-xxx.rpm&lt;/code&gt;&lt;br&gt;
+然后会提示输入&lt;code&gt;/etc/init.d/oracle-xe configure&lt;/code&gt;，按照步骤照做。&lt;br&gt;
+在设置http端口的时候，默认为8080，可能会影响jboss、tomcat，可以改成8088。&lt;/p&gt;
+&lt;p&gt;配置ORACLE_HOME和path:&lt;br&gt;
+打开&lt;code&gt;/etc/bash.bashrc.local&lt;/code&gt;，&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;export ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
+export PATH=$PATH:$ORACLE_HOME/bin:
+export ORACLE_SID=XE
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;配置结束后，在尝试sqlplus连接数据库的时候会出现密码不正确或者权限不够等问题，因为oracle express在安装的时候讲ORACLE用户作为这个软件的owner，而这个owner没有加到dba组里。&lt;br&gt;
+可以输入命令&lt;code&gt;/etc/group&lt;/code&gt;查看当前系统中的用户组，&lt;code&gt;/etc/passwd&lt;/code&gt;查看系统中的用户。遇到一个问题就是实际上并不存在ORACLE这个用户，然后采取了一个方法，就是&lt;code&gt;vi /etc/group&lt;/code&gt;强制在dba这个组加上ORACLE这个用户。&lt;br&gt;
+打开新的终端，&lt;code&gt;su - oracle&lt;/code&gt;从而切换到ORACLE用户，然后输入&lt;code&gt;groups&lt;/code&gt;，可以查看它属于dba组。（其实挺奇怪，&lt;code&gt;su - oracle&lt;/code&gt;可以切换到oracle用户，但是之前在其他地方找不到这个用户）&lt;/p&gt;
+&lt;p&gt;输入&lt;code&gt;/etc/init.d/oracle-xe start&lt;/code&gt;(或&lt;code&gt;lsnrctl start&lt;/code&gt;)启动oracle。&lt;/p&gt;
+&lt;p&gt;输入&lt;code&gt;sqlplus system/密码&lt;/code&gt;，进行连接，如果说用户名或密码错误的话，可以输入&lt;code&gt;sqlplus / as sysdba&lt;/code&gt;(注意，需要在ORACLE用户下)，然后建立连接后，输入&lt;code&gt;alter user system identified by 密码&lt;/code&gt;;&lt;br&gt;
+quit后在以&lt;code&gt;sqlplus system/密码&lt;/code&gt;就能连上了。&lt;/p&gt;
+&lt;p&gt;密码不正确或者权限不够等问题，应该也可以通过更改oracle安装后的目录及文件的owner来实现，这里就暂不讨论。&lt;/p&gt;
+&lt;p&gt;还有可能和&lt;code&gt;$ORACLE_HOME/network/admin&lt;/code&gt;下面的几个ora文件有关。附件里列出了它们。&lt;/p&gt;
+&lt;p&gt;如果安装的时候忘了改http端口，可以输入如下命令：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sqlplus /nolog
+connect
+(input username and password)
+exec dbms_xdb.sethttpport(8088)
+&lt;/code&gt;&lt;/pre&gt;
+">SUSE Linux中安装Oracle数据库</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/references-in-java/"" data-c="
+          &lt;p&gt;Java中的引用主要有以下几种类型：&lt;br&gt;
+• 强引用（StrongReference）：强引用是使用最普遍的引用。如果一个对象具有强引用，那垃圾回收器绝不会回收它。当内存空间不足，Java虚拟机宁愿抛出OutOfMemoryError错误，使程序异常终止，也不会靠随意回收具有强引用的对象来解决内存不足的问题。&lt;/p&gt;
+&lt;p&gt;• 软引用（SoftReference）：如果一个对象只具有软引用，则内存空间足够，垃圾回收器就不会回收它；如果内存空间不足了，就会回收这些对象的内存。只要垃圾回收器没有回收它，该对象就可以被程序使用。软引用可用来实现内存敏感的高速缓存。软引用可以和一个引用队列（ReferenceQueue）联合使用，如果软引用所引用的对象被垃圾回收器回收，Java虚拟机就会把这个软引用加入到与之关联的引用队列中。&lt;/p&gt;
+&lt;p&gt;• 弱引用（WeakReference）：弱引用与软引用的区别在于：只具有弱引用的对象拥有更短暂的生命周期。在垃圾回收器线程扫描它所管辖的内存区域的过程中，一旦发现了只具有弱引用的对象，不管当前内存空间足够与否，都会回收它的内存。不过，由于垃圾回收器是一个优先级很低的线程，因此不一定会很快发现那些只具有弱引用的对象。弱引用可以和一个引用队列（ReferenceQueue）联合使用，如果弱引用所引用的对象被垃圾回收，Java虚拟机就会把这个弱引用加入到与之关联的引用队列中。&lt;/p&gt;
+&lt;p&gt;• 虚引用（PhantomReference）：“虚引用”顾名思义，就是形同虚设，与其他几种引用都不同，虚引用并不会决定对象的生命周期。如果一个对象仅持有虚引用，那么它就和没有任何引用一样，在任何时候都可能被垃圾回收器回收。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;下面主要来谈谈软引用。&lt;br&gt;
+对于软引用对象本身，至少有两个强引用指向它：由应用创建的原始的强引用，还有就是JVM创建的在所引对象队列上的一个新的强引用。软引用本质上是一个比较大的、最近最久未用的对象池。获得较好性能的关键是确保它们会被及时清理。&lt;/p&gt;
+&lt;p&gt;不要使用太多软引用，它们很容易填满整个堆。&lt;/p&gt;
+&lt;p&gt;当问题中的所引对象会同时被几个线程使用时，应该考虑弱引用。否则，弱引用很可能会被垃圾收集器回收：只有弱引用的对象在每个GC周期都可以回收。当强引用被移除时，弱引用会立即释放。&lt;/p&gt;
+&lt;p&gt;软：只要有足够内存，而且看上去有人会偶尔访问它，就留着它。&lt;br&gt;
+弱：只要有其他人对这个对象感兴趣就让我知道它在哪，但是如果他们不再需要它了，就丢了，我自己会重新创建。&lt;/p&gt;
+&lt;p&gt;软引用的对象通常可以存活几分钟甚至几小时，但是只要所引读写仍然存在，弱引用对象就会一直存活（下一个GC周期会清理）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;在Java中，集合类经常是内存泄露的根源。比如某个应用将对象放入一个HashMap对象中，但从不移除。随着时间推移，这个HashMap对象会越来越大，而且消耗堆。&lt;/strong&gt;&lt;/p&gt;
+">Java中的几种引用</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/abstract-class-and-interface/"" data-c="
+          &lt;p&gt;本文亦发布于&lt;a href=&#34;https://thinkbucket.cn/docs/java/object-oriented-programming/abstract-class-interface&#34;&gt;ThinkBucket&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;抽象类和接口是 Java 面向对象编程中非常重要的元素，在面向接口的编程中两者更是经常用到。类是对象的模版，抽象类和接口可以看作是具体的类的模版。&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;h2 id=&#34;抽象类&#34;&gt;抽象类&lt;/h2&gt;
+&lt;p&gt;如果一个 &lt;code&gt;class&lt;/code&gt; 用 &lt;code&gt;abstract&lt;/code&gt;修饰，它就是抽象类。除了正常的方法定义外，抽象类里的方法可以是空的，直接以分号结尾，没有具体执行代码，这个方法就是抽象方法，它必须用 &lt;code&gt;abstract&lt;/code&gt; 修饰。&lt;/p&gt;
+&lt;p&gt;我们无法实例化一个抽象类，抽象类必须通过一个具体的子类实例化：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;Person p = new Person(); // 编译错误
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public final class Demo {
+  public static void main(String[] args) {
+    Teacher t = new Teacher();
+    t.setName(&amp;quot;王明&amp;quot;);
+    t.work();
+    Driver d = new Driver();
+    d.setName(&amp;quot;小陈&amp;quot;);
+    d.work();
+  }
+}
+// 定义一个抽象类
+abstract class People {
+  private String name; // 实例变量
+  // 共有的 setter 和 getter 方法
+  public void setName(String name){
+    this.name = name;
+  }
+  public String getName(){
+    return this.name;
+  }
+  // 抽象方法
+  public abstract void work();
+}
+
+class Teacher extends People {
+  // 必须实现该方法
+  public void work() {
+    System.out.println(&amp;quot;我的名字叫&amp;quot; + this.getName() + &amp;quot;，我正在讲课，请大家不要东张西望…&amp;quot;);
+  }
+}
+
+class Driver extends People {
+  // 必须实现该方法
+  public void work() {
+    System.out.println(&amp;quot;我的名字叫&amp;quot; + this.getName() + &amp;quot;，我正在开车，不能接听电话…&amp;quot;);
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;除了可以拥有抽象方法和不能实例化的特性外，抽象类拥有普通类的所有特点，比如：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;可以继承父类（但抽象类的父类必须是抽象类）&lt;/li&gt;
+&lt;li&gt;可以实现接口&lt;/li&gt;
+&lt;li&gt;可以写 &lt;code&gt;private&lt;/code&gt; 、 &lt;code&gt;protected&lt;/code&gt;、 &lt;code&gt;public&lt;/code&gt; 的成员变量和方法&lt;/li&gt;
+&lt;li&gt;可以写 &lt;code&gt;static final&lt;/code&gt; 的常量&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;接口&#34;&gt;接口&lt;/h2&gt;
+&lt;p&gt;接口一般是描述一些行为，是对接口使用者的一个承诺。在面向接口的编程中，接口的使用者只需要调用接口的某个方法达到其目的，而无需关心是哪个类实现的。接口的一个例子：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;interface Person {
+  void run();
+  String getName();
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;接口的一些特性：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;所有方法都是 &lt;code&gt;public abstract&lt;/code&gt; 的，必须被接口的实现类实现（Java 8之前）&lt;/li&gt;
+&lt;li&gt;所有的变量都是 &lt;code&gt;public static final&lt;/code&gt; 的，其实就是常量&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;:::&lt;strong&gt;tip&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;因为接口定义的所有方法默认都是 &lt;code&gt;public abstract&lt;/code&gt; 的，所以这两个修饰符不需要写出来（写不写效果都一样）。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;当一个具体的 &lt;code&gt;class&lt;/code&gt; 去实现一个 &lt;code&gt;interface&lt;/code&gt; 时，需要使用 &lt;code&gt;implements&lt;/code&gt; 关键字。举个例子：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;class Student implements Person {
+  private String name;
+
+  public Student(String name) {
+    this.name = name;
+  }
+
+  @Override
+  public void run() {
+    System.out.println(this.name + &amp;quot; run&amp;quot;);
+  }
+
+  @Override
+  public String getName() {
+    return this.name;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;空接口&#34;&gt;空接口&lt;/h3&gt;
+&lt;p&gt;我们常常看到 Java 程序里有定义的一些空接口，那么空接口是什么作用呢？&lt;/p&gt;
+&lt;p&gt;空接口的主要是用来做判断的，也就是作为一个标记。为了判断某一个类是否满足其筛选条件时可以做一个空接口，然后利用 &lt;code&gt;instanceof&lt;/code&gt; 方法来判断某一类是否使用了该接口，以达到你要筛选指定类型类的需求。&lt;/p&gt;
+&lt;h2 id=&#34;接口和抽象类比较&#34;&gt;接口和抽象类比较&lt;/h2&gt;
+&lt;h3 id=&#34;相同点&#34;&gt;相同点&lt;/h3&gt;
+&lt;p&gt;从某种角度讲，接口是一种特殊的抽象类，它们有很大的相似处：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;都代表类树形结构的抽象层。在使用引用变量时，尽量使用类结构的抽象层，&lt;strong&gt;使方法的定义和实现分离&lt;/strong&gt;，这样做对于代码有松散耦合的好处。&lt;/li&gt;
+&lt;li&gt;都不能被实例化。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ul&gt;
+&lt;li&gt;都能包含抽象方法。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;区别&#34;&gt;区别&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;接口里只能有常量，而且会“污染”实现类里的作用域；抽象类可以拥有 &lt;code&gt;private&lt;/code&gt; 的变量，有一定程度的封装。&lt;/li&gt;
+&lt;li&gt;接口只能继承接口；抽象类既可以继承抽象类，也可以实现接口。&lt;/li&gt;
+&lt;li&gt;接口里的所有方法使用者都能直接调用；抽象类里可以封装一些 &lt;code&gt;private&lt;/code&gt;、&lt;code&gt;protected&lt;/code&gt; 或者包访问级别的方法&lt;/li&gt;
+&lt;li&gt;接口里的所有方法都是抽象的，没有方法体（Java 8 之前）；抽象类里的非抽象方法可以拥有方法体。&lt;/li&gt;
+&lt;li&gt;一个实现类一旦继承了某个抽象类，可以实现别的接口，但是不能继承其他类了；而如果它实现了某个接口，还可以实现别的接口，也可以继承别的类。体为空），但抽象类实现某个接口，可以不实现所有接口的方法，可以由它的子类实现。&lt;/li&gt;
+&lt;li&gt;接口是对行为的一种抽象，而抽象类是对类的抽象，包括属性、方法。继承抽象类的类往往是具有一些相似特点的类，而实现接口的类可以跨不同的域，仅仅实现了接口定义的契约。类继承抽象类像是一个 &lt;strong&gt;”is-a”&lt;/strong&gt; 特点，类实现接口像是 &lt;strong&gt;”like-a”&lt;/strong&gt; 特点。&lt;/li&gt;
+&lt;li&gt;在设计时，对接口往往是自上而下的，先定义接口行为，然后再针对其做具体实现；抽象类往往是自下而上的，我们先知道子类后才对其进行抽象出父类。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;class Student implements Person, Hello { // 实现了两个interface
+  ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;接口继承&#34;&gt;接口继承&lt;/h3&gt;
+&lt;p&gt;一个 &lt;code&gt;interface&lt;/code&gt; 可以使用 &lt;code&gt;extends&lt;/code&gt; 继承自另一个 &lt;code&gt;interface&lt;/code&gt; 。例如：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;interface Hello {
+  void hello();
+}
+
+interface Person extends Hello {
+  void run();
+  String getName();
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;此时， &lt;code&gt;Person&lt;/code&gt; 接口继承自 &lt;code&gt;Hello&lt;/code&gt; 接口，因此， &lt;code&gt;Person&lt;/code&gt; 接口现在实际上有 3 个抽象方法签名，其中一个来自继承的 &lt;code&gt;Hello&lt;/code&gt; 接口。&lt;/p&gt;
+&lt;h3 id=&#34;类与接口的继承关系&#34;&gt;类与接口的继承关系&lt;/h3&gt;
+&lt;p&gt;合理设计 interface 和 abstract class 的继承关系，可以充分复用代码。一般来说，公共逻辑适合放在 abstract class 中，具体逻辑放到各个子类，而接口层次代表抽象程度。可以参考 Java 的集合类定义的一组接口、抽象类以及具体子类的继承关系：&lt;/p&gt;
+&lt;Img w=&#34;380&#34; src=&#39;https://cosmos-x.oss-cn-hangzhou.aliyuncs.com/rt4hsL.png&#39; /&gt;
+&lt;p&gt;在使用的时候，实例化的对象永远只能是某个具体的子类，但总是通过接口去引用它，因为接口比抽象类更抽象：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;List list = new ArrayList(); // 用List接口引用具体子类的实例
+Collection coll = list; // 向上转型为Collection接口
+Iterable it = coll; // 向上转型为Iterable接口
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;接口里的默认方法&#34;&gt;接口里的默认方法&lt;/h2&gt;
+&lt;p&gt;从 Java 8 开始，Java 为接口提供了默认方法的功能，用 &lt;code&gt;default&lt;/code&gt; 关键字表示，比如：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;interface InterfaceA {
+  default void foo() {
+    System.out.println(&amp;quot;InterfaceA foo&amp;quot;);
+  }
+}
+
+class ClassA implements InterfaceA {
+}
+
+public class Test {
+  public static void main(String[] args) {
+    new ClassA().foo(); // Will print &amp;quot;InterfaceA foo&amp;quot;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;ClassA&lt;/code&gt; 没有实现 &lt;code&gt;InterfaceA&lt;/code&gt; 的 &lt;code&gt;foo&lt;/code&gt; 方法，但是 &lt;code&gt;InterfaceA&lt;/code&gt; 提供了默认实现，当 &lt;code&gt;ClassA&lt;/code&gt; 的实例调用到 &lt;code&gt;foo&lt;/code&gt; 方法时，实际上是调用了接口里的默认实现。&lt;/p&gt;
+&lt;h3 id=&#34;为什么引入默认方法&#34;&gt;为什么引入默认方法&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;在 Java 8 之前&lt;/strong&gt;，接口和实现类之间高度耦合，当接口中添加一个方法时，它的所有实现类都需要修改，否则会发生编译错误。无法在不破坏现有实现的条件下向接口添加&lt;strong&gt;新&lt;/strong&gt;方法。&lt;/p&gt;
+&lt;p&gt;:::&lt;strong&gt;tip&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;To use default method, JDK &amp;gt;= 1.8 is a must.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;在 Java 8 里面，引入默认方法的意图是&lt;strong&gt;允许向现有接口添加方法&lt;/strong&gt;，Java 8 里有一个重要新功能： lamda 表达式，这需要升级旧接口并保持向后兼容。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;String[] array = new String[] {
+  &amp;quot;hello&amp;quot;,
+  &amp;quot;, &amp;quot;,
+  &amp;quot;world&amp;quot;,
+};
+List&amp;lt;String&amp;gt; list = Arrays.asList(array);
+list.forEach(System.out::println); // additional method in JDK 1.8
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;forEach&lt;/code&gt; 方法是 Java 8 里为 &lt;code&gt;Iterable&lt;/code&gt; 接口添加的新默认方法，实现类不需要做任何修改就可以直接用它。下面是 &lt;code&gt;Iterable&lt;/code&gt; 接口里的 &lt;code&gt;forEach&lt;/code&gt; 方法：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;package java.lang;
+
+import java.util.Objects;
+import java.util.function.Consumer;
+
+public interface Iterable&amp;lt;T&amp;gt; {
+  default void forEach(Consumer&amp;lt;? super T&amp;gt; action) {
+    Objects.requireNonNull(action);
+    for (T t : this) {
+      action.accept(t);
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;更多细节，可以参考这篇文章：https://ebnbin.com/2015/12/20/java-8-default-methods/&lt;/p&gt;
+&lt;p&gt;:::&lt;strong&gt;caution&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;向现有接口添加新方法充满了风险。在存在默认方法的情况下，接口的现有实现&lt;strong&gt;可能&lt;/strong&gt;编译没有错误或警告，但在运行时会失败。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;:::&lt;strong&gt;good&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;除非有必要，否则应避免使用默认方法向现有接口添加新方法，在这种情况下，你应该认真考虑一下现有接口实现是否会被默认方法实现破坏。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;以上都是需要注意的，但是默认方法对于在创建接口时提供标准方法实现非常有用，它能简化实现接口的任务。&lt;/p&gt;
+&lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://book.douban.com/subject/30412517/&#34;&gt;Effective Java, By Joshua Bloch&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://ebnbin.com/2015/12/20/java-8-default-methods/&#34;&gt;Java 8 Default Methods, By Ebn Zhang&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+">Java 抽象类和接口</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/add-icon-to-ubuntu-dash/"" data-c="
+          &lt;p&gt;我们建设以创建 Eclipse 程序图标为例&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;进入图标存放目录|：&lt;code&gt;cd /usr/share/applications&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;创建文件并编辑：&lt;code&gt;sudo gedit eclipse.desktop&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;[Desktop Entry]
+Name=eclipse
+Name[zh_CN]=eclipse
+Comment=eclipse Client
+Exec=/usr/programa/tools/eclipse/eclipse
+Icon=/usr/programa/tools/eclipse/icon.xpm
+Terminal=false
+Type=Application
+Categories=Application;
+Encoding=UTF-8
+StartupNotify=true
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;重点参数说明（注意：路径使用完整路径）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Name 为你想要显示在 Launcher 中的名称&lt;/li&gt;
+&lt;li&gt;Comment 为说明。&lt;/li&gt;
+&lt;li&gt;Exec 为程序执行位置&lt;/li&gt;
+&lt;li&gt;Icon 为图标所在路径&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;最后，打开 Dash，在顶部搜索框搜索 eclipse，此时你应该能搜到它，先单击试一下看能不能打开，如果可以打开，拖到该图标启动器上，下次就可以直接从启动器打开了&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;资料&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://my.oschina.net/Obahua/blog/110612&#34;&gt;Ubuntu 将 Sublime Text 添加到 Launcher 和其它方式 原&lt;br&gt;
+&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.cnblogs.com/enein/articles/2818864.html&#34;&gt;Ubuntu 12.10 程序图标放到启动器&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.chinaunix.net/uid-26404477-id-3462663.html&#34;&gt;向Ubuntu Dash中添加图标&lt;/a&gt;\&lt;/li&gt;
+&lt;/ul&gt;
+">Ubuntu中给Dash创建图标</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/final-finally-finalize-in-java/"" data-c="
+          &lt;h2 id=&#34;final&#34;&gt;final&lt;/h2&gt;
+&lt;p&gt;final是Java里面的一个关键字，可以用来修饰成员变量、局部变量、类、方法。&lt;/p&gt;
+&lt;p&gt;final修饰的类不能被继承，比方说String，Integer以及其他包装类。&lt;/p&gt;
+&lt;p&gt;final修饰的方法不能被重写。&lt;/p&gt;
+&lt;p&gt;final修饰的基本类型变量不可以被修改，修饰的其他类型变量的引用不能被修改。也就是说如果&lt;code&gt;final int a=10&lt;/code&gt;，那么这个&lt;code&gt;a&lt;/code&gt;变量以后就不能再给它赋值成别的值了。而修饰的非基本类型变量的话，该变量的引用指向的堆里面的内容是可以修改的，比如说：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-Java&#34;&gt;final List&amp;lt;String&amp;gt; list = new ArrayList&amp;lt;String&amp;gt;();
+list.add(&amp;quot;item1&amp;quot;);
+list.add(&amp;quot;item2&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;上述操作是合法的。&lt;/p&gt;
+&lt;p&gt;final修饰的String类型再第一次赋值之后，也不能再重新赋值了，因为不管是采用下面哪种方式创建的String对象，如果再次赋值，该对象指向的引用就会变化。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-Java&#34;&gt;final String string1 = new String(&amp;quot;string1&amp;quot;);
+final String string2 = &amp;quot;string2&amp;quot;;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;另外，匿名内部类如果需要用到外面的局部变量，该变量必须是final类型。&lt;/p&gt;
+&lt;p&gt;final修饰局部变量时，局部变量必须在声明时就赋值。&lt;/p&gt;
+&lt;p&gt;没有在声明时初始化的final成员变量的称为空白final变量(blank final variable)，它们必须在构造器中初始化，或者调用this()初始化。不这么做的话，编译器会报错“final变量(变量名)需要进行初始化”。&lt;/p&gt;
+&lt;p&gt;接口中的声明的变量始终都是 &lt;code&gt;publis static final&lt;/code&gt; 类型的。&lt;/p&gt;
+&lt;h2 id=&#34;finally&#34;&gt;finally&lt;/h2&gt;
+&lt;p&gt;finally用于在异常处理时处理一些收尾工作，比方说输入输出流、JDBC数据库连接打开后不管成功成功还是失败，都要将其关闭，释放资源。常用格式：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-Java&#34;&gt;try{
+  ......
+}catch (Exception e){
+  ......
+}finally {
+  ......
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;finalize&#34;&gt;finalize&lt;/h2&gt;
+&lt;p&gt;finalize是Object类中定义的方法，用于垃圾回收。Object类中该方法的定义如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-Java&#34;&gt;protected void finalize() throws Throwable { }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;当对某个对象垃圾收集确定没有更多引用时被垃圾收集器调用。子类重写&lt;code&gt;finalize&lt;/code&gt;方法来处理系统资源或者做其他清理工作。&lt;/p&gt;
+&lt;p&gt;一般来说，finalize方法都是在Java虚拟机发现去除那些已经被执行了finalize的对象之外，没有任何活动的线程能够引用到该对象的时候调用。finalize方法可以做任何事情，包括使这个对象可以被其他进程访问；但是通常finalize的目的是在对象被真正回收之前做一些清理工作。例如，一个对象的finalize方法表示输入/输出连接可能在对象被永久回收前执行显式I/O事务来中断连接。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Object&lt;/code&gt;类的finalize方法不执行特别的操作，它只是简单地返回。&lt;code&gt;Object&lt;/code&gt;子类可以重写这个方法。&lt;/p&gt;
+&lt;p&gt;Java编程语言不保证对于任何给定的对象哪个线程将调用finalize方法，但是它保证执行finalize的线程在调用finalize方法后不会一直保持任何用户可见的同步锁。如果finalize方法中抛出一个没有catch的异常，这个异常将会被忽略并且对象的finalize将终止。&lt;/p&gt;
+&lt;p&gt;在启用某个对象的 finalize 方法后，将不会执行进一步操作，直到 Java 虚拟机再次确定尚未终止的任何线程无法再通过任何方法访问此对象，其中包括由准备终止的其他对象或类执行的可能操作，在执行该操作时，对象可能被丢弃。&lt;/p&gt;
+&lt;p&gt;对于任何给定的对象，finalize最多被Java虚拟机执行一次。&lt;/p&gt;
+&lt;p&gt;finalize方法抛出的任何异常将导致这个对象的终结操作停止，但也会被忽略。（抛出异常后，该对象还是不可以继续操作，不会影响其他对象，直到被虚拟机回收）&lt;/p&gt;
+&lt;p&gt;建议尽量避免使用它，它不是C/C++中的析构函数，而是Java诞生时为了使c/c++程序员更容易接受它所做的一个妥协。它的运行代价高昂，不确定性大，无法保证各个对对象的调用顺序。虽然注释中描述它适合做“关闭外部资源”之类的工作，这完全是对这个方法用途的一种安慰，finalize()能做的所用工作，使用try-finally或者其他方式都可以做的更好，更及时。&lt;/p&gt;
+&lt;h2 id=&#34;参考资源&#34;&gt;参考资源&lt;/h2&gt;
+&lt;p&gt;JDK 1.7 源码&lt;/p&gt;
+&lt;p&gt;Effective Java&lt;/p&gt;
+&lt;p&gt;http://www.importnew.com/7553.html&lt;/p&gt;
+&lt;p&gt;http://s1099.iteye.com/blog/1447714&lt;/p&gt;
+&lt;p&gt;http://www.xuebuyuan.com/813760.html&lt;/p&gt;
+&lt;p&gt;http://blog.csdn.net/cyp331203/article/details/44461021&lt;/p&gt;
+&lt;p&gt;http://www.debugease.com/j2se/820363.html&lt;/p&gt;
+&lt;p&gt;http://www.programgo.com/article/6855606134/&lt;/p&gt;
+">Java中的final、finally和finalize</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/release-it-design-and-deploy-production-ready-software/"" data-c="
+          &lt;h1 id=&#34;笔记&#34;&gt;笔记&lt;/h1&gt;
+&lt;p&gt;早期决策对系统的最终形态影响最大，最初的决策最难以更改。这个时候团队对软件的最终结构最无知，但必须要做出某些不可更改的决策。&lt;/p&gt;
+&lt;p&gt;敏捷强调及早发布并持续改进，意味着软件可以尽快投入使用，因为软件投入使用是唯一得知软件如何响应真实世界刺激的途径。&lt;/p&gt;
+&lt;p&gt;发布1.0版是软件生命的开始，而不是项目的结束。1.0版发布后，你的生活质量取决于你在这个重要里程碑之前所做的选择。&lt;/p&gt;
+&lt;p&gt;对于那些还没有被取消或废弃的系统来说，系统的运营时间要远远多于开发时间，靠承担经常性运营成本来避免一次性成本，是没有意义的。&lt;/p&gt;
+&lt;p&gt;宕机后恢复服务是优先级最高的任务。重大事故之后的管理认知和管理事故本身同样重要。&lt;/p&gt;
+&lt;p&gt;系统寿命受到的主要威胁是内存泄露和数据疯涨。&lt;/p&gt;
+&lt;p&gt;有条墨菲定律，只要你不针对某种失效情况特别做测试，它一定会发生。&lt;/p&gt;
+&lt;p&gt;最初的触发点，裂痕扩散的方式和损坏的结果，并称为故障模式。&lt;/p&gt;
+&lt;p&gt;代码耦合得越紧，代码错误扩散的机会也越大。反之，代码越松散，就如同减震器一样越能消除而非扩大这种错误的影响。&lt;/p&gt;
+&lt;p&gt;考虑下面各种可能存在的冲击和压力：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果我不启动连接？&lt;/li&gt;
+&lt;li&gt;如果连接需要10分钟？&lt;/li&gt;
+&lt;li&gt;如果已经连接，那它如何断开连接？&lt;/li&gt;
+&lt;li&gt;如果已经连接，而我却不能得到另一端的任何响应？&lt;/li&gt;
+&lt;li&gt;如果需要2分钟来回应我的查询请求？&lt;/li&gt;
+&lt;li&gt;如果同时有10000个请求？&lt;/li&gt;
+&lt;li&gt;如果网络陷入蠕虫的攻击而瘫痪，而我要将关于SQLException异常发生的错误信息写入日志时，我的磁盘已满？&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;网络永远是不可靠的，超时是让你放弃等待你认为不会到来的响应的一种简单机制。设置合理的超时可以隔离故障，在其他系统、子系统或设备中的问题不会成为你的问题。所有阻塞线程的资源池都应设置一个超时，以确保不管资源最后是否可用，线程都可以被解除阻塞。如果不这么做，就可能会永远等待了。&lt;/p&gt;
+&lt;p&gt;电路中的保险丝，自己先失效，从而控制整体失效。但是有人自己使用高电流低电阻的保险丝，从而不起到保险作用。软件系统中也可以使用断路器来保护。检测过度使用，然后先失效（跳闸），可以再重新设置恢复系统使用。&lt;/p&gt;
+">发布！软件的设计与部署</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/handle-password-expire-in-oracle/"" data-c="
+          &lt;p&gt;Oracle的用户密码默认是有一定的有效期限，前一阵子有提示密码快过期但是没理睬，于是等过期之后就无法用那个用户名连接oracle数据库了。&lt;/p&gt;
+&lt;p&gt;首先看看服务器里面的数据库连接配置使用了哪些用户名和密码，然后进入oracle用system用户连接，接下来，执行下面的SQL语句查看当前数据库中所有用户的状态：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT USERNAME,ACCOUNT_STATUS FROM DBA_USERS;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;查询结果类似这样：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;USERNAME&lt;/th&gt;
+&lt;th&gt;ACCOUNT_STATUS&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;TEST1&lt;/td&gt;
+&lt;td&gt;OPEN&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;TEST2&lt;/td&gt;
+&lt;td&gt;LOCKED&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;TEST3&lt;/td&gt;
+&lt;td&gt;EXPIRED &amp;amp;LOCKED&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SYSTEM&lt;/td&gt;
+&lt;td&gt;LOCKER&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;如果嫌密码总是会过期比较麻烦的话，可以执行下面的SQL语句，让密码生命周期不受限制：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;ALTER PROFILE DEFAULT LIMIT PASSWORD_LIFE_TIME UNLIMITED;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;针对已经过期的用户，如TEST3，需要重置它的密码（如密码设为test3）：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;ALTER USER TEST3 IDENTIFIED BY test3;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后解除用户的锁定，&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;ALTER USER TEST3 ACCOUNT UNLOCK;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;参考资料：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://hecpv.wordpress.com/2014/10/16/how-to-solve-ora-28001-the-password-has-expired/&#34;&gt;https://hecpv.wordpress.com/2014/10/16/how-to-solve-ora-28001-the-password-has-expired/&lt;/a&gt;&lt;/p&gt;
+">Oracle用户密码过期解决</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/reetrantlock-in-java/"" data-c="
+          &lt;h2 id=&#34;类说明&#34;&gt;类说明&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;ReetrantLock&lt;/code&gt;是一个可重入排它&lt;code&gt;Lock&lt;/code&gt;，和使用&lt;code&gt;synchronized&lt;/code&gt;方法和语句的隐式监视器锁有着相同的基本行为和语义，但是有着扩展性能。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ReentrantLock&lt;/code&gt;由上次成功加锁但是还没有解锁的线程所持有。在锁没有被其他线程持有时，一个线程调用&lt;code&gt;lock&lt;/code&gt;将返回成功获取锁。如果当前线程已经持有锁那么该方法将立即返回。这个可以使用方法&lt;code&gt;isHeldByCurrentThread&lt;/code&gt;和&lt;code&gt;getHoldCount&lt;/code&gt;检查。&lt;/p&gt;
+&lt;p&gt;这个类的构造器接收一个可选的公平性参数。当设为 true 时，在争用的情况下，锁倾向于授权给等待时间最长的线程。另外，这个锁不保证任何特定访问顺序。使用被多个线程访问的公平锁的程序将呈现比使用默认设置的情况较低的总吞吐量（也就是变慢了，通常是慢很多），但是在获取锁和保证不饥饿的时间上有较小的方差。&lt;/p&gt;
+&lt;p&gt;公平锁可以保证锁的获取按照FIFO原则，而代价是进行大量的线程切换。非公平性锁虽然可能造成线程饥饿，但是较少线程切换，保证了很大的吞吐量。&lt;/p&gt;
+&lt;p&gt;同样需要注意的是，不计时的&lt;code&gt;tryLock()&lt;/code&gt;方法不赞成公平设置。如果锁是可用的它将成功获得锁，而不管其他线程是否正在等待。&lt;/p&gt;
+&lt;p&gt;建议实践时永远在&lt;code&gt;lock&lt;/code&gt;后面立即跟上一个&lt;code&gt;try&lt;/code&gt;块，大多数典型的在构造之前/之后的情况是：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;class X{
+	private final ReentrantLock lock = new ReentrantLock();
+	//...
+	public void m(){
+		lock.lock(); // block until condition holds
+		try{
+			// ... method body
+		} finally {
+			lock.unlock();
+		}
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;除了实现&lt;code&gt;Lock&lt;/code&gt;接口，这个类定义了大量 public 和 protected 方法来检查锁的状态。其中有一些方法只用于仪表和监控。&lt;/p&gt;
+&lt;p&gt;这个类的序列化和内置锁的行为方式一致：反序列化的锁是处于解锁状态，在序列化的时候不管当前它的状态。&lt;/p&gt;
+&lt;p&gt;这个锁支持相同线程递归锁最大2147483647次。尝试超过这个限制将导致从加锁方法抛出&lt;code&gt;Error&lt;/code&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
+&lt;p&gt;JDK 1.7&lt;/p&gt;
+">Java中的可重入锁ReetrantLock</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/readwrite-lock-in-java/"" data-c="
+          &lt;p&gt;&lt;code&gt;ReadWriteLock&lt;/code&gt;是&lt;code&gt;java.util.concurrent.locks&lt;/code&gt;下面的接口，其内部方法结构如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-Java&#34;&gt;public interface ReadWriteLock{
+	Lock readLock();
+	Lock writeLock();
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;接口说明&#34;&gt;接口说明&lt;/h2&gt;
+&lt;p&gt;一个&lt;code&gt;ReadWriteLock&lt;/code&gt;维护一组关联的锁，一个用于只读的操作，另一个用来写。读锁可以被多个读线程同时持有，只要当前没有写线程。而写锁是排它的。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ReadWriteLock&lt;/code&gt;的所有实现必须保证&lt;code&gt;writeLock&lt;/code&gt;操作的内存同步影响（在&lt;code&gt;Lock&lt;/code&gt;接口中定义的），也保持关联的&lt;code&gt;readLock&lt;/code&gt;的影响。也就是说，一个成功获取读锁的线程将看到写锁之前版本所做的所有更新。&lt;/p&gt;
+&lt;p&gt;读写锁访问共享数据比允许一个排它锁的并发性大很多。它利用一次只有一个线程可以修改共享数据，大多数情况下任意数量可以同步读取数据的现实（所以叫读线程）。理论上，允许读写锁的使用对并发性的提高将导致比使用一个排它锁带来性能提升。在实践中，这个并发改善只有在多处理器上能够完全实现，并且只有共享数据的访问模式是合适的。&lt;/p&gt;
+&lt;p&gt;读写锁与排它锁是否提高性能取决于数据被读以及被修改的频率比较，读和写操作的持续时间，以及数据的争用情况——也就是说，同一时间尝试去读或尝试去写数据的线程的数量。例如，最初填充数据的集合此后很少被修改，而且频繁被搜索（比如一个目录），这就是读写锁使用的理想选择。但是，如果更新变的频繁，那么数据花费大量时间被排它锁定，那么就很少有并发上的提升。而且，如果读操作时间太短，读写锁实现的开销（读写锁所固有的比一个排它锁更复杂）可能在执行消耗中占主要部分，尤其是很多读写锁实现仍然通过一小段代码序列化所有线程。最终，只有分析和测量才能确定使用读写锁是否适合于你的应用。&lt;/p&gt;
+&lt;p&gt;尽管读写锁的基本操作是很简单，实现需要做出很多政策决定，这个将影响给定应用中的读写锁的效率。这些政策包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;当写线程释放写锁时，此时有读线程和写线程都在等待，确定是授权读锁还是写锁。通常倾向于给写线程，因为写操作一般比较短而且不频繁。通常不倾向于给读线程，因为如一般情况下那样如果读线程频繁写存活时间长读操作可能导致写的时间延迟。公平的讲，或者“按照顺序”的实现也是可以的。&lt;/li&gt;
+&lt;li&gt;当一个读线程活跃且一个写线程等待时，确定是否有读线程请求读锁，然后授权读锁。倾向于给读线程可能使得写线程无限期延迟，而倾向于写线程可能减少并发的潜力。&lt;/li&gt;
+&lt;li&gt;确定锁是否是可重入的：一个带写锁的线程能否重复获取写锁？当持有写锁的时候能否获取读锁？读锁本身是否可重入？&lt;/li&gt;
+&lt;li&gt;写锁能否在不允许干预写线程的情况下降级到读锁？读锁能否升级到写锁，优先于其他等待的读线程和写线程？&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;你应该在评估你应用的给定实现时考虑以上全部4点。&lt;/p&gt;
+&lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
+&lt;p&gt;JDK 1.7&lt;/p&gt;
+">Java中的ReadWriteLock</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/about/"" data-c="
+          &lt;p&gt;Goroyal Dai @ 苏州&lt;/p&gt;
+">关于</a>
+      </div>
+      
+    </div>
+    <div class="page">
+      <div id="page_ul"></div>
+    </div>
+  </div>
+</div>
+<script>
+  !function () {
+    let searchMask = document.querySelector('#search_mask');
+    let result = document.querySelector('#result');
+    let items = document.querySelectorAll('.item');
+    let searchBox = document.querySelector('#search');
+    let statCount = document.querySelector('#stat_count');
+    let statTimes = document.querySelector('#stat_times');
+    let pageUl = document.querySelector('#page_ul');
+    let close = document.querySelector('#close');
+    
+    close.addEventListener('click', function() {
+      searchMask.style = 'display: none;'
+    })
+
+    let finds = [];
+    let contents = [];
+    let pageSize = 10;
+    items.forEach(item => {
+      let a = item.querySelector('a');
+      contents.push({
+        title: a.innerText,
+        details: a.dataset.c,
+        link: a.href
+      })
+      item.remove();
+    })
+
+    function insertStr(soure, start, count) {
+      let newStr = soure.substr(start, count);
+      return soure.slice(0, start) + '<em>' + newStr + '</em>' + soure.slice(start + count);
+    }
+
+    pageUl.addEventListener('click', function(event) {
+      let target = event.target;
+      if (target.__proto__ === HTMLSpanElement.prototype) {
+        appendResults(parseInt(target.dataset.i));
+      }
+    })
+
+    function appendResults(index) {
+      let htmlResult = '';
+      let start = index || 0;
+      let end = Math.min(start + pageSize, finds.length);
+      for (let i = start; i < end; i++) {
+        const current = finds[i];
+        let html = current.title;
+        let sum = 0;
+        let positions = current.positions;
+        positions.forEach(position => {
+          html = insertStr(html, position.start + sum, position.count);
+          sum += 9;
+        })
+        htmlResult += `<div class="item"><a class="result-title" href="${current.link}">${html}</a></div>`;
+      }
+      result.innerHTML = htmlResult;
+      pageUl.innerHTML = '';
+      let count = finds.length / pageSize;
+      let lis = '';
+      if (start !== 0) {
+        lis += `<span class="fa fa-angle-left" data-i='${start - 1}'></span>`;
+      }
+      for (let i = 0; i < count; i++) {
+        lis += `<span class='${i === start?'current':''}' data-i='${i}'>${i+1}</span>`;     
+      }
+      if (start+1 < count) {
+        lis += `<span class="fa fa-angle-right" data-i='${start+1}'></span>`;  
+      }
+      pageUl.innerHTML = lis;
+    }
+
+    function search(delay) {
+      let timer = null
+      return function () {
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+          let start = Date.now();
+          let segments = searchBox.value.split(' ').filter(c => c != '');
+          if (segments.length <= 0) {
+            return;
+          }
+          finds = [];
+          let htmlResult = '';
+          contents.forEach(content => {
+            let title = content.title;
+            let positions = [];
+            let find = false;
+            segments.forEach((segment) => {
+              if (content.title.includes(segment)) {
+                find = true;
+                positions.push({
+                  start: content.title.indexOf(segment),
+                  count: segment.length
+                })
+              } else if (content.details.includes(segment)) {
+                find = true;
+              }
+            });
+            if (find) {
+              finds.push({
+                title: content.title,
+                link: content.link,
+                positions
+              });
+            }
+          })
+          appendResults(0);
+          statCount.textContent = finds.length;
+          statTimes.textContent = Date.now() - start;
+        }, delay)
+      }
+    }
+    searchBox.addEventListener('input', search(200));
+  }()
+</script>
+
+<input hidden id="copy" />
+<script>
+  let language = '';
+  if (language !== '') {
+    let map = new Map();
+    if (language === 'en') {
+      map.set('search', 'Search');
+      map.set('category', 'Categories');
+      map.set('article', 'Articles');
+      map.set('tag', 'Tags');
+      map.set('top', 'Top');
+      map.set('publish', 'published');
+      map.set('minute', ' minutes');
+      map.set('read-more', 'Read More');
+      map.set('view', 'View');
+      map.set('words', ' words');
+      map.set('category-in', 'category in');
+      map.set('preview', 'Meta');
+      map.set('index', 'Toc');
+      map.set('no-archives', "You haven't created yet");
+      map.set('archives', " articles in total");
+      map.set('cloud-tags', " tags in total");
+      map.set('copyright', "Copyright: ");
+      map.set('author', "Author: ");
+      map.set('link', "Link: ");
+      map.set('leave-message', "Leave a message");
+      map.set('format', "Links Format");
+      map.set('site-name', "Name: ");
+      map.set('site-link', "Link: ");
+      map.set('site-desc', "Desc: ");
+      map.set('stat', " related results, taking ");
+      map.set('stat-time', " ms");
+      map.set('site-img', "Image: ");
+    }
+
+    if (map.size > 0) {
+      let lanElems = document.querySelectorAll('.language');
+      lanElems.forEach(elem => {
+        let lan = elem.dataset.lan, text = map.get(lan);
+        if (elem.__proto__ === HTMLInputElement.prototype) {
+          elem.placeholder = text
+        } else {
+          if (elem.dataset.count) {
+            text = elem.dataset.count + text;
+          }
+          elem.textContent = text;
+        }
+      })
+    }
+  }
+  //拿来主义(真香)^_^，Clipboard 实现摘自掘金 https://juejin.im/post/5aefeb6e6fb9a07aa43c20af
+  window.Clipboard = (function (window, document, navigator) {
+    var textArea,
+      copy;
+
+    // 判断是不是ios端
+    function isOS() {
+      return navigator.userAgent.match(/ipad|iphone/i);
+    }
+    //创建文本元素
+    function createTextArea(text) {
+      textArea = document.createElement('textArea');
+      textArea.value = text;
+      textArea.style.width = 0;
+      textArea.style.height = 0;
+      textArea.clientHeight = 0;
+      textArea.clientWidth = 0;
+      document.body.appendChild(textArea);
+    }
+    //选择内容
+    function selectText() {
+      var range,
+        selection;
+
+      if (isOS()) {
+        range = document.createRange();
+        range.selectNodeContents(textArea);
+        selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        textArea.setSelectionRange(0, 999999);
+      } else {
+        textArea.select();
+      }
+    }
+
+    //复制到剪贴板
+    function copyToClipboard() {
+      try {
+        document.execCommand("Copy")
+      } catch (err) {
+        alert("复制错误！请手动复制！")
+      }
+      document.body.removeChild(textArea);
+    }
+
+    copy = function (text) {
+      createTextArea(text);
+      selectText();
+      copyToClipboard();
+    };
+
+    return {
+      copy: copy
+    };
+  })(window, document, navigator);
+
+  function copyCode(e) {
+    if (e.srcElement.tagName === 'SPAN' && e.srcElement.classList.contains('copy-code')) {
+      let code = e.currentTarget.querySelector('code');
+      var text = code.innerText;
+      if (e.srcElement.textContent === '复制成功') {
+        console.log('复制操作频率过高');
+        return;
+      }
+      e.srcElement.textContent = '复制成功';
+      (function (elem) {
+        setTimeout(() => {
+          if (elem.textContent === '复制成功') {
+            elem.textContent = '复制代码'
+          }
+        }, 1000);
+      })(e.srcElement)
+      Clipboard.copy(text);
+    }
+  }
+
+  let pres = document.querySelectorAll('pre');
+  pres.forEach(pre => {
+    let code = pre.querySelector('code');
+    let copyElem = document.createElement('span');
+    copyElem.classList.add('copy-code');
+    copyElem.textContent = '复制代码';
+    pre.appendChild(copyElem);
+    pre.onclick = copyCode
+  })
+
+</script>
+<script src="/media/js/motion.js"></script>
+
+<script src="https://cdn.jsdelivr.net/gh/cferdinandi/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script>
+<script>
+  var scroll = new SmoothScroll('a[href*="#"]', {
+    speed: 200
+  });
+</script>
+
+
+
+
+</html>
