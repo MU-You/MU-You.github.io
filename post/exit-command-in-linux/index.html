@@ -8,8 +8,8 @@
 <meta name="keywords" content="Goroyal technical blog">
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
-<title>Linux中的exit命令 | Goroyal&#39;s blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1590077799974">
+<title>Linux 中的 exit 命令 | Goroyal&#39;s blog</title>
+<link rel="shortcut icon" href="/favicon.ico?v=1590078137296">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -38,7 +38,7 @@
 
 
 
-  <meta name="description" content="Linux中的exit命令" />
+  <meta name="description" content="Linux 中的 exit 命令" />
   <meta name="keywords" content="Linux" />
 </head>
 
@@ -190,7 +190,8 @@
       <div class="sidebar-body gemini" id="sidebar_body">
         
           
-            
+            <div class="post-side-meta" id="post_side_meta">
+              
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -225,6 +226,195 @@
 
 
 </div>
+            </div>
+            <div class="post-toc sidebar-body-active" id="post_toc" style="opacity: 1;">
+              <div class="toc-box right-motion">
+  <div class="toc-wrapper auto-number auto"
+    id="toc_wrapper">
+    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+</div>
+
+<script>
+
+  let lastTop = 0, lList = [], hList = [], postBody, lastIndex = -1;
+  let active = 'active-show', activeClass = 'active-current';
+  let tocWrapper = document.querySelector('#toc_wrapper');
+  let tocContent = tocWrapper.children[0];
+  let autoNumber = tocWrapper && tocWrapper.classList.contains('auto-number');
+
+  function addTocNumber(elem, deep) {
+    if (!elem) {
+      return;
+    }
+    let prop = elem.__proto__;
+
+    if (prop === HTMLUListElement.prototype) {
+      for (let i = 0; i < elem.children.length; i++) {
+        addTocNumber(elem.children[i], deep + (i + 1) + '.');
+      }
+    } else if (prop === HTMLLIElement.prototype) {
+      // 保存li元素
+      if (elem.children[0].__proto__ === HTMLAnchorElement.prototype) {
+        lList.push(elem);
+      }
+      for (let i = 0; i < elem.children.length; i++) {
+        let cur = elem.children[i];
+        if (cur.__proto__ === HTMLAnchorElement.prototype) {
+          if (autoNumber) {
+            cur.text = deep + ' ' + cur.text;
+          }
+        } else if (cur.__proto__ === HTMLUListElement.prototype) {
+          addTocNumber(cur, deep);
+        }
+      }
+    }
+  }
+
+  function removeParentActiveClass() {
+    let parents = tocContent.querySelectorAll('.' + active)
+    parents.forEach(function (elem) {
+      elem.classList.remove(active);
+    });
+  }
+
+  function addActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.add(activeClass);
+    }
+  }
+
+  function removeActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.remove(activeClass);
+    }
+  }
+
+  function addActiveLiElemment(elem, parent) {
+    if (!elem || elem === parent) {
+      return;
+    } else {
+      if (elem.__proto__ === HTMLLIElement.prototype) {
+        elem.classList.add(active);
+      }
+      addActiveLiElemment(elem.parentElement, parent);
+    }
+  }
+
+  function showToc() {
+    if (tocWrapper) {
+      postBody = document.querySelector('#post_body');
+      for (let i = 0; i < postBody.children.length; i++) {
+        if (postBody.children[i].__proto__ === HTMLHeadingElement.prototype) {
+          hList.push(postBody.children[i]);
+        }
+      }
+      if (tocWrapper.classList.contains('compress')) {
+        tocContent.classList.add('closed');
+      } else if (tocWrapper.classList.contains('no_compress')) {
+        tocContent.classList.add('expanded');
+      } else {
+        if (hList.length > 10) {
+          active = 'active-hidden'
+          tocContent.classList.add('closed');
+        } else {
+          tocContent.classList.add('expanded');
+        }
+      }
+    }
+  }
+
+  (function () {
+    // 处理不是从#一级标题开始目录
+    if (tocContent.children.length === 1 && tocContent.children[0].__proto__ === HTMLLIElement.prototype) {
+      let con = tocContent.children[0].children[0];
+      tocContent.innerHTML = con.innerHTML;
+    }
+    let markdownItTOC = document.querySelector('.markdownIt-TOC');
+    let innerHeight = window.innerHeight;
+    markdownItTOC.style = `max-height: ${innerHeight - 80 > 0 ? innerHeight - 80 : innerHeight}px`
+    addTocNumber(tocContent, '');
+  })();
+
+  document.addEventListener('scroll', function (e) {
+    if (lList.length <= 0) {
+      return;
+    }
+    let scrollTop = document.scrollingElement.scrollTop + 10;
+    let dir;
+
+    if (lastTop - scrollTop > 0) {
+      dir = 'up';
+    } else {
+      dir = 'down';
+    }
+
+    lastTop = scrollTop;
+    if (scrollTop <= 0) {
+      if (lastIndex >= 0 && lastIndex < hList.length) {
+        lList[lastIndex].classList.remove(activeClass);
+      }
+      return;
+    }
+
+    let current = 0, hasFind = false;
+    for (let i = 0; i < hList.length; i++) {
+      if (hList[i].offsetTop > scrollTop) {
+        current = i;
+        hasFind = true;
+        break;
+      }
+    }
+    if (!hasFind && scrollTop > lList[lList.length - 1].offsetTop) {
+      current = hList.length - 1;
+    } else {
+      current--;
+    }
+    if (dir === 'down') {
+      if (current > lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex)
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    } else {
+      if (current < lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex);
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    }
+  });
+
+
+  window.addEventListener('load', function () {
+    showToc();
+    document.querySelector('#sidebar').style = 'display: block;';
+    tocWrapper.classList.add('toc-active');
+    setTimeout(function () {
+      if ("createEvent" in document) {
+        let evt = document.createEvent("HTMLEvents");
+        evt.initEvent("scroll", false, true);
+        document.dispatchEvent(evt);
+      }
+      else {
+        document.fireEvent("scroll");
+      }
+    }, 500)
+  })
+
+</script>
+            </div>
           
         
       </div>
@@ -313,7 +503,7 @@
             <header class="post-header">
   <h1 class="post-title">
     <a class="post-title-link" href="https://goroyal.github.io/post/exit-command-in-linux/">
-      Linux中的exit命令
+      Linux 中的 exit 命令
     </a>
   </h1>
   <div class="post-meta">
@@ -345,12 +535,12 @@
     <span class="meta-item">
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
-      <span>239<span class="pc-show language" data-lan="words">字数</span></span>
+      <span>257<span class="pc-show language" data-lan="words">字数</span></span>
     </span>
     
     
     
-    <span id="/post/exit-command-in-linux/" data-flag-title="Linux中的exit命令" class="meta-item pc-show leancloud_visitors">
+    <span id="/post/exit-command-in-linux/" data-flag-title="Linux 中的 exit 命令" class="meta-item pc-show leancloud_visitors">
       <span class="post-meta-divider">|</span>
       <i class="fa fa-eye"></i>
       <span><span class="language" data-lan="view">浏览量</span>：<span class="leancloud-visitors-count"></span></span>
@@ -359,23 +549,57 @@
   </div>
 </header>
             <div class="post-body next-md-body" id="post_body">
-              <p>我们在linux的命令行里面会用到exit，比方说退出某个shell。在shell脚本中这个命令可以终止脚本的执行。exit后面是可以接一个数字表示退出时候的状态。</p>
+              <p>本文亦发布于<a href="https://thinkbucket.cn/blog/2020/02/11/linux-exit/">ThinkBucket</a>。<br>
+我们在 Linux 的命令行里面会用到<code>exit</code>，比方说退出某个 shell。在 shell 脚本中这个命令可以终止脚本的执行。<code>exit</code>后面是可以接一个数字表示退出时候的状态。</p>
+<!-- more -->
 <p><code>exit(0)</code>一般表示成功结束，其他的是不成功的，如<code>exit(1)</code>。对于一些系统程序而言，这些错误编号是有含义的：</p>
-<ul>
-<li>1　　　　　　　　  一般性未知错误</li>
-<li>2　　　　　　　　  不适合的shell命令</li>
-<li>126 　　　　　　　命令不可执行</li>
-<li>127 　　　　　　　没找到命令</li>
-<li>128 　　　　　　　无效的退出参数</li>
-<li>128+x 　　　　　　与Linux信号x相关的严重错误</li>
-<li>130 　　　　　　　通过Ctrl+C终止的命令</li>
-<li>255 　　　　　　　正常范围之外的退出状态码</li>
-</ul>
-<p>不带数字直接<code>exit</code>，脚本的退出状态码就由脚本里面最后执行的命令来决定（即exit之前的命令）。</p>
+<table>
+<thead>
+<tr>
+<th>exit 错误编号</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>一般性未知错误</td>
+</tr>
+<tr>
+<td>2</td>
+<td>不适合的 shell 命令</td>
+</tr>
+<tr>
+<td>126</td>
+<td>命令不可执行</td>
+</tr>
+<tr>
+<td>127</td>
+<td>没找到命令</td>
+</tr>
+<tr>
+<td>128</td>
+<td>无效的退出参数</td>
+</tr>
+<tr>
+<td>128 + x</td>
+<td>与 Linux 信号<code>x</code>相关的严重错误</td>
+</tr>
+<tr>
+<td>130</td>
+<td>通过<code>Ctrl + C</code>终止的命令</td>
+</tr>
+<tr>
+<td>255</td>
+<td>正常范围之外的退出状态码</td>
+</tr>
+</tbody>
+</table>
+<p>不带数字直接<code>exit</code>，脚本的退出状态码就由脚本里面最后执行的命令来决定（即<code>exit</code>之前的命令）。</p>
 <p>至于<code>exit $?</code>，它和<code>exit</code>是一样的作用。</p>
-<p>参考：</p>
+<h2 id="参考资料">参考资料</h2>
 <ul>
-<li><a href="http://man.linuxde.net/exit">Linux命令大全</a></li>
+<li><a href="http://man.linuxde.net/exit">Linux 命令大全</a></li>
 <li><a href="https://www.ixdba.net/docs/shell/exit-status.html">退出和退出状态码</a></li>
 </ul>
 
@@ -389,7 +613,7 @@
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="https://goroyal.github.io/post/exit-command-in-linux/" title="Linux中的exit命令">https://goroyal.github.io/post/exit-command-in-linux/</a>
+      <a href="https://goroyal.github.io/post/exit-command-in-linux/" title="Linux 中的 exit 命令">https://goroyal.github.io/post/exit-command-in-linux/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -648,7 +872,8 @@
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/linux-redirect-dev-null/"" data-c="
-          &lt;p&gt;在 Linux 的 shell 命令或者脚本中，我们经常看到这样的命令：&lt;/p&gt;
+          &lt;p&gt;本文亦发布于&lt;a href=&#34;https://thinkbucket.cn/blog/2020/05/21/linux-redirect-dev-null&#34;&gt;ThinkBucket&lt;/a&gt;。&lt;br&gt;
+在 Linux 的 shell 命令或者脚本中，我们经常看到这样的命令：&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;2&amp;gt; /dev/null
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;这是何意？&lt;/p&gt;
@@ -1003,26 +1228,60 @@ http://www.itzhai.com/java-based-notebook-annotation-annotation-introduction-and
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/exit-command-in-linux/"" data-c="
-          &lt;p&gt;我们在linux的命令行里面会用到exit，比方说退出某个shell。在shell脚本中这个命令可以终止脚本的执行。exit后面是可以接一个数字表示退出时候的状态。&lt;/p&gt;
+          &lt;p&gt;本文亦发布于&lt;a href=&#34;https://thinkbucket.cn/blog/2020/02/11/linux-exit/&#34;&gt;ThinkBucket&lt;/a&gt;。&lt;br&gt;
+我们在 Linux 的命令行里面会用到&lt;code&gt;exit&lt;/code&gt;，比方说退出某个 shell。在 shell 脚本中这个命令可以终止脚本的执行。&lt;code&gt;exit&lt;/code&gt;后面是可以接一个数字表示退出时候的状态。&lt;/p&gt;
+&lt;!-- more --&gt;
 &lt;p&gt;&lt;code&gt;exit(0)&lt;/code&gt;一般表示成功结束，其他的是不成功的，如&lt;code&gt;exit(1)&lt;/code&gt;。对于一些系统程序而言，这些错误编号是有含义的：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;1　　　　　　　　  一般性未知错误&lt;/li&gt;
-&lt;li&gt;2　　　　　　　　  不适合的shell命令&lt;/li&gt;
-&lt;li&gt;126 　　　　　　　命令不可执行&lt;/li&gt;
-&lt;li&gt;127 　　　　　　　没找到命令&lt;/li&gt;
-&lt;li&gt;128 　　　　　　　无效的退出参数&lt;/li&gt;
-&lt;li&gt;128+x 　　　　　　与Linux信号x相关的严重错误&lt;/li&gt;
-&lt;li&gt;130 　　　　　　　通过Ctrl+C终止的命令&lt;/li&gt;
-&lt;li&gt;255 　　　　　　　正常范围之外的退出状态码&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;不带数字直接&lt;code&gt;exit&lt;/code&gt;，脚本的退出状态码就由脚本里面最后执行的命令来决定（即exit之前的命令）。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;exit 错误编号&lt;/th&gt;
+&lt;th&gt;含义&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;一般性未知错误&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;不适合的 shell 命令&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;126&lt;/td&gt;
+&lt;td&gt;命令不可执行&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;127&lt;/td&gt;
+&lt;td&gt;没找到命令&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;128&lt;/td&gt;
+&lt;td&gt;无效的退出参数&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;128 + x&lt;/td&gt;
+&lt;td&gt;与 Linux 信号&lt;code&gt;x&lt;/code&gt;相关的严重错误&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;130&lt;/td&gt;
+&lt;td&gt;通过&lt;code&gt;Ctrl + C&lt;/code&gt;终止的命令&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;255&lt;/td&gt;
+&lt;td&gt;正常范围之外的退出状态码&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;不带数字直接&lt;code&gt;exit&lt;/code&gt;，脚本的退出状态码就由脚本里面最后执行的命令来决定（即&lt;code&gt;exit&lt;/code&gt;之前的命令）。&lt;/p&gt;
 &lt;p&gt;至于&lt;code&gt;exit $?&lt;/code&gt;，它和&lt;code&gt;exit&lt;/code&gt;是一样的作用。&lt;/p&gt;
-&lt;p&gt;参考：&lt;/p&gt;
+&lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://man.linuxde.net/exit&#34;&gt;Linux命令大全&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://man.linuxde.net/exit&#34;&gt;Linux 命令大全&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.ixdba.net/docs/shell/exit-status.html&#34;&gt;退出和退出状态码&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-">Linux中的exit命令</a>
+">Linux 中的 exit 命令</a>
       </div>
       
       <div class="item">

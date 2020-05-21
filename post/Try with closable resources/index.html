@@ -9,7 +9,7 @@
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
 <title>Try with closable resources | Goroyal&#39;s blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1590077799974">
+<link rel="shortcut icon" href="/favicon.ico?v=1590078137296">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -635,7 +635,8 @@ try {
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/linux-redirect-dev-null/"" data-c="
-          &lt;p&gt;在 Linux 的 shell 命令或者脚本中，我们经常看到这样的命令：&lt;/p&gt;
+          &lt;p&gt;本文亦发布于&lt;a href=&#34;https://thinkbucket.cn/blog/2020/05/21/linux-redirect-dev-null&#34;&gt;ThinkBucket&lt;/a&gt;。&lt;br&gt;
+在 Linux 的 shell 命令或者脚本中，我们经常看到这样的命令：&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;2&amp;gt; /dev/null
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;这是何意？&lt;/p&gt;
@@ -990,26 +991,60 @@ http://www.itzhai.com/java-based-notebook-annotation-annotation-introduction-and
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/exit-command-in-linux/"" data-c="
-          &lt;p&gt;我们在linux的命令行里面会用到exit，比方说退出某个shell。在shell脚本中这个命令可以终止脚本的执行。exit后面是可以接一个数字表示退出时候的状态。&lt;/p&gt;
+          &lt;p&gt;本文亦发布于&lt;a href=&#34;https://thinkbucket.cn/blog/2020/02/11/linux-exit/&#34;&gt;ThinkBucket&lt;/a&gt;。&lt;br&gt;
+我们在 Linux 的命令行里面会用到&lt;code&gt;exit&lt;/code&gt;，比方说退出某个 shell。在 shell 脚本中这个命令可以终止脚本的执行。&lt;code&gt;exit&lt;/code&gt;后面是可以接一个数字表示退出时候的状态。&lt;/p&gt;
+&lt;!-- more --&gt;
 &lt;p&gt;&lt;code&gt;exit(0)&lt;/code&gt;一般表示成功结束，其他的是不成功的，如&lt;code&gt;exit(1)&lt;/code&gt;。对于一些系统程序而言，这些错误编号是有含义的：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;1　　　　　　　　  一般性未知错误&lt;/li&gt;
-&lt;li&gt;2　　　　　　　　  不适合的shell命令&lt;/li&gt;
-&lt;li&gt;126 　　　　　　　命令不可执行&lt;/li&gt;
-&lt;li&gt;127 　　　　　　　没找到命令&lt;/li&gt;
-&lt;li&gt;128 　　　　　　　无效的退出参数&lt;/li&gt;
-&lt;li&gt;128+x 　　　　　　与Linux信号x相关的严重错误&lt;/li&gt;
-&lt;li&gt;130 　　　　　　　通过Ctrl+C终止的命令&lt;/li&gt;
-&lt;li&gt;255 　　　　　　　正常范围之外的退出状态码&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;不带数字直接&lt;code&gt;exit&lt;/code&gt;，脚本的退出状态码就由脚本里面最后执行的命令来决定（即exit之前的命令）。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;exit 错误编号&lt;/th&gt;
+&lt;th&gt;含义&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;一般性未知错误&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;不适合的 shell 命令&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;126&lt;/td&gt;
+&lt;td&gt;命令不可执行&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;127&lt;/td&gt;
+&lt;td&gt;没找到命令&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;128&lt;/td&gt;
+&lt;td&gt;无效的退出参数&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;128 + x&lt;/td&gt;
+&lt;td&gt;与 Linux 信号&lt;code&gt;x&lt;/code&gt;相关的严重错误&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;130&lt;/td&gt;
+&lt;td&gt;通过&lt;code&gt;Ctrl + C&lt;/code&gt;终止的命令&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;255&lt;/td&gt;
+&lt;td&gt;正常范围之外的退出状态码&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;不带数字直接&lt;code&gt;exit&lt;/code&gt;，脚本的退出状态码就由脚本里面最后执行的命令来决定（即&lt;code&gt;exit&lt;/code&gt;之前的命令）。&lt;/p&gt;
 &lt;p&gt;至于&lt;code&gt;exit $?&lt;/code&gt;，它和&lt;code&gt;exit&lt;/code&gt;是一样的作用。&lt;/p&gt;
-&lt;p&gt;参考：&lt;/p&gt;
+&lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://man.linuxde.net/exit&#34;&gt;Linux命令大全&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://man.linuxde.net/exit&#34;&gt;Linux 命令大全&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.ixdba.net/docs/shell/exit-status.html&#34;&gt;退出和退出状态码&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-">Linux中的exit命令</a>
+">Linux 中的 exit 命令</a>
       </div>
       
       <div class="item">
