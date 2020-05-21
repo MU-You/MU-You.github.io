@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://goroyal.github.io//favicon.ico?v=1561567993727">
+<link rel="shortcut icon" href="https://goroyal.github.io//favicon.ico?v=1590074244195">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://goroyal.github.io//styles/main.css">
 
@@ -36,7 +36,7 @@
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://goroyal.github.io/">
-        <img src="https://goroyal.github.io//images/avatar.png?v=1561567993727" class="site-logo">
+        <img src="https://goroyal.github.io//images/avatar.png?v=1590074244195" class="site-logo">
         <h1 class="site-title">Goroyal&#39;s blog</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -108,8 +108,8 @@
 <p>测试覆盖率不完全是看单元测试，还包括更高层次的集成测试、系统测试。当然了，如果单元测试没写多少，指望粒度更粗层次更高的其他测试，你会非常痛苦的。单元测试的2个优势：跑得快、容易定位问题。</p>
 <p>上面说了这么多，就是在强调单元测试覆盖率一定要尽可能高，每个单元测试职责一定要尽可能单一简单。单元测试覆盖无非就是代码行覆盖、分支覆盖，单元测试职责单一简单是说单元测试不要试图测某个方法的所有可能性，多写几个，这样出了问题能根据测试名字迅速找到为什么什么用例失败了以及被测方法的哪行可能有问题。</p>
 <h2 id="2-单元测试为何难写">2. 单元测试为何难写？</h2>
-<p>你可能听说过“测试驱动开发”，就是先写测试、后写代码，这个要求在写代码之前先好好分析需求、细化用例，把各个用例的测试写出来，每次改动代码都要求让尽可能多的测试结果为绿（成功），直到最后所有测试都绿了，那么代码的功能上也基本没问题了。这个可以了解下，有兴趣多看看这方面拓展一下。
-<img src="https://goroyal.github.io//post-images/1560780095750.png" alt=""></p>
+<p>你可能听说过“测试驱动开发”，就是先写测试、后写代码，这个要求在写代码之前先好好分析需求、细化用例，把各个用例的测试写出来，每次改动代码都要求让尽可能多的测试结果为绿（成功），直到最后所有测试都绿了，那么代码的功能上也基本没问题了。这个可以了解下，有兴趣多看看这方面拓展一下。<br>
+<img src="https://goroyal.github.io//post-images/1560780095750.png" alt="" loading="lazy"></p>
 <p>为什么单元测试覆盖率往往上不去？因为有时候真的不好写。什么样的代码不好写单元测试：</p>
 <ol>
 <li>被测方法传入了比较复杂的类的对象参数（不是依赖接口），当我要测这个方法，我就要去new依赖的那个对象，但是那个对象又依赖其他的，我又要接着new……，可能这个方法还没开始测，光创建它依赖的东西就写了一大堆测试代码。</li>
@@ -136,7 +136,7 @@
             
               <div class="tag-container">
                 
-                  <a href="https://goroyal.github.io//tag/16eTJqumR" class="tag">
+                  <a href="https://goroyal.github.io/tag/16eTJqumR/" class="tag">
                     UnitTest
                   </a>
                 
@@ -145,7 +145,7 @@
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://goroyal.github.io//post/http-response-code">
+                <a href="https://goroyal.github.io/post/http-response-code/">
                   <h3 class="post-title">
                     HTTP 响应状态码
                   </h3>

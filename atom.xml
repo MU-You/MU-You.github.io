@@ -2,29 +2,100 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://goroyal.github.io/</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2019-06-26T16:53:15.759Z</updated>
+    <updated>2020-05-21T15:19:10.904Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://goroyal.github.io/"/>
-    <link rel="self" href="https://goroyal.github.io//atom.xml"/>
+    <link rel="self" href="https://goroyal.github.io/atom.xml"/>
     <subtitle>学习分享</subtitle>
-    <logo>https://goroyal.github.io//images/avatar.png</logo>
-    <icon>https://goroyal.github.io//favicon.ico</icon>
-    <rights>All rights reserved 2019, Goroyal&apos;s blog</rights>
+    <logo>https://goroyal.github.io/images/avatar.png</logo>
+    <icon>https://goroyal.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2020, Goroyal&apos;s blog</rights>
     <entry>
-        <title type="html"><![CDATA[纯函数]]></title>
-        <id>https://goroyal.github.io//post/pure-function</id>
-        <link href="https://goroyal.github.io//post/pure-function">
+        <title type="html"><![CDATA[Linux 中的 2> /dev/null]]></title>
+        <id>https://goroyal.github.io/post/linux-zhong-de-2greater-devnull/</id>
+        <link href="https://goroyal.github.io/post/linux-zhong-de-2greater-devnull/">
+        </link>
+        <updated>2020-05-21T15:12:33.000Z</updated>
+        <summary type="html"><![CDATA[<p>在 Linux 的 shell 命令或者脚本中，我们经常看到这样的命令：</p>
+<pre><code class="language-shell">2&gt; /dev/null
+</code></pre>
+<p>这是何意？</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>在 Linux 的 shell 命令或者脚本中，我们经常看到这样的命令：</p>
+<pre><code class="language-shell">2&gt; /dev/null
+</code></pre>
+<p>这是何意？</p>
+ <!-- more --> 
+<h2 id="linux-进程">Linux 进程</h2>
+<p>以 bash 为例，shell 中执行一个命令时，其实是由 bash shell fork 出一个子进程，然后在这个子进程中运行相应的命令，直至退出。Linux 里的进程的数据结构如下：</p>
+<pre><code class="language-C">struct task_struct {
+	// 进程状态
+	long state;
+	// 虚拟内存结构体
+	struct mm_struct *mm;
+	// 进程号
+	pid_t pid;
+	// 指向父进程的指针
+	struct task_struct __rcu *parent;
+	// 子进程列表
+	struct list_head children;
+	// 存放文件系统信息的指针
+	struct fs_struct *fs;
+	// 一个数组，包含该进程打开的文件指针
+	struct files_struct *files;
+};
+</code></pre>
+<p><code>task_struct</code> 就是 Linux 对于一个进程的描述，也可以称之为进程描述符。其中的 <code>files</code> 指针指向一个数组，表示当前进程打开的所有文件。</p>
+<p><strong>每个进程被创建时，<code>files</code> 指向的数组前三位被填入默认值，分别指向标准输入流、标准输出流、标准错误流。我们常说的「文件描述符」就是指这个文件指针数组的索引，所以程序的文件描述符默认情况下 0 是输入，1 是输出，2 是错误。</strong></p>
+<p>:::tip</p>
+<p>Linux 中的所有设备都是抽象成文件的，设备可以当作文件一样读和写。</p>
+<p>:::</p>
+<h2 id="重定向">重定向</h2>
+<p>Linux shell 里通过 <code>&gt;</code>、<code>&lt;</code>进行输出、输入的重定向。</p>
+<ul>
+<li><code>&gt;</code>：将 shell 命令的输出指向某个地方，可以是文件，也可以是内存里的某个变量。比如 <code>ls -l &gt; file.txt</code> 就是把当前路径下的文件信息保存到 file.txt 文本中，如果没有这个重定向，它会将结果输出到显示器屏幕上。</li>
+<li><code>&lt;</code>：从某个地方读取内容作为 shell 命令的输入，可以是文件，也可以是内存里的某个变量。比如 <code>{command} &lt; file.txt</code>，如果没有这个重定向，它会从键盘读取输入。</li>
+</ul>
+<p>此外，shell 还可以通过 <code>|</code> 将前一个命令的输出作为下一个命令的输入，比如：</p>
+<pre><code class="language-shell"># 在命令历史中找到包含 ssh 字符串的命令
+history | grep ssh
+</code></pre>
+<h2 id="2-devnull">2&gt; /dev/null</h2>
+<p>通过上面的章节可以知道，<code>2</code> 表示标准错误，<code>&gt;</code> 表示将标准错误重定向到某个地方。</p>
+<p><code>/dev/null</code> 是一个特殊文件，在Unix系统中称为 null 设备。 通俗地说，它也称为比特桶（bit bucket，也译作比特垃圾桶）或黑洞（blackhole），因为它会立即丢弃写入其中的任何内容，并且在读取时仅返回文件结束EOF。</p>
+<p>所以这个命令合起来就是将忽略执行命令产生的错误。比如：</p>
+<pre><code class="language-shell"># 删除当前路径下的folder目录，如果不存在则忽略错误
+rm -r folder 2&gt; /dev/null
+</code></pre>
+<p>:::caution</p>
+<p><code>2</code>和<code>&gt;</code>之间不能有空格</p>
+<p>:::</p>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li><a href="https://bash.cyberciti.biz/guide/What_is_a_Process%3F">What is a Process?</a></li>
+<li><a href="https://github.com/labuladong/fucking-algorithm/blob/master/%E6%8A%80%E6%9C%AF/linux%E8%BF%9B%E7%A8%8B.md">Linux的进程、线程、文件描述符是什么</a></li>
+<li><a href="https://zh.wikipedia.org/wiki//dev/null">维基百科：/dev/null</a></li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[面向对象编程与纯函数]]></title>
+        <id>https://goroyal.github.io/post/oop-and-pure-function/</id>
+        <link href="https://goroyal.github.io/post/oop-and-pure-function/">
         </link>
         <updated>2019-06-26T16:51:40.000Z</updated>
-        <content type="html"><![CDATA[<p>纯函数是一种特殊的函数，给它相同的输入永远会得到相同的输出，而且没有任何可观察的副作用。</p>
+        <content type="html"><![CDATA[<p>在面向对象编程里面，我们常常对现实世界建模抽象成一个个类，然后创建它们的对象，通过对象的方法行为去描述逻辑。</p>
+<p>纯函数是一种特殊的函数，给它相同的输入永远会得到相同的输出，而且没有任何可观察的副作用。</p>
 <hr>
 <p>占位符，待更。</p>
+<p>https://llh911001.gitbooks.io/mostly-adequate-guide-chinese/content/ch3.html#%E8%BF%BD%E6%B1%82%E2%80%9C%E7%BA%AF%E2%80%9D%E7%9A%84%E7%90%86%E7%94%B1<br>
+https://www.jiqizhixin.com/articles/2018-10-22-15</p>
 ]]></content>
     </entry>
     <entry>
         <title type="html"><![CDATA[管理多个Java版本]]></title>
-        <id>https://goroyal.github.io//post/manage-multiple-java-versions</id>
-        <link href="https://goroyal.github.io//post/manage-multiple-java-versions">
+        <id>https://goroyal.github.io/post/manage-multiple-java-versions/</id>
+        <link href="https://goroyal.github.io/post/manage-multiple-java-versions/">
         </link>
         <updated>2019-06-26T16:30:26.000Z</updated>
         <content type="html"><![CDATA[<p>自从Oracle宣布Java开始收费之后，越来越多的人会考虑从<a href="https://openjdk.java.net/install/">Open JDK</a>下载安装Java环境。可能自己机器上也会同时并存好几个Java版本，本文以macOS为例介绍一下如何从Open JDK安装并进行管理多版本。</p>
@@ -70,8 +141,8 @@ function java12() {
     </entry>
     <entry>
         <title type="html"><![CDATA[Try with closable resources]]></title>
-        <id>https://goroyal.github.io//post/Try with closable resources</id>
-        <link href="https://goroyal.github.io//post/Try with closable resources">
+        <id>https://goroyal.github.io/post/Try with closable resources/</id>
+        <link href="https://goroyal.github.io/post/Try with closable resources/">
         </link>
         <updated>2019-06-17T14:41:03.000Z</updated>
         <content type="html"><![CDATA[<p>以前，拿到一个closable资源后，如果对它操作，都要先用try包起来，最后一定要在finally里面关掉：</p>
@@ -99,8 +170,8 @@ try {
     </entry>
     <entry>
         <title type="html"><![CDATA[以单元测试的角度聊聊写代码]]></title>
-        <id>https://goroyal.github.io//post/wring-code-from-unit-test-side</id>
-        <link href="https://goroyal.github.io//post/wring-code-from-unit-test-side">
+        <id>https://goroyal.github.io/post/wring-code-from-unit-test-side/</id>
+        <link href="https://goroyal.github.io/post/wring-code-from-unit-test-side/">
         </link>
         <updated>2019-05-24T12:25:28.000Z</updated>
         <content type="html"><![CDATA[<p>单元测试，也就是对代码较细粒度单元的测试，一般就是测某个方法或函数。说到单元测试，基本上每个开发者都不陌生，时不时会听到“测试覆盖率太低了！”，然后“We need to increase our code coverage!”。经常出bug？好好准备测试吧。</p>
@@ -109,8 +180,8 @@ try {
 <p>测试覆盖率不完全是看单元测试，还包括更高层次的集成测试、系统测试。当然了，如果单元测试没写多少，指望粒度更粗层次更高的其他测试，你会非常痛苦的。单元测试的2个优势：跑得快、容易定位问题。</p>
 <p>上面说了这么多，就是在强调单元测试覆盖率一定要尽可能高，每个单元测试职责一定要尽可能单一简单。单元测试覆盖无非就是代码行覆盖、分支覆盖，单元测试职责单一简单是说单元测试不要试图测某个方法的所有可能性，多写几个，这样出了问题能根据测试名字迅速找到为什么什么用例失败了以及被测方法的哪行可能有问题。</p>
 <h2 id="2-单元测试为何难写">2. 单元测试为何难写？</h2>
-<p>你可能听说过“测试驱动开发”，就是先写测试、后写代码，这个要求在写代码之前先好好分析需求、细化用例，把各个用例的测试写出来，每次改动代码都要求让尽可能多的测试结果为绿（成功），直到最后所有测试都绿了，那么代码的功能上也基本没问题了。这个可以了解下，有兴趣多看看这方面拓展一下。
-<img src="https://goroyal.github.io//post-images/1560780095750.png" alt=""></p>
+<p>你可能听说过“测试驱动开发”，就是先写测试、后写代码，这个要求在写代码之前先好好分析需求、细化用例，把各个用例的测试写出来，每次改动代码都要求让尽可能多的测试结果为绿（成功），直到最后所有测试都绿了，那么代码的功能上也基本没问题了。这个可以了解下，有兴趣多看看这方面拓展一下。<br>
+<img src="https://goroyal.github.io//post-images/1560780095750.png" alt="" loading="lazy"></p>
 <p>为什么单元测试覆盖率往往上不去？因为有时候真的不好写。什么样的代码不好写单元测试：</p>
 <ol>
 <li>被测方法传入了比较复杂的类的对象参数（不是依赖接口），当我要测这个方法，我就要去new依赖的那个对象，但是那个对象又依赖其他的，我又要接着new……，可能这个方法还没开始测，光创建它依赖的东西就写了一大堆测试代码。</li>
@@ -136,8 +207,8 @@ try {
     </entry>
     <entry>
         <title type="html"><![CDATA[HTTP 响应状态码]]></title>
-        <id>https://goroyal.github.io//post/http-response-code</id>
-        <link href="https://goroyal.github.io//post/http-response-code">
+        <id>https://goroyal.github.io/post/http-response-code/</id>
+        <link href="https://goroyal.github.io/post/http-response-code/">
         </link>
         <updated>2019-04-06T12:14:38.000Z</updated>
         <content type="html"><![CDATA[<p>目前HTTP在Web开发中被广泛使用，REST (Representational State Transfer) 很多人应该或多或少都知道些。当然了，比较熟悉的可能主要是GET、POST方法。这篇文章不是介绍REST的定义和如何创建符合REST风格的API，而是讲讲在Web开发中通用的不同HTTP响应状态码的含义。在普通网站开发、分布式集群开发、团队协作方面，如果采用了HTTP作为组件之间交互的协议，遵守通用的响应状态码是很有必要的（一是有充分的信息量、二是避免歧义）。</p>
@@ -191,17 +262,17 @@ try {
     </entry>
     <entry>
         <title type="html"><![CDATA[Java中的注解]]></title>
-        <id>https://goroyal.github.io//post/java-annotation</id>
-        <link href="https://goroyal.github.io//post/java-annotation">
+        <id>https://goroyal.github.io/post/java-annotation/</id>
+        <link href="https://goroyal.github.io/post/java-annotation/">
         </link>
         <updated>2019-02-06T12:17:45.000Z</updated>
         <content type="html"><![CDATA[<h2 id="概念">概念</h2>
-<p>注解，也就是Annotation，是Java 5 开始引入的特征，它提供了一种安全的类似注释的机制，用来将任何的信息或元数据与程序元素（类、方法、属性等）进行关联。
-Annotation通过Java反射机制来访问注解信息，相关类根据这些信息决定对这些程序元素采用什么行为。Java语言解释器在工作时会忽略这些注解，因此注解在JVM中是“不起作用”的，只能通过配套工具对这些注解类型的信息进行访问和处理。
+<p>注解，也就是Annotation，是Java 5 开始引入的特征，它提供了一种安全的类似注释的机制，用来将任何的信息或元数据与程序元素（类、方法、属性等）进行关联。<br>
+Annotation通过Java反射机制来访问注解信息，相关类根据这些信息决定对这些程序元素采用什么行为。Java语言解释器在工作时会忽略这些注解，因此注解在JVM中是“不起作用”的，只能通过配套工具对这些注解类型的信息进行访问和处理。<br>
 在软件框架或者工具中常常用到注解，比如Struts，JUnit，TestNG，Spring等。</p>
 <h2 id="定义注解">定义注解</h2>
-<p>注解使用关键字<code>@interface</code>定义，而不是<code>interface</code>。所有注解都是继承的<code>java.lang.annotation.Annotation</code>接口，但是如果直接创建一个interface继承<code>java.lang.annotation.Annotation</code>接口并不是定义一个注解类型。
-创建的注解类型中可以定义常量、静态成员，也可以定义方法。但是这些方法的声明里必须是无参数、无抛出异常的。方法的返回值必须为primitive类型（包括<code>String</code>类型）、<code>Class</code>类型、枚举类型、注解类型中的一个或者以上之一组成的一维数组。方法的后面可以用default和一个值来表示这个方法的默认返回值，注意，默认值不能设为null。只有返回值是<code>Class</code>的方法可以在注解类型中使用泛型，因为该方法能够将各种类型通过类转换变成<code>Class</code>。
+<p>注解使用关键字<code>@interface</code>定义，而不是<code>interface</code>。所有注解都是继承的<code>java.lang.annotation.Annotation</code>接口，但是如果直接创建一个interface继承<code>java.lang.annotation.Annotation</code>接口并不是定义一个注解类型。<br>
+创建的注解类型中可以定义常量、静态成员，也可以定义方法。但是这些方法的声明里必须是无参数、无抛出异常的。方法的返回值必须为primitive类型（包括<code>String</code>类型）、<code>Class</code>类型、枚举类型、注解类型中的一个或者以上之一组成的一维数组。方法的后面可以用default和一个值来表示这个方法的默认返回值，注意，默认值不能设为null。只有返回值是<code>Class</code>的方法可以在注解类型中使用泛型，因为该方法能够将各种类型通过类转换变成<code>Class</code>。<br>
 举一个定义注解的例子：</p>
 <pre><code class="language-java">public @interface Property{
     boolean nullable default false;
@@ -230,7 +301,7 @@ public @interface Override {
 public @interface Deprecated {
 }
 </code></pre>
-<p><code>@Deprecated</code>是一种标记型注解。对不应该再使用的程序元素添加该注解，当调用被注解的方法时，在编译器会显示提示信息不鼓励使用被这个注解了的程序元素。
+<p><code>@Deprecated</code>是一种标记型注解。对不应该再使用的程序元素添加该注解，当调用被注解的方法时，在编译器会显示提示信息不鼓励使用被这个注解了的程序元素。<br>
 注意，该注解与JavaDoc注释中的<code>@deprecated</code>标记是有区别的：前者是用于Java编译器识别的，而后者是在生成文档时被JavaDoc识别。</p>
 <h3 id="suppresswarnings">@SuppressWarnings</h3>
 <pre><code class="language-java">@Target({TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE})
@@ -242,14 +313,14 @@ public @interface SuppressWarnings {
 <p>此注解能告诉Java编译器关闭对类、方法及成员变量的警告。有时编译时会提出一些警告，对于这些警告有的隐藏着Bug，有的是无法避免的，对于某些不想看到的警告信息，可以通过这个注解来屏蔽。<code>@SuppressWarning</code>不是一个marker annotation。它有一个类型为<code>String[]</code>的成员，这个成员的值为被禁止的警告名。对于javac编译器来讲，被-Xlint选项有效的警告名也同样对<code>@SuppressWarings</code>有效，同时编译器忽略掉无法识别的警告名。</p>
 <h2 id="四种元注解">四种元注解</h2>
 <h3 id="target">@Target</h3>
-<p>表示注解可以用在什么地方，它的值是ElementType枚举中的枚举类型：
-CONSTRUCTOR 构造器声明；
-FIELD 域声明；
-METHOD 方法声明；
-TYPE 类、接口或enum声明；
-PARAMETER 参数声明；
-LOCAL_VARIABLE 局部变量声明；
-ANNOTATION_TYPE 注释类型声明
+<p>表示注解可以用在什么地方，它的值是ElementType枚举中的枚举类型：<br>
+CONSTRUCTOR 构造器声明；<br>
+FIELD 域声明；<br>
+METHOD 方法声明；<br>
+TYPE 类、接口或enum声明；<br>
+PARAMETER 参数声明；<br>
+LOCAL_VARIABLE 局部变量声明；<br>
+ANNOTATION_TYPE 注释类型声明<br>
 PACKAGE 包声明</p>
 <h3 id="retention">@Retention</h3>
 <p>表示需要在什么级别保存该注解信息。设值时需要提供java.lang.annotation.RetentionPolicy中的枚举类型。</p>
@@ -266,7 +337,7 @@ PACKAGE 包声明</p>
 <hr>
 <p>在自定义注解的时候可以综合使用这四个元注解定义自己定义的注解的作用范围等信息。</p>
 <h2 id="通过反射加载注解">通过反射加载注解</h2>
-<p>还用之前举的例子，下面简单写个通过反射获得注解信息的例子。
+<p>还用之前举的例子，下面简单写个通过反射获得注解信息的例子。<br>
 先定义注解：</p>
 <pre><code class="language-java">import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -313,15 +384,15 @@ email: true test@a.com
 </code></pre>
 <p>从上面的结果也可以看到，即使类中的属性定义为private类型，也可以通过注解对其进行标记赋值，这个方法在Spring等框架中常常使用。</p>
 <h2 id="参考资料">参考资料</h2>
-<p>http://computerdragon.blog.51cto.com/6235984/1210969
-http://www.cnblogs.com/mandroid/archive/2011/07/18/2109829.html
+<p>http://computerdragon.blog.51cto.com/6235984/1210969<br>
+http://www.cnblogs.com/mandroid/archive/2011/07/18/2109829.html<br>
 http://www.itzhai.com/java-based-notebook-annotation-annotation-introduction-and-use-custom-annotations.html</p>
 ]]></content>
     </entry>
     <entry>
         <title type="html"><![CDATA[Linux中的exit命令]]></title>
-        <id>https://goroyal.github.io//post/exit-command-in-linux</id>
-        <link href="https://goroyal.github.io//post/exit-command-in-linux">
+        <id>https://goroyal.github.io/post/exit-command-in-linux/</id>
+        <link href="https://goroyal.github.io/post/exit-command-in-linux/">
         </link>
         <updated>2018-05-13T14:22:26.000Z</updated>
         <content type="html"><![CDATA[<p>我们在linux的命令行里面会用到exit，比方说退出某个shell。在shell脚本中这个命令可以终止脚本的执行。exit后面是可以接一个数字表示退出时候的状态。</p>
@@ -347,24 +418,24 @@ http://www.itzhai.com/java-based-notebook-annotation-annotation-introduction-and
     </entry>
     <entry>
         <title type="html"><![CDATA[SUSE Linux中安装Oracle数据库]]></title>
-        <id>https://goroyal.github.io//post/install-oracle-db-in-suse</id>
-        <link href="https://goroyal.github.io//post/install-oracle-db-in-suse">
+        <id>https://goroyal.github.io/post/install-oracle-db-in-suse/</id>
+        <link href="https://goroyal.github.io/post/install-oracle-db-in-suse/">
         </link>
         <updated>2018-04-06T13:34:02.000Z</updated>
-        <content type="html"><![CDATA[<p>从官网下载64位rpm安装包，解压，打开terminal进入rpm安装包所在目录，输入<code>rpm -i install oralce-xe-xxx.rpm</code>
-然后会提示输入<code>/etc/init.d/oracle-xe configure</code>，按照步骤照做。
+        <content type="html"><![CDATA[<p>从官网下载64位rpm安装包，解压，打开terminal进入rpm安装包所在目录，输入<code>rpm -i install oralce-xe-xxx.rpm</code><br>
+然后会提示输入<code>/etc/init.d/oracle-xe configure</code>，按照步骤照做。<br>
 在设置http端口的时候，默认为8080，可能会影响jboss、tomcat，可以改成8088。</p>
-<p>配置ORACLE_HOME和path:
+<p>配置ORACLE_HOME和path:<br>
 打开<code>/etc/bash.bashrc.local</code>，</p>
 <pre><code class="language-shell">export ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
 export PATH=$PATH:$ORACLE_HOME/bin:
 export ORACLE_SID=XE
 </code></pre>
-<p>配置结束后，在尝试sqlplus连接数据库的时候会出现密码不正确或者权限不够等问题，因为oracle express在安装的时候讲ORACLE用户作为这个软件的owner，而这个owner没有加到dba组里。
-可以输入命令<code>/etc/group</code>查看当前系统中的用户组，<code>/etc/passwd</code>查看系统中的用户。遇到一个问题就是实际上并不存在ORACLE这个用户，然后采取了一个方法，就是<code>vi /etc/group</code>强制在dba这个组加上ORACLE这个用户。
+<p>配置结束后，在尝试sqlplus连接数据库的时候会出现密码不正确或者权限不够等问题，因为oracle express在安装的时候讲ORACLE用户作为这个软件的owner，而这个owner没有加到dba组里。<br>
+可以输入命令<code>/etc/group</code>查看当前系统中的用户组，<code>/etc/passwd</code>查看系统中的用户。遇到一个问题就是实际上并不存在ORACLE这个用户，然后采取了一个方法，就是<code>vi /etc/group</code>强制在dba这个组加上ORACLE这个用户。<br>
 打开新的终端，<code>su - oracle</code>从而切换到ORACLE用户，然后输入<code>groups</code>，可以查看它属于dba组。（其实挺奇怪，<code>su - oracle</code>可以切换到oracle用户，但是之前在其他地方找不到这个用户）</p>
 <p>输入<code>/etc/init.d/oracle-xe start</code>(或<code>lsnrctl start</code>)启动oracle。</p>
-<p>输入<code>sqlplus system/密码</code>，进行连接，如果说用户名或密码错误的话，可以输入<code>sqlplus / as sysdba</code>(注意，需要在ORACLE用户下)，然后建立连接后，输入<code>alter user system identified by 密码</code>;
+<p>输入<code>sqlplus system/密码</code>，进行连接，如果说用户名或密码错误的话，可以输入<code>sqlplus / as sysdba</code>(注意，需要在ORACLE用户下)，然后建立连接后，输入<code>alter user system identified by 密码</code>;<br>
 quit后在以<code>sqlplus system/密码</code>就能连上了。</p>
 <p>密码不正确或者权限不够等问题，应该也可以通过更改oracle安装后的目录及文件的owner来实现，这里就暂不讨论。</p>
 <p>还有可能和<code>$ORACLE_HOME/network/admin</code>下面的几个ora文件有关。附件里列出了它们。</p>
@@ -378,43 +449,24 @@ exec dbms_xdb.sethttpport(8088)
     </entry>
     <entry>
         <title type="html"><![CDATA[Java中的几种引用]]></title>
-        <id>https://goroyal.github.io//post/references-in-java</id>
-        <link href="https://goroyal.github.io//post/references-in-java">
+        <id>https://goroyal.github.io/post/references-in-java/</id>
+        <link href="https://goroyal.github.io/post/references-in-java/">
         </link>
         <updated>2018-01-11T14:36:39.000Z</updated>
-        <content type="html"><![CDATA[<p>Java中的引用主要有以下几种类型：
+        <content type="html"><![CDATA[<p>Java中的引用主要有以下几种类型：<br>
 • 强引用（StrongReference）：强引用是使用最普遍的引用。如果一个对象具有强引用，那垃圾回收器绝不会回收它。当内存空间不足，Java虚拟机宁愿抛出OutOfMemoryError错误，使程序异常终止，也不会靠随意回收具有强引用的对象来解决内存不足的问题。</p>
 <p>• 软引用（SoftReference）：如果一个对象只具有软引用，则内存空间足够，垃圾回收器就不会回收它；如果内存空间不足了，就会回收这些对象的内存。只要垃圾回收器没有回收它，该对象就可以被程序使用。软引用可用来实现内存敏感的高速缓存。软引用可以和一个引用队列（ReferenceQueue）联合使用，如果软引用所引用的对象被垃圾回收器回收，Java虚拟机就会把这个软引用加入到与之关联的引用队列中。</p>
 <p>• 弱引用（WeakReference）：弱引用与软引用的区别在于：只具有弱引用的对象拥有更短暂的生命周期。在垃圾回收器线程扫描它所管辖的内存区域的过程中，一旦发现了只具有弱引用的对象，不管当前内存空间足够与否，都会回收它的内存。不过，由于垃圾回收器是一个优先级很低的线程，因此不一定会很快发现那些只具有弱引用的对象。弱引用可以和一个引用队列（ReferenceQueue）联合使用，如果弱引用所引用的对象被垃圾回收，Java虚拟机就会把这个弱引用加入到与之关联的引用队列中。</p>
 <p>• 虚引用（PhantomReference）：“虚引用”顾名思义，就是形同虚设，与其他几种引用都不同，虚引用并不会决定对象的生命周期。如果一个对象仅持有虚引用，那么它就和没有任何引用一样，在任何时候都可能被垃圾回收器回收。</p>
 <hr>
-<p>下面主要来谈谈软引用。
+<p>下面主要来谈谈软引用。<br>
 对于软引用对象本身，至少有两个强引用指向它：由应用创建的原始的强引用，还有就是JVM创建的在所引对象队列上的一个新的强引用。软引用本质上是一个比较大的、最近最久未用的对象池。获得较好性能的关键是确保它们会被及时清理。</p>
 <p>不要使用太多软引用，它们很容易填满整个堆。</p>
 <p>当问题中的所引对象会同时被几个线程使用时，应该考虑弱引用。否则，弱引用很可能会被垃圾收集器回收：只有弱引用的对象在每个GC周期都可以回收。当强引用被移除时，弱引用会立即释放。</p>
-<p>软：只要有足够内存，而且看上去有人会偶尔访问它，就留着它。
+<p>软：只要有足够内存，而且看上去有人会偶尔访问它，就留着它。<br>
 弱：只要有其他人对这个对象感兴趣就让我知道它在哪，但是如果他们不再需要它了，就丢了，我自己会重新创建。</p>
 <p>软引用的对象通常可以存活几分钟甚至几小时，但是只要所引读写仍然存在，弱引用对象就会一直存活（下一个GC周期会清理）。</p>
 <p><strong>在Java中，集合类经常是内存泄露的根源。比如某个应用将对象放入一个HashMap对象中，但从不移除。随着时间推移，这个HashMap对象会越来越大，而且消耗堆。</strong></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[抽象类和接口]]></title>
-        <id>https://goroyal.github.io//post/abstract-class-and-interface</id>
-        <link href="https://goroyal.github.io//post/abstract-class-and-interface">
-        </link>
-        <updated>2017-10-14T13:31:52.000Z</updated>
-        <content type="html"><![CDATA[<p>抽象类和接口是Java面向对象中非常重要的元素，在面向接口的编程中两者更是经常用到。面试的时候也经常会问到两者的一些区别，下面是对两者的一些总结：</p>
-<p>(1)当一个类继承了别的类的时候，这时候，只能让它去实现接口，因为Java里面只能单继承。</p>
-<p>(2)抽象类中可以定义非<code>abstract</code>的方法和变量，而且可以是非<code>public</code>的，而且抽象类中方法可以有具体内容。接口中的方法必须是<code>public</code>的，就算不写也会默认为<code>public</code>，且方法体必须为空的。接口中的变量是<code>public static final</code>类型的，其实就是常量。</p>
-<p>(3)继承了抽象类的子类只能看到抽象类中public和protected类型的变量和方法，对于非abstract的方法不需要重写。而接口中定义的所有方法必须重写，定义的常量会影响所有实现它的类，所以，一般不推荐在接口里定义常量，且接口规模应尽可能小。如果需要抽象出多个方法，不应该把这些方法都放在接口里，而是采用多个接口+接口继承的形式。这点在Effective Java里面也有提到。</p>
-<p>(4)接口是对行为的一种抽象，而抽象类是对类的抽象，包括属性、方法。继承抽象类的类往往是具有一些相似特点的类，而实现接口的类可以跨不同的域，仅仅实现了接口定义的契约。类继承抽象类像是一个”is-a”特点，类实现接口像是”like-a”特点。</p>
-<p>(5)在设计时，对接口往往是自上而下的，先定义接口行为，然后再针对其做具体实现；抽象类往往是自下而上的，我们先知道子类后才对其进行抽象出父类。</p>
-<p>(6)我们常常看到Java程序里有定义的一些空接口，那么空接口是什么作用呢？</p>
-<p>空接口的主要是用来做判断的，也就是作为一个标记。为了判断某一个类是否满足其筛选条件时可以做一个空接口，然后利用instanceof方法来判断某一类是否使用了该接口，以达到你要筛选指定类型类的需求。</p>
-<h2 id="参考资料">参考资料</h2>
-<p>Effective Java
-https://github.com/android-cn/android-discuss/issues/6</p>
 ]]></content>
     </entry>
 </feed>

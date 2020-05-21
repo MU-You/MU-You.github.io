@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://goroyal.github.io//favicon.ico?v=1561567993727">
+<link rel="shortcut icon" href="https://goroyal.github.io//favicon.ico?v=1590074244195">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://goroyal.github.io//styles/main.css">
 
@@ -36,7 +36,7 @@
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://goroyal.github.io/">
-        <img src="https://goroyal.github.io//images/avatar.png?v=1561567993727" class="site-logo">
+        <img src="https://goroyal.github.io//images/avatar.png?v=1590074244195" class="site-logo">
         <h1 class="site-title">Goroyal&#39;s blog</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -102,20 +102,20 @@
             <div class="post-date">2018-04-06</div>
             
             <div class="post-content">
-              <p>从官网下载64位rpm安装包，解压，打开terminal进入rpm安装包所在目录，输入<code>rpm -i install oralce-xe-xxx.rpm</code>
-然后会提示输入<code>/etc/init.d/oracle-xe configure</code>，按照步骤照做。
+              <p>从官网下载64位rpm安装包，解压，打开terminal进入rpm安装包所在目录，输入<code>rpm -i install oralce-xe-xxx.rpm</code><br>
+然后会提示输入<code>/etc/init.d/oracle-xe configure</code>，按照步骤照做。<br>
 在设置http端口的时候，默认为8080，可能会影响jboss、tomcat，可以改成8088。</p>
-<p>配置ORACLE_HOME和path:
+<p>配置ORACLE_HOME和path:<br>
 打开<code>/etc/bash.bashrc.local</code>，</p>
 <pre><code class="language-shell">export ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
 export PATH=$PATH:$ORACLE_HOME/bin:
 export ORACLE_SID=XE
 </code></pre>
-<p>配置结束后，在尝试sqlplus连接数据库的时候会出现密码不正确或者权限不够等问题，因为oracle express在安装的时候讲ORACLE用户作为这个软件的owner，而这个owner没有加到dba组里。
-可以输入命令<code>/etc/group</code>查看当前系统中的用户组，<code>/etc/passwd</code>查看系统中的用户。遇到一个问题就是实际上并不存在ORACLE这个用户，然后采取了一个方法，就是<code>vi /etc/group</code>强制在dba这个组加上ORACLE这个用户。
+<p>配置结束后，在尝试sqlplus连接数据库的时候会出现密码不正确或者权限不够等问题，因为oracle express在安装的时候讲ORACLE用户作为这个软件的owner，而这个owner没有加到dba组里。<br>
+可以输入命令<code>/etc/group</code>查看当前系统中的用户组，<code>/etc/passwd</code>查看系统中的用户。遇到一个问题就是实际上并不存在ORACLE这个用户，然后采取了一个方法，就是<code>vi /etc/group</code>强制在dba这个组加上ORACLE这个用户。<br>
 打开新的终端，<code>su - oracle</code>从而切换到ORACLE用户，然后输入<code>groups</code>，可以查看它属于dba组。（其实挺奇怪，<code>su - oracle</code>可以切换到oracle用户，但是之前在其他地方找不到这个用户）</p>
 <p>输入<code>/etc/init.d/oracle-xe start</code>(或<code>lsnrctl start</code>)启动oracle。</p>
-<p>输入<code>sqlplus system/密码</code>，进行连接，如果说用户名或密码错误的话，可以输入<code>sqlplus / as sysdba</code>(注意，需要在ORACLE用户下)，然后建立连接后，输入<code>alter user system identified by 密码</code>;
+<p>输入<code>sqlplus system/密码</code>，进行连接，如果说用户名或密码错误的话，可以输入<code>sqlplus / as sysdba</code>(注意，需要在ORACLE用户下)，然后建立连接后，输入<code>alter user system identified by 密码</code>;<br>
 quit后在以<code>sqlplus system/密码</code>就能连上了。</p>
 <p>密码不正确或者权限不够等问题，应该也可以通过更改oracle安装后的目录及文件的owner来实现，这里就暂不讨论。</p>
 <p>还有可能和<code>$ORACLE_HOME/network/admin</code>下面的几个ora文件有关。附件里列出了它们。</p>
@@ -130,7 +130,7 @@ exec dbms_xdb.sethttpport(8088)
             
               <div class="tag-container">
                 
-                  <a href="https://goroyal.github.io//tag/R38FKKbZc" class="tag">
+                  <a href="https://goroyal.github.io/tag/R38FKKbZc/" class="tag">
                     Linux
                   </a>
                 
@@ -139,7 +139,7 @@ exec dbms_xdb.sethttpport(8088)
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://goroyal.github.io//post/references-in-java">
+                <a href="https://goroyal.github.io/post/references-in-java/">
                   <h3 class="post-title">
                     Java中的几种引用
                   </h3>
