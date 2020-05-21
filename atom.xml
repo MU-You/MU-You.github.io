@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://goroyal.github.io/</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2020-05-21T15:26:02.630Z</updated>
+    <updated>2020-05-21T15:28:39.786Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://goroyal.github.io/"/>
     <link rel="self" href="https://goroyal.github.io/atom.xml"/>
@@ -12,8 +12,8 @@
     <rights>All rights reserved 2020, Goroyal&apos;s blog</rights>
     <entry>
         <title type="html"><![CDATA[Linux 中的 2> /dev/null]]></title>
-        <id>https://goroyal.github.io/post/linux-zhong-de-2greater-devnull/</id>
-        <link href="https://goroyal.github.io/post/linux-zhong-de-2greater-devnull/">
+        <id>https://goroyal.github.io/post/linux-redirect-dev-null/</id>
+        <link href="https://goroyal.github.io/post/linux-redirect-dev-null/">
         </link>
         <updated>2020-05-21T15:12:33.000Z</updated>
         <summary type="html"><![CDATA[<p>在 Linux 的 shell 命令或者脚本中，我们经常看到这样的命令：</p>
