@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://goroyal.github.io//favicon.ico?v=1590074244195">
+<link rel="shortcut icon" href="https://goroyal.github.io//favicon.ico?v=1590074760407">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://goroyal.github.io//styles/main.css">
 
@@ -36,7 +36,7 @@
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://goroyal.github.io/">
-        <img src="https://goroyal.github.io//images/avatar.png?v=1590074244195" class="site-logo">
+        <img src="https://goroyal.github.io//images/avatar.png?v=1590074760407" class="site-logo">
         <h1 class="site-title">Goroyal&#39;s blog</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -128,9 +128,10 @@
 </code></pre>
 <p><code>task_struct</code> 就是 Linux 对于一个进程的描述，也可以称之为进程描述符。其中的 <code>files</code> 指针指向一个数组，表示当前进程打开的所有文件。</p>
 <p><strong>每个进程被创建时，<code>files</code> 指向的数组前三位被填入默认值，分别指向标准输入流、标准输出流、标准错误流。我们常说的「文件描述符」就是指这个文件指针数组的索引，所以程序的文件描述符默认情况下 0 是输入，1 是输出，2 是错误。</strong></p>
-<p>:::tip</p>
+<p>:::<strong>tip</strong></p>
+<blockquote>
 <p>Linux 中的所有设备都是抽象成文件的，设备可以当作文件一样读和写。</p>
-<p>:::</p>
+</blockquote>
 <h2 id="重定向">重定向</h2>
 <p>Linux shell 里通过 <code>&gt;</code>、<code>&lt;</code>进行输出、输入的重定向。</p>
 <ul>
@@ -148,9 +149,10 @@ history | grep ssh
 <pre><code class="language-shell"># 删除当前路径下的folder目录，如果不存在则忽略错误
 rm -r folder 2&gt; /dev/null
 </code></pre>
-<p>:::caution</p>
+<p>:::<strong>caution</strong></p>
+<blockquote>
 <p><code>2</code>和<code>&gt;</code>之间不能有空格</p>
-<p>:::</p>
+</blockquote>
 <h2 id="参考资料">参考资料</h2>
 <ul>
 <li><a href="https://bash.cyberciti.biz/guide/What_is_a_Process%3F">What is a Process?</a></li>

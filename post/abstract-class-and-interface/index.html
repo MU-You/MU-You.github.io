@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://goroyal.github.io//favicon.ico?v=1590074244195">
+<link rel="shortcut icon" href="https://goroyal.github.io//favicon.ico?v=1590074760407">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://goroyal.github.io//styles/main.css">
 
@@ -36,7 +36,7 @@
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://goroyal.github.io/">
-        <img src="https://goroyal.github.io//images/avatar.png?v=1590074244195" class="site-logo">
+        <img src="https://goroyal.github.io//images/avatar.png?v=1590074760407" class="site-logo">
         <h1 class="site-title">Goroyal&#39;s blog</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -102,7 +102,9 @@
             <div class="post-date">2017-10-14</div>
             
             <div class="post-content">
-              <p>抽象类和接口是 Java 面向对象编程中非常重要的元素，在面向接口的编程中两者更是经常用到。类是对象的模版，抽象类和接口可以看作是具体的类的模版。</p>
+              <p>本文亦发布于<a href="https://thinkbucket.cn/docs/java/object-oriented-programming/abstract-class-interface">ThinkBucket</a>。</p>
+<p>抽象类和接口是 Java 面向对象编程中非常重要的元素，在面向接口的编程中两者更是经常用到。类是对象的模版，抽象类和接口可以看作是具体的类的模版。</p>
+<!-- more -->
 <h2 id="抽象类">抽象类</h2>
 <p>如果一个 <code>class</code> 用 <code>abstract</code>修饰，它就是抽象类。除了正常的方法定义外，抽象类里的方法可以是空的，直接以分号结尾，没有具体执行代码，这个方法就是抽象方法，它必须用 <code>abstract</code> 修饰。</p>
 <p>我们无法实例化一个抽象类，抽象类必须通过一个具体的子类实例化：</p>
@@ -165,9 +167,10 @@ class Driver extends People {
 <li>所有方法都是 <code>public abstract</code> 的，必须被接口的实现类实现（Java 8之前）</li>
 <li>所有的变量都是 <code>public static final</code> 的，其实就是常量</li>
 </ul>
-<p>:::tip</p>
+<p>:::<strong>tip</strong></p>
+<blockquote>
 <p>因为接口定义的所有方法默认都是 <code>public abstract</code> 的，所以这两个修饰符不需要写出来（写不写效果都一样）。</p>
-<p>:::</p>
+</blockquote>
 <p>当一个具体的 <code>class</code> 去实现一个 <code>interface</code> 时，需要使用 <code>implements</code> 关键字。举个例子：</p>
 <pre><code class="language-java">class Student implements Person {
   private String name;
@@ -254,9 +257,10 @@ public class Test {
 <p><code>ClassA</code> 没有实现 <code>InterfaceA</code> 的 <code>foo</code> 方法，但是 <code>InterfaceA</code> 提供了默认实现，当 <code>ClassA</code> 的实例调用到 <code>foo</code> 方法时，实际上是调用了接口里的默认实现。</p>
 <h3 id="为什么引入默认方法">为什么引入默认方法</h3>
 <p><strong>在 Java 8 之前</strong>，接口和实现类之间高度耦合，当接口中添加一个方法时，它的所有实现类都需要修改，否则会发生编译错误。无法在不破坏现有实现的条件下向接口添加<strong>新</strong>方法。</p>
-<p>:::tip</p>
+<p>:::<strong>tip</strong></p>
+<blockquote>
 <p>To use default method, JDK &gt;= 1.8 is a must.</p>
-<p>:::</p>
+</blockquote>
 <p>在 Java 8 里面，引入默认方法的意图是<strong>允许向现有接口添加方法</strong>，Java 8 里有一个重要新功能： lamda 表达式，这需要升级旧接口并保持向后兼容。</p>
 <pre><code class="language-java">String[] array = new String[] {
   &quot;hello&quot;,
@@ -282,12 +286,14 @@ public interface Iterable&lt;T&gt; {
 }
 </code></pre>
 <p>更多细节，可以参考这篇文章：https://ebnbin.com/2015/12/20/java-8-default-methods/</p>
-<p>:::caution</p>
+<p>:::<strong>caution</strong></p>
+<blockquote>
 <p>向现有接口添加新方法充满了风险。在存在默认方法的情况下，接口的现有实现<strong>可能</strong>编译没有错误或警告，但在运行时会失败。</p>
-<p>:::</p>
-<p>:::good</p>
+</blockquote>
+<p>:::<strong>good</strong></p>
+<blockquote>
 <p>除非有必要，否则应避免使用默认方法向现有接口添加新方法，在这种情况下，你应该认真考虑一下现有接口实现是否会被默认方法实现破坏。</p>
-<p>:::</p>
+</blockquote>
 <p>以上都是需要注意的，但是默认方法对于在创建接口时提供标准方法实现非常有用，它能简化实现接口的任务。</p>
 <h2 id="参考资料">参考资料</h2>
 <ol>
