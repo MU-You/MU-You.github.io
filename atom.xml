@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://goroyal.github.io/</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2020-05-21T16:28:06.427Z</updated>
+    <updated>2020-05-22T01:37:52.112Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://goroyal.github.io/"/>
     <link rel="self" href="https://goroyal.github.io/atom.xml"/>
@@ -88,9 +88,12 @@ rm -r folder 2&gt; /dev/null
         <link href="https://goroyal.github.io/post/oop-and-pure-function/">
         </link>
         <updated>2019-06-26T16:51:40.000Z</updated>
+        <summary type="html"><![CDATA[<p>在面向对象编程里面，我们常常对现实世界建模抽象成一个个类，然后创建它们的对象，通过对象的方法行为去描述逻辑。</p>
+<p>纯函数是一种特殊的函数，给它相同的输入永远会得到相同的输出，而且没有任何可观察的副作用。</p>
+]]></summary>
         <content type="html"><![CDATA[<p>在面向对象编程里面，我们常常对现实世界建模抽象成一个个类，然后创建它们的对象，通过对象的方法行为去描述逻辑。</p>
 <p>纯函数是一种特殊的函数，给它相同的输入永远会得到相同的输出，而且没有任何可观察的副作用。</p>
-<hr>
+<!-- more -->
 <p>占位符，待更。</p>
 <p>https://llh911001.gitbooks.io/mostly-adequate-guide-chinese/content/ch3.html#%E8%BF%BD%E6%B1%82%E2%80%9C%E7%BA%AF%E2%80%9D%E7%9A%84%E7%90%86%E7%94%B1<br>
 https://www.jiqizhixin.com/articles/2018-10-22-15</p>
@@ -102,7 +105,10 @@ https://www.jiqizhixin.com/articles/2018-10-22-15</p>
         <link href="https://goroyal.github.io/post/manage-multiple-java-versions/">
         </link>
         <updated>2019-06-26T16:30:26.000Z</updated>
+        <summary type="html"><![CDATA[<p>自从Oracle宣布Java开始收费之后，越来越多的人会考虑从[Open JDK][1]下载安装Java环境。可能自己机器上也会同时并存好几个Java版本，本文以macOS为例介绍一下如何从Open JDK安装并进行管理多版本。</p>
+]]></summary>
         <content type="html"><![CDATA[<p>自从Oracle宣布Java开始收费之后，越来越多的人会考虑从<a href="https://openjdk.java.net/install/">Open JDK</a>下载安装Java环境。可能自己机器上也会同时并存好几个Java版本，本文以macOS为例介绍一下如何从Open JDK安装并进行管理多版本。</p>
+<!-- more -->
 <h2 id="下载安装">下载安装</h2>
 <pre><code class="language-shell">curl -O https://download.java.net/java/GA/jdk12/33/GPL/openjdk-12_osx-x64_bin.tar.gz 
 tar xvf openjdk-12_osx-x64_bin.tar.gz
@@ -178,7 +184,10 @@ try {
         <link href="https://goroyal.github.io/post/wring-code-from-unit-test-side/">
         </link>
         <updated>2019-05-24T12:25:28.000Z</updated>
+        <summary type="html"><![CDATA[<p>单元测试，也就是对代码较细粒度单元的测试，一般就是测某个方法或函数。说到单元测试，基本上每个开发者都不陌生，时不时会听到“测试覆盖率太低了！”，然后“We need to increase our code coverage!”。经常出bug？好好准备测试吧。</p>
+]]></summary>
         <content type="html"><![CDATA[<p>单元测试，也就是对代码较细粒度单元的测试，一般就是测某个方法或函数。说到单元测试，基本上每个开发者都不陌生，时不时会听到“测试覆盖率太低了！”，然后“We need to increase our code coverage!”。经常出bug？好好准备测试吧。</p>
+<!-- more -->
 <h2 id="1-为什么要提高覆盖率">1. 为什么要提高覆盖率？</h2>
 <p>覆盖率为什么这么重要？我们每次修改代码之后都不希望把原有可用的功能搞出问题，如果没有足够的测试覆盖，开发者就没有足够的信心去交付新代码。测试覆盖率高的话，就可以用机器自动去跑高效率地去验证，在覆盖不到的地方需要人工去验证。所以当覆盖率很低的时候，人工需要一遍又一遍的去验证已有的功能，还要去验证新加的功能是否符合预期，这个真的会崩溃。开发者自己去做的话，八成会偷懒抑或是觉得自己改的范围影响不到那么多测得乐观。如果让测试工程师去做，那么需要领导们考虑开发跟测试的比例了。</p>
 <p>测试覆盖率不完全是看单元测试，还包括更高层次的集成测试、系统测试。当然了，如果单元测试没写多少，指望粒度更粗层次更高的其他测试，你会非常痛苦的。单元测试的2个优势：跑得快、容易定位问题。</p>
@@ -215,8 +224,12 @@ try {
         <link href="https://goroyal.github.io/post/http-response-code/">
         </link>
         <updated>2019-04-06T12:14:38.000Z</updated>
+        <summary type="html"><![CDATA[<p>目前HTTP在Web开发中被广泛使用，REST (Representational State Transfer) 很多人应该或多或少都知道些。当然了，比较熟悉的可能主要是GET、POST方法。这篇文章不是介绍REST的定义和如何创建符合REST风格的API，而是讲讲在Web开发中通用的不同HTTP响应状态码的含义。在普通网站开发、分布式集群开发、团队协作方面，如果采用了HTTP作为组件之间交互的协议，遵守通用的响应状态码是很有必要的（一是有充分的信息量、二是避免歧义）。</p>
+<p>HTTP响应状态共有5大类，分别是数字1、2、3、4、5开头。</p>
+]]></summary>
         <content type="html"><![CDATA[<p>目前HTTP在Web开发中被广泛使用，REST (Representational State Transfer) 很多人应该或多或少都知道些。当然了，比较熟悉的可能主要是GET、POST方法。这篇文章不是介绍REST的定义和如何创建符合REST风格的API，而是讲讲在Web开发中通用的不同HTTP响应状态码的含义。在普通网站开发、分布式集群开发、团队协作方面，如果采用了HTTP作为组件之间交互的协议，遵守通用的响应状态码是很有必要的（一是有充分的信息量、二是避免歧义）。</p>
 <p>HTTP响应状态共有5大类，分别是数字1、2、3、4、5开头。</p>
+<!-- more -->
 <h2 id="1xx">1XX</h2>
 <p>信息性状态码，表示接收的请求正在处理。</p>
 <ul>
@@ -270,10 +283,16 @@ try {
         <link href="https://goroyal.github.io/post/java-annotation/">
         </link>
         <updated>2019-02-06T12:17:45.000Z</updated>
+        <summary type="html"><![CDATA[<h2 id="概念">概念</h2>
+<p>注解，也就是Annotation，是Java 5 开始引入的特征，它提供了一种安全的类似注释的机制，用来将任何的信息或元数据与程序元素（类、方法、属性等）进行关联。<br>
+Annotation通过Java反射机制来访问注解信息，相关类根据这些信息决定对这些程序元素采用什么行为。Java语言解释器在工作时会忽略这些注解，因此注解在JVM中是“不起作用”的，只能通过配套工具对这些注解类型的信息进行访问和处理。<br>
+在软件框架或者工具中常常用到注解，比如Struts，JUnit，TestNG，Spring等。</p>
+]]></summary>
         <content type="html"><![CDATA[<h2 id="概念">概念</h2>
 <p>注解，也就是Annotation，是Java 5 开始引入的特征，它提供了一种安全的类似注释的机制，用来将任何的信息或元数据与程序元素（类、方法、属性等）进行关联。<br>
 Annotation通过Java反射机制来访问注解信息，相关类根据这些信息决定对这些程序元素采用什么行为。Java语言解释器在工作时会忽略这些注解，因此注解在JVM中是“不起作用”的，只能通过配套工具对这些注解类型的信息进行访问和处理。<br>
 在软件框架或者工具中常常用到注解，比如Struts，JUnit，TestNG，Spring等。</p>
+<!-- more -->
 <h2 id="定义注解">定义注解</h2>
 <p>注解使用关键字<code>@interface</code>定义，而不是<code>interface</code>。所有注解都是继承的<code>java.lang.annotation.Annotation</code>接口，但是如果直接创建一个interface继承<code>java.lang.annotation.Annotation</code>接口并不是定义一个注解类型。<br>
 创建的注解类型中可以定义常量、静态成员，也可以定义方法。但是这些方法的声明里必须是无参数、无抛出异常的。方法的返回值必须为primitive类型（包括<code>String</code>类型）、<code>Class</code>类型、枚举类型、注解类型中的一个或者以上之一组成的一维数组。方法的后面可以用default和一个值来表示这个方法的默认返回值，注意，默认值不能设为null。只有返回值是<code>Class</code>的方法可以在注解类型中使用泛型，因为该方法能够将各种类型通过类转换变成<code>Class</code>。<br>
@@ -388,9 +407,11 @@ email: true test@a.com
 </code></pre>
 <p>从上面的结果也可以看到，即使类中的属性定义为private类型，也可以通过注解对其进行标记赋值，这个方法在Spring等框架中常常使用。</p>
 <h2 id="参考资料">参考资料</h2>
-<p>http://computerdragon.blog.51cto.com/6235984/1210969<br>
-http://www.cnblogs.com/mandroid/archive/2011/07/18/2109829.html<br>
-http://www.itzhai.com/java-based-notebook-annotation-annotation-introduction-and-use-custom-annotations.html</p>
+<ul>
+<li><a href="http://computerdragon.blog.51cto.com/6235984/1210969">Java注解annotation用法和自定义注解处理器</a></li>
+<li><a href="http://www.cnblogs.com/mandroid/archive/2011/07/18/2109829.html">Java基础之理解Annotation</a></li>
+<li><a href="http://www.itzhai.com/java-based-notebook-annotation-annotation-introduction-and-use-custom-annotations.html">Java基础笔记 - Annotation注解的介绍和使用 自定义注解</a></li>
+</ul>
 ]]></content>
     </entry>
     <entry>

@@ -9,7 +9,7 @@
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
 <title>Java中的可重入锁ReetrantLock | Goroyal&#39;s blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1590078221879">
+<link rel="shortcut icon" href="/favicon.ico?v=1590111466985">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -540,6 +540,7 @@
               <h2 id="类说明">类说明</h2>
 <p><code>ReetrantLock</code>是一个可重入排它<code>Lock</code>，和使用<code>synchronized</code>方法和语句的隐式监视器锁有着相同的基本行为和语义，但是有着扩展性能。</p>
 <p><code>ReentrantLock</code>由上次成功加锁但是还没有解锁的线程所持有。在锁没有被其他线程持有时，一个线程调用<code>lock</code>将返回成功获取锁。如果当前线程已经持有锁那么该方法将立即返回。这个可以使用方法<code>isHeldByCurrentThread</code>和<code>getHoldCount</code>检查。</p>
+<!-- more -->
 <p>这个类的构造器接收一个可选的公平性参数。当设为 true 时，在争用的情况下，锁倾向于授权给等待时间最长的线程。另外，这个锁不保证任何特定访问顺序。使用被多个线程访问的公平锁的程序将呈现比使用默认设置的情况较低的总吞吐量（也就是变慢了，通常是慢很多），但是在获取锁和保证不饥饿的时间上有较小的方差。</p>
 <p>公平锁可以保证锁的获取按照FIFO原则，而代价是进行大量的线程切换。非公平性锁虽然可能造成线程饥饿，但是较少线程切换，保证了很大的吞吐量。</p>
 <p>同样需要注意的是，不计时的<code>tryLock()</code>方法不赞成公平设置。如果锁是可用的它将成功获得锁，而不管其他线程是否正在等待。</p>
@@ -895,7 +896,7 @@ rm -r folder 2&amp;gt; /dev/null
         <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/oop-and-pure-function/"" data-c="
           &lt;p&gt;在面向对象编程里面，我们常常对现实世界建模抽象成一个个类，然后创建它们的对象，通过对象的方法行为去描述逻辑。&lt;/p&gt;
 &lt;p&gt;纯函数是一种特殊的函数，给它相同的输入永远会得到相同的输出，而且没有任何可观察的副作用。&lt;/p&gt;
-&lt;hr&gt;
+&lt;!-- more --&gt;
 &lt;p&gt;占位符，待更。&lt;/p&gt;
 &lt;p&gt;https://llh911001.gitbooks.io/mostly-adequate-guide-chinese/content/ch3.html#%E8%BF%BD%E6%B1%82%E2%80%9C%E7%BA%AF%E2%80%9D%E7%9A%84%E7%90%86%E7%94%B1&lt;br&gt;
 https://www.jiqizhixin.com/articles/2018-10-22-15&lt;/p&gt;
@@ -905,6 +906,7 @@ https://www.jiqizhixin.com/articles/2018-10-22-15&lt;/p&gt;
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/manage-multiple-java-versions/"" data-c="
           &lt;p&gt;自从Oracle宣布Java开始收费之后，越来越多的人会考虑从&lt;a href=&#34;https://openjdk.java.net/install/&#34;&gt;Open JDK&lt;/a&gt;下载安装Java环境。可能自己机器上也会同时并存好几个Java版本，本文以macOS为例介绍一下如何从Open JDK安装并进行管理多版本。&lt;/p&gt;
+&lt;!-- more --&gt;
 &lt;h2 id=&#34;下载安装&#34;&gt;下载安装&lt;/h2&gt;
 &lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;curl -O https://download.java.net/java/GA/jdk12/33/GPL/openjdk-12_osx-x64_bin.tar.gz 
 tar xvf openjdk-12_osx-x64_bin.tar.gz
@@ -975,6 +977,7 @@ try {
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/wring-code-from-unit-test-side/"" data-c="
           &lt;p&gt;单元测试，也就是对代码较细粒度单元的测试，一般就是测某个方法或函数。说到单元测试，基本上每个开发者都不陌生，时不时会听到“测试覆盖率太低了！”，然后“We need to increase our code coverage!”。经常出bug？好好准备测试吧。&lt;/p&gt;
+&lt;!-- more --&gt;
 &lt;h2 id=&#34;1-为什么要提高覆盖率&#34;&gt;1. 为什么要提高覆盖率？&lt;/h2&gt;
 &lt;p&gt;覆盖率为什么这么重要？我们每次修改代码之后都不希望把原有可用的功能搞出问题，如果没有足够的测试覆盖，开发者就没有足够的信心去交付新代码。测试覆盖率高的话，就可以用机器自动去跑高效率地去验证，在覆盖不到的地方需要人工去验证。所以当覆盖率很低的时候，人工需要一遍又一遍的去验证已有的功能，还要去验证新加的功能是否符合预期，这个真的会崩溃。开发者自己去做的话，八成会偷懒抑或是觉得自己改的范围影响不到那么多测得乐观。如果让测试工程师去做，那么需要领导们考虑开发跟测试的比例了。&lt;/p&gt;
 &lt;p&gt;测试覆盖率不完全是看单元测试，还包括更高层次的集成测试、系统测试。当然了，如果单元测试没写多少，指望粒度更粗层次更高的其他测试，你会非常痛苦的。单元测试的2个优势：跑得快、容易定位问题。&lt;/p&gt;
@@ -1010,6 +1013,7 @@ try {
         <a class="result-title" style="opacity: 0;" href="https://goroyal.github.io/post/http-response-code/"" data-c="
           &lt;p&gt;目前HTTP在Web开发中被广泛使用，REST (Representational State Transfer) 很多人应该或多或少都知道些。当然了，比较熟悉的可能主要是GET、POST方法。这篇文章不是介绍REST的定义和如何创建符合REST风格的API，而是讲讲在Web开发中通用的不同HTTP响应状态码的含义。在普通网站开发、分布式集群开发、团队协作方面，如果采用了HTTP作为组件之间交互的协议，遵守通用的响应状态码是很有必要的（一是有充分的信息量、二是避免歧义）。&lt;/p&gt;
 &lt;p&gt;HTTP响应状态共有5大类，分别是数字1、2、3、4、5开头。&lt;/p&gt;
+&lt;!-- more --&gt;
 &lt;h2 id=&#34;1xx&#34;&gt;1XX&lt;/h2&gt;
 &lt;p&gt;信息性状态码，表示接收的请求正在处理。&lt;/p&gt;
 &lt;ul&gt;
@@ -1064,6 +1068,7 @@ try {
 &lt;p&gt;注解，也就是Annotation，是Java 5 开始引入的特征，它提供了一种安全的类似注释的机制，用来将任何的信息或元数据与程序元素（类、方法、属性等）进行关联。&lt;br&gt;
 Annotation通过Java反射机制来访问注解信息，相关类根据这些信息决定对这些程序元素采用什么行为。Java语言解释器在工作时会忽略这些注解，因此注解在JVM中是“不起作用”的，只能通过配套工具对这些注解类型的信息进行访问和处理。&lt;br&gt;
 在软件框架或者工具中常常用到注解，比如Struts，JUnit，TestNG，Spring等。&lt;/p&gt;
+&lt;!-- more --&gt;
 &lt;h2 id=&#34;定义注解&#34;&gt;定义注解&lt;/h2&gt;
 &lt;p&gt;注解使用关键字&lt;code&gt;@interface&lt;/code&gt;定义，而不是&lt;code&gt;interface&lt;/code&gt;。所有注解都是继承的&lt;code&gt;java.lang.annotation.Annotation&lt;/code&gt;接口，但是如果直接创建一个interface继承&lt;code&gt;java.lang.annotation.Annotation&lt;/code&gt;接口并不是定义一个注解类型。&lt;br&gt;
 创建的注解类型中可以定义常量、静态成员，也可以定义方法。但是这些方法的声明里必须是无参数、无抛出异常的。方法的返回值必须为primitive类型（包括&lt;code&gt;String&lt;/code&gt;类型）、&lt;code&gt;Class&lt;/code&gt;类型、枚举类型、注解类型中的一个或者以上之一组成的一维数组。方法的后面可以用default和一个值来表示这个方法的默认返回值，注意，默认值不能设为null。只有返回值是&lt;code&gt;Class&lt;/code&gt;的方法可以在注解类型中使用泛型，因为该方法能够将各种类型通过类转换变成&lt;code&gt;Class&lt;/code&gt;。&lt;br&gt;
@@ -1178,9 +1183,11 @@ email: true test@a.com
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;从上面的结果也可以看到，即使类中的属性定义为private类型，也可以通过注解对其进行标记赋值，这个方法在Spring等框架中常常使用。&lt;/p&gt;
 &lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
-&lt;p&gt;http://computerdragon.blog.51cto.com/6235984/1210969&lt;br&gt;
-http://www.cnblogs.com/mandroid/archive/2011/07/18/2109829.html&lt;br&gt;
-http://www.itzhai.com/java-based-notebook-annotation-annotation-introduction-and-use-custom-annotations.html&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://computerdragon.blog.51cto.com/6235984/1210969&#34;&gt;Java注解annotation用法和自定义注解处理器&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.cnblogs.com/mandroid/archive/2011/07/18/2109829.html&#34;&gt;Java基础之理解Annotation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.itzhai.com/java-based-notebook-annotation-annotation-introduction-and-use-custom-annotations.html&#34;&gt;Java基础笔记 - Annotation注解的介绍和使用 自定义注解&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 ">Java中的注解</a>
       </div>
       
@@ -1662,6 +1669,7 @@ final String string2 = &amp;quot;string2&amp;quot;;
           &lt;h2 id=&#34;类说明&#34;&gt;类说明&lt;/h2&gt;
 &lt;p&gt;&lt;code&gt;ReetrantLock&lt;/code&gt;是一个可重入排它&lt;code&gt;Lock&lt;/code&gt;，和使用&lt;code&gt;synchronized&lt;/code&gt;方法和语句的隐式监视器锁有着相同的基本行为和语义，但是有着扩展性能。&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;ReentrantLock&lt;/code&gt;由上次成功加锁但是还没有解锁的线程所持有。在锁没有被其他线程持有时，一个线程调用&lt;code&gt;lock&lt;/code&gt;将返回成功获取锁。如果当前线程已经持有锁那么该方法将立即返回。这个可以使用方法&lt;code&gt;isHeldByCurrentThread&lt;/code&gt;和&lt;code&gt;getHoldCount&lt;/code&gt;检查。&lt;/p&gt;
+&lt;!-- more --&gt;
 &lt;p&gt;这个类的构造器接收一个可选的公平性参数。当设为 true 时，在争用的情况下，锁倾向于授权给等待时间最长的线程。另外，这个锁不保证任何特定访问顺序。使用被多个线程访问的公平锁的程序将呈现比使用默认设置的情况较低的总吞吐量（也就是变慢了，通常是慢很多），但是在获取锁和保证不饥饿的时间上有较小的方差。&lt;/p&gt;
 &lt;p&gt;公平锁可以保证锁的获取按照FIFO原则，而代价是进行大量的线程切换。非公平性锁虽然可能造成线程饥饿，但是较少线程切换，保证了很大的吞吐量。&lt;/p&gt;
 &lt;p&gt;同样需要注意的是，不计时的&lt;code&gt;tryLock()&lt;/code&gt;方法不赞成公平设置。如果锁是可用的它将成功获得锁，而不管其他线程是否正在等待。&lt;/p&gt;
