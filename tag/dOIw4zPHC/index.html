@@ -9,7 +9,7 @@
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
 <title>Goroyal&#39;s blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1594369653455">
+<link rel="shortcut icon" href="/favicon.ico?v=1594369811793">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -195,19 +195,19 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">19</span>
+        <span class="site-item-stat-count">20</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
     <div class="sidebar-item-box">
       <a href="">
-        <span class="site-item-stat-count">7</span>
+        <span class="site-item-stat-count">8</span>
         <span class="site-item-stat-name language" data-lan="category">分类</span>
       </a>
     </div>
     <div class="sidebar-item-box">
       <a href="/tags/">
-        <span class="site-item-stat-count">7</span>
+        <span class="site-item-stat-count">8</span>
         <span class="site-item-stat-name language" data-lan="tag">标签</span>
       </a>
     </div>
@@ -245,6 +245,10 @@
           <small class="language" data-lan="tag">标签</small>
         </h2>
       </div>
+      
+      
+      
+      
       
       
       
@@ -517,6 +521,47 @@
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/js-object/"" data-c="
+          &lt;p&gt;JavaScript简单数据结构包括数字、字符串、布尔值、null值、undefined值，其他都是对象。&lt;br&gt;
+对象时属性的容器，其中每个属性都是名字和值。&lt;br&gt;
+JavaScript里面的对象时无类型的，对新属性的名字和值没有限制，适合用于聚集和管理数据，对象里也可以包含其他对象。&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;p&gt;&lt;strong&gt;对象字面量&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var empty_object={};
+
+var stoge={
+  &amp;quot;firstName&amp;quot;:&amp;quot;Joerome&amp;quot;,
+  &amp;quot;lastName&amp;quot;:&amp;quot;Howare&amp;quot;
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;上面的对象stoge中两个属性，如果他们不是JavaScript的保留字，可以去掉引号。&lt;br&gt;
+检索对象里面属性的值可以用中括号去获取，如&lt;code&gt;stoge[&amp;quot;firstName&amp;quot;]&lt;/code&gt;，如果该字符串表达式是一个字符串字面量，且是合法的JavaScript标识符不是保留字，那么也可以用点号“.”获取。如果试图获取一个不存在的属性，将得到undefined。&lt;/p&gt;
+&lt;p&gt;使用typeof操作符对确定属性的类型很有帮助：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;typeof flight.number  // &#39;number&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;注意，原型链中的任何属性都会产生值：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;typeof flight.toString  // &#39;function&#39;
+typeof flight.constructor // &#39;function&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;有两种方法处理这些不需要的属性：&lt;br&gt;
+第一个是让程序做检查并丢弃值为函数的属性，一般来说，想让对象在运行时动态获取自身信息时，关注更多的是数据。&lt;br&gt;
+另一个方法是使用hasOwnProperty方法，如果对象拥有独有的属性，将返回true，该方法不会检查原型链。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;flight.hasOwnProperty(&#39;number&#39;) // true
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;for in 循环中遍历属性的顺序是不确定的，如果想要确保属性以特定的顺序出现，最好的办法是完全避免使用for in语句，而是创建一个数组，在其中以正确的顺序包含属性名，然后使用普通的for循环遍历。&lt;/p&gt;
+&lt;p&gt;delete可以删除对象中的属性，不会触及原型链中的任何对象，删除对象的属性可能会让原型链中的属性透现出来：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;another.nickname  // &#39;Moe&#39;
+
+// 删除another的nickname属性，暴露出原型的nickname属性
+delete another.nickname;
+
+another.nickname  // &#39;Curly&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;用Java里面的话理解，就是删除子类中的覆盖父类的属性以及get方法，那么下次再想获取该属性，将是从父类得到的。&lt;/p&gt;
+">JavaScript里的对象</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/mysql-storage-engine/"" data-c="

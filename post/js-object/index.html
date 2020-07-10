@@ -8,7 +8,7 @@
 <meta name="keywords" content="Goroyal technical blog">
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
-<title>Goroyal&#39;s blog</title>
+<title>JavaScript里的对象 | Goroyal&#39;s blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1594369811793">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -38,6 +38,8 @@
 
 
 
+  <meta name="description" content="JavaScript里的对象" />
+  <meta name="keywords" content="JavaScript" />
 </head>
 
 <body>
@@ -170,10 +172,25 @@
   <div class="main-continer">
     
     <div
-      class="section-layout  gemini">
+      class="section-layout gemini ">
       <div class="section-layout-wrapper">
-        <div id="sidebarMeta" class="sidebar">
-    
+        
+
+<div class="sidebar">
+  
+    <div class="sidebar-box box-shadow-wrapper bg-color right-motion" id="sidebar">
+      
+        <div class="post-list-sidebar">
+          <div class="sidebar-title">
+            <span id="tocSideBar" class="sidebar-title-item sidebar-title-active language" data-lan="index">文章目录</span>
+            <span id="metaSideBar" class="sidebar-title-item language" data-lan="preview">站点概览</span>
+          </div>
+        </div>
+      
+      <div class="sidebar-body gemini" id="sidebar_body">
+        
+          
+            
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -219,138 +236,217 @@
 
 
 </div>
+          
+        
+      </div>
+    </div>
+  
 </div>
 <script>
-  let sidebarMeta = document.querySelector('#sidebarMeta');
-  let scheme = 'gemini';
-  let sidebarWrapper = document.querySelector('.sidebar-wrapper');
-  if (sidebarMeta && (scheme === 'pisces' || scheme === 'gemini')) {
-    document.addEventListener('scroll', function(e) {
-      if (document.scrollingElement.scrollTop > parseInt(sidebarMeta.style.marginTop) + 10) {
-        sidebarWrapper.classList.add('home-sidebar-fixed')
-      } else {
-        sidebarWrapper.classList.remove('home-sidebar-fixed')
+  const SIDEBAR_TITLE_ACTIVE = 'sidebar-title-active';
+  const SIDEBAR_BODY_ACTIVE = 'sidebar-body-active';
+  const SLIDE_UP_IN = 'slide-up-in';
+
+  let sidebar = document.querySelector('#sidebar'),
+  tocSideBar = document.querySelector('#tocSideBar'),
+  metaSideBar = document.querySelector('#metaSideBar'),
+  postToc = document.querySelector('#post_toc'),
+  postSiteMeta = document.querySelector('#post_side_meta'),
+  sidebarTitle = document.querySelector('.sidebar-title'),
+  sidebarBody = document.querySelector('#sidebar_body');
+
+  tocSideBar && tocSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  metaSideBar && metaSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  function toggleSidebar(e) {
+    let currentTitle = document.querySelector("."+SIDEBAR_TITLE_ACTIVE);
+    if (currentTitle == e.srcElement) {
+      return ;
+    }
+    let current, showElement, hideElement;
+    if (e.srcElement == metaSideBar) {
+      showElement = postSiteMeta;
+      hideElement = postToc;
+    } else if (e.srcElement == tocSideBar){
+      showElement = postToc;
+      hideElement = postSiteMeta;
+    }
+    currentTitle.classList.remove(SIDEBAR_TITLE_ACTIVE);
+    e.srcElement.classList.add(SIDEBAR_TITLE_ACTIVE);
+
+    window.Velocity(hideElement, 'stop');
+    window.Velocity(hideElement, 'transition.slideUpOut', {
+      display: 'none',
+      duration: 200,
+      complete: function () {
+        window.Velocity(showElement, 'transition.slideDownIn', {
+          duration: 200
+        });
       }
-    });
+    })
+    hideElement.classList.remove(SIDEBAR_BODY_ACTIVE);
+    showElement.classList.add(SIDEBAR_BODY_ACTIVE);
   }
-  </script>
-        <div class="section-box tag-line box-shadow-wrapper">
-          <section class="section tags-section posts-expand bg-color">
-            <div class="padding-wrapper">
-  <div class="tag-timeline-box">
-    <div class="tag-timeline-wrapper">
-      <div class="tag-timeline-title">
-        <h2>
-          Linux
-          <small class="language" data-lan="tag">标签</small>
-        </h2>
-      </div>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <a href="http://goroyal.github.io/post/linux-redirect-dev-null/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              05-21
-              <small>Linux 中的 2&gt; /dev/null</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <a href="http://goroyal.github.io/post/exit-command-in-linux/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              05-13
-              <small>Linux 中的 exit 命令</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="http://goroyal.github.io/post/install-oracle-db-in-suse/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              04-06
-              <small>SUSE Linux中安装Oracle数据库</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+
+  postToc && postToc.addEventListener('transitionend', function() {
+    this.classList.remove(SLIDE_UP_IN);
+  });
+
+  if (sidebarBody) {
+    if (sidebarBody.classList.contains('pisces') || sidebarBody.classList.contains('gemini')) {
+      let hasFix = false;
+      let scrollEl = document.querySelector('.main-continer');
+      let limitTop = document.querySelector('#nav_ul').children.length * 42 + 162;
+      window.addEventListener('scroll', function(e) {
+        if (document.scrollingElement.scrollTop >= limitTop) {
+          if (!hasFix) {
+            sidebar.classList.add('sidebar-fixed');
+            hasFix = true;
+          }
+        } else {
+          if (hasFix) {
+            sidebar.classList.remove('sidebar-fixed');
+            hasFix = false;
+          }
+        }
+      });
+    }
+  }
+  
+</script>
+        <div class="section-box box-shadow-wrapper">
+          <div class="section bg-color post post-page">
+            <header class="post-header">
+    <h1 class="post-title">
+        <a class="post-title-link" href="http://goroyal.github.io/post/js-object/">
+            JavaScript里的对象
+        </a>
+    </h1>
+    <div class="post-meta">
+        
+                <span class="meta-item pc-show">
+      <i class="fa fa-calendar-o"></i>
+      <span class="language" data-lan="publish">发布于</span>
+                <span>2020-07-10</span>
+                <span class="post-meta-divider pc-show">|</span>
+                </span>
+                
+                    <span class="meta-item">
+      <i class="fa fa-folder-o"></i>
+      <span class="pc-show language" data-lan="category-in">分类于</span>
+                    
+                        
+                            <a href="http://goroyal.github.io/tag/o6aLUZ3Go/">
+                                <span>JavaScript</span>
+                            </a>
+                            
+                                    
+                                        </span>
+                                        <span class="post-meta-divider">|</span>
+                                        
+                                            <span class="meta-item">
+      <i class="fa fa-clock-o"></i>
+      <span>3<span class="language" data-lan="minute">分钟</span></span>
+                                            </span>
+                                            <span class="meta-item">
+      <span class="post-meta-divider">|</span>
+                                            <i class="fa fa-file-word-o"></i>
+                                            <span>577<span class="pc-show language" data-lan="words">字数</span></span>
+                                            </span>
+                                            
+                                                
+                                                    
+                                                                <!-- <span id="/post/js-object/" data-flag-title="JavaScript里的对象" class="meta-item pc-show leancloud_visitors">
+      <span class="post-meta-divider">|</span>
+      <i class="fa fa-eye"></i>
+      <span><span class="language" data-lan="view">浏览量</span>：<span class="leancloud-visitors-count"></span></span>
+    </span> -->
+                                                                
+    </div>
+</header>
+            <div class="post-body next-md-body" id="post_body">
+              <p>JavaScript简单数据结构包括数字、字符串、布尔值、null值、undefined值，其他都是对象。<br>
+对象时属性的容器，其中每个属性都是名字和值。<br>
+JavaScript里面的对象时无类型的，对新属性的名字和值没有限制，适合用于聚集和管理数据，对象里也可以包含其他对象。</p>
+<!-- more -->
+<p><strong>对象字面量</strong></p>
+<pre><code class="language-javascript">var empty_object={};
+
+var stoge={
+  &quot;firstName&quot;:&quot;Joerome&quot;,
+  &quot;lastName&quot;:&quot;Howare&quot;
+};
+</code></pre>
+<p>上面的对象stoge中两个属性，如果他们不是JavaScript的保留字，可以去掉引号。<br>
+检索对象里面属性的值可以用中括号去获取，如<code>stoge[&quot;firstName&quot;]</code>，如果该字符串表达式是一个字符串字面量，且是合法的JavaScript标识符不是保留字，那么也可以用点号“.”获取。如果试图获取一个不存在的属性，将得到undefined。</p>
+<p>使用typeof操作符对确定属性的类型很有帮助：</p>
+<pre><code class="language-javascript">typeof flight.number  // 'number'
+</code></pre>
+<p>注意，原型链中的任何属性都会产生值：</p>
+<pre><code class="language-javascript">typeof flight.toString  // 'function'
+typeof flight.constructor // 'function'
+</code></pre>
+<p>有两种方法处理这些不需要的属性：<br>
+第一个是让程序做检查并丢弃值为函数的属性，一般来说，想让对象在运行时动态获取自身信息时，关注更多的是数据。<br>
+另一个方法是使用hasOwnProperty方法，如果对象拥有独有的属性，将返回true，该方法不会检查原型链。</p>
+<pre><code class="language-javascript">flight.hasOwnProperty('number') // true
+</code></pre>
+<p>for in 循环中遍历属性的顺序是不确定的，如果想要确保属性以特定的顺序出现，最好的办法是完全避免使用for in语句，而是创建一个数组，在其中以正确的顺序包含属性名，然后使用普通的for循环遍历。</p>
+<p>delete可以删除对象中的属性，不会触及原型链中的任何对象，删除对象的属性可能会让原型链中的属性透现出来：</p>
+<pre><code class="language-javascript">another.nickname  // 'Moe'
+
+// 删除another的nickname属性，暴露出原型的nickname属性
+delete another.nickname;
+
+another.nickname  // 'Curly'
+</code></pre>
+<p>用Java里面的话理解，就是删除子类中的覆盖父类的属性以及get方法，那么下次再想获取该属性，将是从父类得到的。</p>
+
+            </div>
+            
+              <div class="post-footer">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong class="language" data-lan="author">本文作者：</strong>
+      Goroyal
+    </li>
+    <li class="post-copyright-link">
+      <strong class="language" data-lan="link">本文链接：</strong>
+      <a href="http://goroyal.github.io/post/js-object/" title="JavaScript里的对象">http://goroyal.github.io/post/js-object/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong class="language" data-lan="copyright">版权声明： </strong>
+      本博客所有文章除特别声明外，均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i> BY-NC-SA</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+  <div class="tags">
+    
+      <a href="http://goroyal.github.io/tag/o6aLUZ3Go/"># JavaScript</a>
+    
+  </div>
+  <div class="nav">
+    <div class="nav-prev">
+      
+    </div>
+    <div class="nav-next">
+      
+        <a class="nav-pc-next" title="MySQL不同的存储引擎" href="http://goroyal.github.io/post/mysql-storage-engine/">MySQL不同的存储引擎</a>
+        <a class="nav-mobile-next" title="MySQL不同的存储引擎" href="http://goroyal.github.io/post/mysql-storage-engine/">下一篇</a>
+        <i class="fa fa-chevron-right"></i>
       
     </div>
   </div>
 </div>
-          </section>
+            
+            
+  
+
+          </div>
         </div>
       </div>
     </div>
@@ -525,6 +621,36 @@
 
     // 代码高亮
     hljs.initHighlightingOnLoad();
+</script>
+    <div class="light-box" id="light_box"></div>
+<script>
+  let imgs = document.querySelectorAll('.post-body img');
+  let lightBox = document.querySelector('#light_box');
+  lightBox.addEventListener('mousedown', (e) => {
+    e.preventDefault()
+  })
+  lightBox.addEventListener('mousewheel', (e) => {
+    e.preventDefault()
+  })
+  let width = window.innerWidth * 0.8;
+  lightBox.onclick = () => {
+    let img = lightBox.querySelector('img');
+    lightBox.style = '';
+    img && img.remove();
+  }
+  imgs.forEach(item => {
+    item.onclick = function (e) {
+      let lightImg = document.createElement('img');
+      lightImg.src = this.src;
+      lightBox.style = `height: 100%; opacity: 1; background-color: rgba(0, 0, 0, 0.5);cursor: zoom-out;`;
+      lightImg.style = `width: ${width}px; border: 1px solid #fff; border-radius: 2px;`;
+      lightImg.onclick = function () {
+        lightBox.style = '';
+        this.remove();
+      }
+      lightBox.append(lightImg);
+    }
+  })
 </script>
   </div>
 </body>
@@ -1872,7 +1998,6 @@ final String string2 = &amp;quot;string2&amp;quot;;
     speed: 200
   });
 </script>
-
 
 
 
