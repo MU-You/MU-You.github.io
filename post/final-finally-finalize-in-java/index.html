@@ -9,7 +9,7 @@
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
 <title>Java中的final、finally和finalize | Goroyal&#39;s blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1594370145994">
+<link rel="shortcut icon" href="/favicon.ico?v=1594370450659">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -1011,7 +1011,7 @@ InnoDB的锁级别是行锁，行锁在锁定上带来的消耗大于表锁，�
 &lt;p&gt;Federated存储引擎表并不存放数据，它只是指向一台远程MySQL数据库服务器上的表。这非常类似于SQL Server的链接服务器和Oracle的透明网关，不同的是，当前Federated存储引擎只支持MySQL数据库表，不支持异构数据库表。&lt;/p&gt;
 &lt;h2 id=&#34;maria存储引擎&#34;&gt;Maria存储引擎&lt;/h2&gt;
 &lt;p&gt;Maria存储引擎是新开发的引擎，设计目标主要是用来取代原有的MyISAM存储引擎，从而成为MySQL的默认存储引擎，开发者是MySQL 的创始人之一的Michael Widenius。因此，它可以看作是MyISAM的后续版本。其特点是：缓存数据和索引文件，行锁设计，提供MVCC功能，支持事务和非事务安全的选项 支持，以及更好的BLOB字符类型的处理性能。&lt;/p&gt;
-&lt;p&gt;##其他存储引擎&lt;/p&gt;
+&lt;h2 id=&#34;其他存储引擎&#34;&gt;其他存储引擎&lt;/h2&gt;
 &lt;p&gt;除了上面提到的7种存储引擎外，还有很多其他的存储引擎，包括Merge、CSV、Sphinx和Infobright，它们都有各自适用的场合，这里不再一一做介绍了。了解了MySQL拥有这么多存储引擎后，现在我可以回答1.2节中提到的问题了。&lt;/p&gt;
 &lt;p&gt;为什么MySQL不支持全文索引？不！MySQL支持，MyISAM、Sphinx存储引擎支持全文索引。&lt;br&gt;
 MySQL快是因为不支持事务吗？错！MySQL MyISAM存储引擎不支持事务，但是InnoDB支持。快是相对于不同应用来说的，对于ETL这种操作，MyISAM当然有其优势。&lt;br&gt;
@@ -1056,11 +1056,11 @@ AUTO_INCREMENT值可用ALTER TABLE或myisamch来重置。&lt;/p&gt;
 对数据一致性要求不高，如session/在线人数等&lt;br&gt;
 需要定期归档的数据&lt;/p&gt;
 &lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
-&lt;p&gt;http://www.ha97.com/4197.html&lt;br&gt;
-http://php100.com/&lt;br&gt;
-http://imysql.com/2015/07/23/something-important-about-mysql-design-reference.shtml&lt;br&gt;
-http://www.2liang.me/archives/254&lt;br&gt;
-http://simpleframework.net/news/view?newsId=63cd772590e8495bbff4d713e092f772&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.ha97.com/4197.html&#34;&gt;MySQL存储引擎MyISAM与InnoDB的主要区别对比&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://imysql.com/2015/07/23/something-important-about-mysql-design-reference.shtml&#34;&gt;老叶观点：MySQL开发规范之我见&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://simpleframework.net/news/view?newsId=63cd772590e8495bbff4d713e092f772&#34;&gt;《MySQL技术内幕:InnoDB存储引擎》-- 第1章 MySQL体系结构和存储引擎&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 ">MySQL不同的存储引擎</a>
       </div>
       
