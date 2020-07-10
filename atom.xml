@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://goroyal.github.io/</id>
+    <id>http://goroyal.xyz</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2020-05-22T01:40:51.849Z</updated>
+    <updated>2020-07-10T07:53:47.252Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://goroyal.github.io/"/>
-    <link rel="self" href="https://goroyal.github.io/atom.xml"/>
+    <link rel="alternate" href="http://goroyal.xyz"/>
+    <link rel="self" href="http://goroyal.xyz/atom.xml"/>
     <subtitle>学习分享</subtitle>
-    <logo>https://goroyal.github.io/images/avatar.png</logo>
-    <icon>https://goroyal.github.io/favicon.ico</icon>
+    <logo>http://goroyal.xyz/images/avatar.png</logo>
+    <icon>http://goroyal.xyz/favicon.ico</icon>
     <rights>All rights reserved 2020, Goroyal&apos;s blog</rights>
     <entry>
         <title type="html"><![CDATA[Linux 中的 2> /dev/null]]></title>
-        <id>https://goroyal.github.io/post/linux-redirect-dev-null/</id>
-        <link href="https://goroyal.github.io/post/linux-redirect-dev-null/">
+        <id>http://goroyal.xyz/post/linux-redirect-dev-null/</id>
+        <link href="http://goroyal.xyz/post/linux-redirect-dev-null/">
         </link>
         <updated>2020-05-21T15:12:33.000Z</updated>
         <summary type="html"><![CDATA[<p>本文亦发布于<a href="https://thinkbucket.cn/blog/2020/05/21/linux-redirect-dev-null">ThinkBucket</a>。<br>
@@ -84,8 +84,8 @@ rm -r folder 2&gt; /dev/null
     </entry>
     <entry>
         <title type="html"><![CDATA[面向对象编程与纯函数]]></title>
-        <id>https://goroyal.github.io/post/oop-and-pure-function/</id>
-        <link href="https://goroyal.github.io/post/oop-and-pure-function/">
+        <id>http://goroyal.xyz/post/oop-and-pure-function/</id>
+        <link href="http://goroyal.xyz/post/oop-and-pure-function/">
         </link>
         <updated>2019-06-26T16:51:40.000Z</updated>
         <summary type="html"><![CDATA[<p>在面向对象编程里面，我们常常对现实世界建模抽象成一个个类，然后创建它们的对象，通过对象的方法行为去描述逻辑。</p>
@@ -100,9 +100,9 @@ https://www.jiqizhixin.com/articles/2018-10-22-15</p>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[管理多个Java版本]]></title>
-        <id>https://goroyal.github.io/post/manage-multiple-java-versions/</id>
-        <link href="https://goroyal.github.io/post/manage-multiple-java-versions/">
+        <title type="html"><![CDATA[在Shell里管理多个Java版本]]></title>
+        <id>http://goroyal.xyz/post/manage-multiple-java-versions/</id>
+        <link href="http://goroyal.xyz/post/manage-multiple-java-versions/">
         </link>
         <updated>2019-06-26T16:30:26.000Z</updated>
         <summary type="html"><![CDATA[<p>自从Oracle宣布Java开始收费之后，越来越多的人会考虑从[Open JDK][1]下载安装Java环境。可能自己机器上也会同时并存好几个Java版本，本文以macOS为例介绍一下如何从Open JDK安装并进行管理多版本。</p>
@@ -151,8 +151,8 @@ function java12() {
     </entry>
     <entry>
         <title type="html"><![CDATA[Try with closable resources]]></title>
-        <id>https://goroyal.github.io/post/Try with closable resources/</id>
-        <link href="https://goroyal.github.io/post/Try with closable resources/">
+        <id>http://goroyal.xyz/post/Try with closable resources/</id>
+        <link href="http://goroyal.xyz/post/Try with closable resources/">
         </link>
         <updated>2019-06-17T14:41:03.000Z</updated>
         <content type="html"><![CDATA[<p>以前，拿到一个closable资源后，如果对它操作，都要先用try包起来，最后一定要在finally里面关掉：</p>
@@ -180,8 +180,8 @@ try {
     </entry>
     <entry>
         <title type="html"><![CDATA[以单元测试的角度聊聊写代码]]></title>
-        <id>https://goroyal.github.io/post/wring-code-from-unit-test-side/</id>
-        <link href="https://goroyal.github.io/post/wring-code-from-unit-test-side/">
+        <id>http://goroyal.xyz/post/wring-code-from-unit-test-side/</id>
+        <link href="http://goroyal.xyz/post/wring-code-from-unit-test-side/">
         </link>
         <updated>2019-05-24T12:25:28.000Z</updated>
         <summary type="html"><![CDATA[<p>单元测试，也就是对代码较细粒度单元的测试，一般就是测某个方法或函数。说到单元测试，基本上每个开发者都不陌生，时不时会听到“测试覆盖率太低了！”，然后“We need to increase our code coverage!”。经常出bug？好好准备测试吧。</p>
@@ -194,7 +194,7 @@ try {
 <p>上面说了这么多，就是在强调单元测试覆盖率一定要尽可能高，每个单元测试职责一定要尽可能单一简单。单元测试覆盖无非就是代码行覆盖、分支覆盖，单元测试职责单一简单是说单元测试不要试图测某个方法的所有可能性，多写几个，这样出了问题能根据测试名字迅速找到为什么什么用例失败了以及被测方法的哪行可能有问题。</p>
 <h2 id="2-单元测试为何难写">2. 单元测试为何难写？</h2>
 <p>你可能听说过“测试驱动开发”，就是先写测试、后写代码，这个要求在写代码之前先好好分析需求、细化用例，把各个用例的测试写出来，每次改动代码都要求让尽可能多的测试结果为绿（成功），直到最后所有测试都绿了，那么代码的功能上也基本没问题了。这个可以了解下，有兴趣多看看这方面拓展一下。<br>
-<img src="https://goroyal.github.io//post-images/1560780095750.png" alt="" loading="lazy"></p>
+<img src="http://goroyal.xyz/post-images/1560780095750.png" alt="" loading="lazy"></p>
 <p>为什么单元测试覆盖率往往上不去？因为有时候真的不好写。什么样的代码不好写单元测试：</p>
 <ol>
 <li>被测方法传入了比较复杂的类的对象参数（不是依赖接口），当我要测这个方法，我就要去new依赖的那个对象，但是那个对象又依赖其他的，我又要接着new……，可能这个方法还没开始测，光创建它依赖的东西就写了一大堆测试代码。</li>
@@ -220,8 +220,8 @@ try {
     </entry>
     <entry>
         <title type="html"><![CDATA[HTTP 响应状态码]]></title>
-        <id>https://goroyal.github.io/post/http-response-code/</id>
-        <link href="https://goroyal.github.io/post/http-response-code/">
+        <id>http://goroyal.xyz/post/http-response-code/</id>
+        <link href="http://goroyal.xyz/post/http-response-code/">
         </link>
         <updated>2019-04-06T12:14:38.000Z</updated>
         <summary type="html"><![CDATA[<p>目前HTTP在Web开发中被广泛使用，REST (Representational State Transfer) 很多人应该或多或少都知道些。当然了，比较熟悉的可能主要是GET、POST方法。这篇文章不是介绍REST的定义和如何创建符合REST风格的API，而是讲讲在Web开发中通用的不同HTTP响应状态码的含义。在普通网站开发、分布式集群开发、团队协作方面，如果采用了HTTP作为组件之间交互的协议，遵守通用的响应状态码是很有必要的（一是有充分的信息量、二是避免歧义）。</p>
@@ -279,8 +279,8 @@ try {
     </entry>
     <entry>
         <title type="html"><![CDATA[Java中的注解]]></title>
-        <id>https://goroyal.github.io/post/java-annotation/</id>
-        <link href="https://goroyal.github.io/post/java-annotation/">
+        <id>http://goroyal.xyz/post/java-annotation/</id>
+        <link href="http://goroyal.xyz/post/java-annotation/">
         </link>
         <updated>2019-02-06T12:17:45.000Z</updated>
         <summary type="html"><![CDATA[<h2 id="概念">概念</h2>
@@ -416,8 +416,8 @@ email: true test@a.com
     </entry>
     <entry>
         <title type="html"><![CDATA[Linux 中的 exit 命令]]></title>
-        <id>https://goroyal.github.io/post/exit-command-in-linux/</id>
-        <link href="https://goroyal.github.io/post/exit-command-in-linux/">
+        <id>http://goroyal.xyz/post/exit-command-in-linux/</id>
+        <link href="http://goroyal.xyz/post/exit-command-in-linux/">
         </link>
         <updated>2018-05-13T14:22:26.000Z</updated>
         <summary type="html"><![CDATA[<p>本文亦发布于<a href="https://thinkbucket.cn/blog/2020/02/11/linux-exit/">ThinkBucket</a>。<br>
@@ -480,8 +480,8 @@ email: true test@a.com
     </entry>
     <entry>
         <title type="html"><![CDATA[SUSE Linux中安装Oracle数据库]]></title>
-        <id>https://goroyal.github.io/post/install-oracle-db-in-suse/</id>
-        <link href="https://goroyal.github.io/post/install-oracle-db-in-suse/">
+        <id>http://goroyal.xyz/post/install-oracle-db-in-suse/</id>
+        <link href="http://goroyal.xyz/post/install-oracle-db-in-suse/">
         </link>
         <updated>2018-04-06T13:34:02.000Z</updated>
         <content type="html"><![CDATA[<p>从官网下载64位rpm安装包，解压，打开terminal进入rpm安装包所在目录，输入<code>rpm -i install oralce-xe-xxx.rpm</code><br>
@@ -511,8 +511,8 @@ exec dbms_xdb.sethttpport(8088)
     </entry>
     <entry>
         <title type="html"><![CDATA[Java中的几种引用]]></title>
-        <id>https://goroyal.github.io/post/references-in-java/</id>
-        <link href="https://goroyal.github.io/post/references-in-java/">
+        <id>http://goroyal.xyz/post/references-in-java/</id>
+        <link href="http://goroyal.xyz/post/references-in-java/">
         </link>
         <updated>2018-01-11T14:36:39.000Z</updated>
         <content type="html"><![CDATA[<p>Java中的引用主要有以下几种类型：<br>
