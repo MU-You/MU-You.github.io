@@ -9,7 +9,7 @@
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
 <title>Goroyal&#39;s blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1594367662530">
+<link rel="shortcut icon" href="/favicon.ico?v=1594369058055">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -184,7 +184,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">17</span>
+        <span class="site-item-stat-count">18</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -232,6 +232,8 @@
   <div class="tag-cloud-list" id="tags">
     
       
+      
+        
       
         
           
@@ -294,6 +296,8 @@
       
       
         
+      
+        
           
         
       
@@ -352,6 +356,8 @@
       <a class="cloud-tag" href="http://goroyal.xyz/tag/8bBitk00X/" rel="1">Programming Style</a>
     
       
+      
+        
       
         
           
@@ -414,6 +420,8 @@
       
       
         
+      
+        
           
         
       
@@ -472,6 +480,8 @@
       <a class="cloud-tag" href="http://goroyal.xyz/tag/16eTJqumR/" rel="1">UnitTest</a>
     
       
+      
+        
       
         
           
@@ -778,6 +788,22 @@
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="http://goroyal.xyz/post/array-and-linkedlist/"" data-c="
+          &lt;p&gt;在计算机程序里，数据存储的方式无外乎两种：顺序存储和链式存储。顺序存储的结构可以称为顺序表，也可以用数组描述，链式存储的结构可以称为链表。&lt;br&gt;
+我们每一个学过数据结构的都知道，它们两者各自有一些鲜明的特性，比如：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;我们可以通过数组下标去访问数组里的元素，查询、更新的效率高，时间复杂度是O(1)，但是在中间某个位置插入或删除一个元素就要挪动后面所有的元素，时间复杂度是O(n)。&lt;/li&gt;
+&lt;li&gt;链表里元素之间存在指针指向关联的另一个元素，我们只能通过指针挨个去遍历访问链表里的元素，查询、更新的效率低，时间复杂度是O(n)，在中间某个位置插入或删除一个元素比较方便，只需要修改相邻指针的引用就可以了，时间复杂度是O(1)。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- more --&gt;
+&lt;h2 id=&#34;数组&#34;&gt;数组&lt;/h2&gt;
+&lt;p&gt;数组的好处显而易见，它的存储结构比较紧凑，相对节省空间。每个元素都有唯一的索引，支持随机访问。但是数组所需要的空间需要一次分配够，当数组容量满时，新加入元素就要对数组进行扩容。扩容时，往往不能在原地直接扩，因为后面的内存可能已经分配给其他数据结构了，所以要重新申请一块新的更大的内存空间，将原有的数组里的元素全部复制到新的数组里，再释放原有数组的空间，这个过程时间复杂度是O(n)，可以参考Java的&lt;code&gt;ArrayList&lt;/code&gt;。如果不加以合理的维护，内存中将产生大量碎片。&lt;/p&gt;
+&lt;h2 id=&#34;链表&#34;&gt;链表&lt;/h2&gt;
+&lt;p&gt;链表有效地解决里数组需要扩容的问题，因为链表里的每个元素节点都不需要连续，链表的节点通过指针进行索引，每个节点只能找到它指针指向的下一个节点。正常的单向链表是从头节点开始，每个节点依次有一个指针指向它后面的节点，尾部节点指向NULL。有时候为了方便拿到前驱节点，我们会采用双向链表，也就是每个节点既包含一个指针指向后面的，也包含一个指针指向前面的。还有一种链表是循环链表，也就是说尾节点指向了头节点。&lt;/p&gt;
+">【数据结构】数组和链表</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="http://goroyal.xyz/post/linux-redirect-dev-null/"" data-c="
