@@ -8,7 +8,7 @@
 <meta name="keywords" content="Goroyal technical blog">
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
-<title>Goroyal&#39;s blog</title>
+<title>MySQL不同的存储引擎 | Goroyal&#39;s blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1594369653455">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -38,6 +38,8 @@
 
 
 
+  <meta name="description" content="MySQL不同的存储引擎" />
+  <meta name="keywords" content="Database" />
 </head>
 
 <body>
@@ -170,10 +172,26 @@
   <div class="main-continer">
     
     <div
-      class="section-layout  gemini">
+      class="section-layout gemini ">
       <div class="section-layout-wrapper">
-        <div id="sidebarMeta" class="sidebar">
-    
+        
+
+<div class="sidebar">
+  
+    <div class="sidebar-box box-shadow-wrapper bg-color right-motion" id="sidebar">
+      
+        <div class="post-list-sidebar">
+          <div class="sidebar-title">
+            <span id="tocSideBar" class="sidebar-title-item sidebar-title-active language" data-lan="index">文章目录</span>
+            <span id="metaSideBar" class="sidebar-title-item language" data-lan="preview">站点概览</span>
+          </div>
+        </div>
+      
+      <div class="sidebar-body gemini" id="sidebar_body">
+        
+          
+            <div class="post-side-meta" id="post_side_meta">
+              
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -219,145 +237,491 @@
 
 
 </div>
+            </div>
+            <div class="post-toc sidebar-body-active" id="post_toc" style="opacity: 1;">
+              <div class="toc-box right-motion">
+  <div class="toc-wrapper auto-number auto"
+    id="toc_wrapper">
+    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#myisam%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E">MyISAM存储引擎</a></li>
+<li><a href="#innodb%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E">InnoDB存储引擎</a></li>
+<li><a href="#memory%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E">Memory存储引擎</a></li>
+<li><a href="#ndb%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E">NDB存储引擎</a></li>
+<li><a href="#archive%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E">Archive存储引擎</a></li>
+<li><a href="#federated%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E">Federated存储引擎</a></li>
+<li><a href="#maria%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E">Maria存储引擎</a></li>
+<li><a href="#myisam%E5%92%8Cinnodb%E5%B7%AE%E5%88%AB">MyISAM和InnoDB差别</a>
+<ul>
+<li><a href="#%E6%9E%84%E6%88%90%E5%B7%AE%E5%88%AB">构成差别</a></li>
+<li><a href="#%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86%E5%B7%AE%E5%88%AB">事务处理差别</a></li>
+<li><a href="#crud%E6%93%8D%E4%BD%9C">CRUD操作</a></li>
+<li><a href="#auto_increment%E6%93%8D%E4%BD%9C">AUTO_INCREMENT操作</a></li>
+<li><a href="#%E8%A1%A8%E7%9A%84%E5%85%B7%E4%BD%93%E8%A1%8C%E6%95%B0">表的具体行数</a></li>
+<li><a href="#%E9%94%81">锁</a></li>
+<li><a href="#%E7%B4%A2%E5%BC%95">索引</a></li>
+</ul>
+</li>
+<li><a href="#%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84%E5%BC%95%E6%93%8E">如何选择合适的引擎</a>
+<ul>
+<li><a href="#%E9%87%87%E7%94%A8myisam%E5%BC%95%E6%93%8E">采用MyISAM引擎</a></li>
+<li><a href="#%E9%87%87%E7%94%A8innodb%E5%BC%95%E6%93%8E">采用InnoDB引擎</a></li>
+<li><a href="#%E9%87%87%E7%94%A8memory%E5%BC%95%E6%93%8E">采用Memory引擎</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
 </div>
+
 <script>
-  let sidebarMeta = document.querySelector('#sidebarMeta');
-  let scheme = 'gemini';
-  let sidebarWrapper = document.querySelector('.sidebar-wrapper');
-  if (sidebarMeta && (scheme === 'pisces' || scheme === 'gemini')) {
-    document.addEventListener('scroll', function(e) {
-      if (document.scrollingElement.scrollTop > parseInt(sidebarMeta.style.marginTop) + 10) {
-        sidebarWrapper.classList.add('home-sidebar-fixed')
-      } else {
-        sidebarWrapper.classList.remove('home-sidebar-fixed')
+
+  let lastTop = 0, lList = [], hList = [], postBody, lastIndex = -1;
+  let active = 'active-show', activeClass = 'active-current';
+  let tocWrapper = document.querySelector('#toc_wrapper');
+  let tocContent = tocWrapper.children[0];
+  let autoNumber = tocWrapper && tocWrapper.classList.contains('auto-number');
+
+  function addTocNumber(elem, deep) {
+    if (!elem) {
+      return;
+    }
+    let prop = elem.__proto__;
+
+    if (prop === HTMLUListElement.prototype) {
+      for (let i = 0; i < elem.children.length; i++) {
+        addTocNumber(elem.children[i], deep + (i + 1) + '.');
       }
+    } else if (prop === HTMLLIElement.prototype) {
+      // 保存li元素
+      if (elem.children[0].__proto__ === HTMLAnchorElement.prototype) {
+        lList.push(elem);
+      }
+      for (let i = 0; i < elem.children.length; i++) {
+        let cur = elem.children[i];
+        if (cur.__proto__ === HTMLAnchorElement.prototype) {
+          if (autoNumber) {
+            cur.text = deep + ' ' + cur.text;
+          }
+        } else if (cur.__proto__ === HTMLUListElement.prototype) {
+          addTocNumber(cur, deep);
+        }
+      }
+    }
+  }
+
+  function removeParentActiveClass() {
+    let parents = tocContent.querySelectorAll('.' + active)
+    parents.forEach(function (elem) {
+      elem.classList.remove(active);
     });
   }
-  </script>
-        <div class="section-box tag-line box-shadow-wrapper">
-          <section class="section tags-section posts-expand bg-color">
-            <div class="padding-wrapper">
-  <div class="tag-timeline-box">
-    <div class="tag-timeline-wrapper">
-      <div class="tag-timeline-title">
-        <h2>
-          Java
-          <small class="language" data-lan="tag">标签</small>
-        </h2>
+
+  function addActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.add(activeClass);
+    }
+  }
+
+  function removeActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.remove(activeClass);
+    }
+  }
+
+  function addActiveLiElemment(elem, parent) {
+    if (!elem || elem === parent) {
+      return;
+    } else {
+      if (elem.__proto__ === HTMLLIElement.prototype) {
+        elem.classList.add(active);
+      }
+      addActiveLiElemment(elem.parentElement, parent);
+    }
+  }
+
+  function showToc() {
+    if (tocWrapper) {
+      postBody = document.querySelector('#post_body');
+      for (let i = 0; i < postBody.children.length; i++) {
+        if (postBody.children[i].__proto__ === HTMLHeadingElement.prototype) {
+          hList.push(postBody.children[i]);
+        }
+      }
+      if (tocWrapper.classList.contains('compress')) {
+        tocContent.classList.add('closed');
+      } else if (tocWrapper.classList.contains('no_compress')) {
+        tocContent.classList.add('expanded');
+      } else {
+        if (hList.length > 10) {
+          active = 'active-hidden'
+          tocContent.classList.add('closed');
+        } else {
+          tocContent.classList.add('expanded');
+        }
+      }
+    }
+  }
+
+  (function () {
+    // 处理不是从#一级标题开始目录
+    if (tocContent.children.length === 1 && tocContent.children[0].__proto__ === HTMLLIElement.prototype) {
+      let con = tocContent.children[0].children[0];
+      tocContent.innerHTML = con.innerHTML;
+    }
+    let markdownItTOC = document.querySelector('.markdownIt-TOC');
+    let innerHeight = window.innerHeight;
+    markdownItTOC.style = `max-height: ${innerHeight - 80 > 0 ? innerHeight - 80 : innerHeight}px`
+    addTocNumber(tocContent, '');
+  })();
+
+  document.addEventListener('scroll', function (e) {
+    if (lList.length <= 0) {
+      return;
+    }
+    let scrollTop = document.scrollingElement.scrollTop + 10;
+    let dir;
+
+    if (lastTop - scrollTop > 0) {
+      dir = 'up';
+    } else {
+      dir = 'down';
+    }
+
+    lastTop = scrollTop;
+    if (scrollTop <= 0) {
+      if (lastIndex >= 0 && lastIndex < hList.length) {
+        lList[lastIndex].classList.remove(activeClass);
+      }
+      return;
+    }
+
+    let current = 0, hasFind = false;
+    for (let i = 0; i < hList.length; i++) {
+      if (hList[i].offsetTop > scrollTop) {
+        current = i;
+        hasFind = true;
+        break;
+      }
+    }
+    if (!hasFind && scrollTop > lList[lList.length - 1].offsetTop) {
+      current = hList.length - 1;
+    } else {
+      current--;
+    }
+    if (dir === 'down') {
+      if (current > lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex)
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    } else {
+      if (current < lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex);
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    }
+  });
+
+
+  window.addEventListener('load', function () {
+    showToc();
+    document.querySelector('#sidebar').style = 'display: block;';
+    tocWrapper.classList.add('toc-active');
+    setTimeout(function () {
+      if ("createEvent" in document) {
+        let evt = document.createEvent("HTMLEvents");
+        evt.initEvent("scroll", false, true);
+        document.dispatchEvent(evt);
+      }
+      else {
+        document.fireEvent("scroll");
+      }
+    }, 500)
+  })
+
+</script>
+            </div>
+          
+        
       </div>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <a href="http://goroyal.github.io/post/manage-multiple-java-versions/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              06-27
-              <small>在Shell里管理多个Java版本</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <a href="http://goroyal.github.io/post/java-annotation/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              02-06
-              <small>Java中的注解</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <a href="http://goroyal.github.io/post/abstract-class-and-interface/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              10-14
-              <small>Java 抽象类和接口</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      <a href="http://goroyal.github.io/post/final-finally-finalize-in-java/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              05-03
-              <small>Java中的final、finally和finalize</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+    </div>
+  
+</div>
+<script>
+  const SIDEBAR_TITLE_ACTIVE = 'sidebar-title-active';
+  const SIDEBAR_BODY_ACTIVE = 'sidebar-body-active';
+  const SLIDE_UP_IN = 'slide-up-in';
+
+  let sidebar = document.querySelector('#sidebar'),
+  tocSideBar = document.querySelector('#tocSideBar'),
+  metaSideBar = document.querySelector('#metaSideBar'),
+  postToc = document.querySelector('#post_toc'),
+  postSiteMeta = document.querySelector('#post_side_meta'),
+  sidebarTitle = document.querySelector('.sidebar-title'),
+  sidebarBody = document.querySelector('#sidebar_body');
+
+  tocSideBar && tocSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  metaSideBar && metaSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  function toggleSidebar(e) {
+    let currentTitle = document.querySelector("."+SIDEBAR_TITLE_ACTIVE);
+    if (currentTitle == e.srcElement) {
+      return ;
+    }
+    let current, showElement, hideElement;
+    if (e.srcElement == metaSideBar) {
+      showElement = postSiteMeta;
+      hideElement = postToc;
+    } else if (e.srcElement == tocSideBar){
+      showElement = postToc;
+      hideElement = postSiteMeta;
+    }
+    currentTitle.classList.remove(SIDEBAR_TITLE_ACTIVE);
+    e.srcElement.classList.add(SIDEBAR_TITLE_ACTIVE);
+
+    window.Velocity(hideElement, 'stop');
+    window.Velocity(hideElement, 'transition.slideUpOut', {
+      display: 'none',
+      duration: 200,
+      complete: function () {
+        window.Velocity(showElement, 'transition.slideDownIn', {
+          duration: 200
+        });
+      }
+    })
+    hideElement.classList.remove(SIDEBAR_BODY_ACTIVE);
+    showElement.classList.add(SIDEBAR_BODY_ACTIVE);
+  }
+
+  postToc && postToc.addEventListener('transitionend', function() {
+    this.classList.remove(SLIDE_UP_IN);
+  });
+
+  if (sidebarBody) {
+    if (sidebarBody.classList.contains('pisces') || sidebarBody.classList.contains('gemini')) {
+      let hasFix = false;
+      let scrollEl = document.querySelector('.main-continer');
+      let limitTop = document.querySelector('#nav_ul').children.length * 42 + 162;
+      window.addEventListener('scroll', function(e) {
+        if (document.scrollingElement.scrollTop >= limitTop) {
+          if (!hasFix) {
+            sidebar.classList.add('sidebar-fixed');
+            hasFix = true;
+          }
+        } else {
+          if (hasFix) {
+            sidebar.classList.remove('sidebar-fixed');
+            hasFix = false;
+          }
+        }
+      });
+    }
+  }
+  
+</script>
+        <div class="section-box box-shadow-wrapper">
+          <div class="section bg-color post post-page">
+            <header class="post-header">
+    <h1 class="post-title">
+        <a class="post-title-link" href="http://goroyal.github.io/post/mysql-storage-engine/">
+            MySQL不同的存储引擎
+        </a>
+    </h1>
+    <div class="post-meta">
+        
+                <span class="meta-item pc-show">
+      <i class="fa fa-calendar-o"></i>
+      <span class="language" data-lan="publish">发布于</span>
+                <span>2020-07-10</span>
+                <span class="post-meta-divider pc-show">|</span>
+                </span>
+                
+                    <span class="meta-item">
+      <i class="fa fa-folder-o"></i>
+      <span class="pc-show language" data-lan="category-in">分类于</span>
+                    
+                        
+                            <a href="http://goroyal.github.io/tag/8q5LigPjO/">
+                                <span>Database</span>
+                            </a>
+                            
+                                    
+                                        </span>
+                                        <span class="post-meta-divider">|</span>
+                                        
+                                            <span class="meta-item">
+      <i class="fa fa-clock-o"></i>
+      <span>14<span class="language" data-lan="minute">分钟</span></span>
+                                            </span>
+                                            <span class="meta-item">
+      <span class="post-meta-divider">|</span>
+                                            <i class="fa fa-file-word-o"></i>
+                                            <span>3642<span class="pc-show language" data-lan="words">字数</span></span>
+                                            </span>
+                                            
+                                                
+                                                    
+                                                                <!-- <span id="/post/mysql-storage-engine/" data-flag-title="MySQL不同的存储引擎" class="meta-item pc-show leancloud_visitors">
+      <span class="post-meta-divider">|</span>
+      <i class="fa fa-eye"></i>
+      <span><span class="language" data-lan="view">浏览量</span>：<span class="leancloud-visitors-count"></span></span>
+    </span> -->
+                                                                
+    </div>
+</header>
+            <div class="post-body next-md-body" id="post_body">
+              <p>MySQL由以下几部分组成：</p>
+<ul>
+<li>连接池组件</li>
+<li>管理服务和工具组件</li>
+<li>SQL接口组件</li>
+<li>查询分析器组件</li>
+<li>优化器组件</li>
+<li>缓冲（Cache）组件</li>
+<li>插件式存储引擎</li>
+<li>物理文件</li>
+</ul>
+<p>MySQL区别于其他数据库的最重要的特点就是其插件式的表存储引擎。MySQL插件式的存储引擎架构提供了一系列标准的管理和服务支持，这些标准与存储引擎本身无关，可能是每个数据库系统本身都必需的，如SQL分析器和优化器等，而存储引擎是底层物理结构的实现，每个存储引擎开发者都可以按照自己的意愿来进行开发。</p>
+<p><strong>注意：存储引擎是基于表的，而不是数据库。</strong></p>
+<!-- more -->
+<p>MySQL常用的插件式存储引擎主要包括MyISAM，InnoDB，NDB Cluster，Maria，Falcon，Memory，Archive，Merge，Federated等，其中最著名且使用最广泛的是MyISAM和InnoDB。MyISAM是MySQL的默认存储引擎，是MySQL最早的ISAM存储引擎的升级版本。</p>
+<h2 id="myisam存储引擎">MyISAM存储引擎</h2>
+<p>MyISAM是MySQL的默认存储引擎，它支持B-tree/FullText/R-tree索引类型。<br>
+MyISAM的锁级别是表锁，表锁的开销小，加锁快；锁粒度大，发生锁冲突的概率较高，并发度低；表锁适合查询。MyISAM引擎不支持事务性，也不支持外键。</p>
+<p>MyISAM对于一些OLAP（Online Analytical Processing，在线分析处理）操作速度快。除Windows版本外，是所有MySQL版本默认的存储引擎。</p>
+<p>MyISAM存储引擎表由MYD和MYI组成，MYD用来存放数据文件，MYI用来存放索引文件。可以通过使用myisampack工具来进一步压缩数据文件，因为myisampack工具使用赫夫曼（Huffman）编码静态算法来压缩数据，因此使用myisampack工具压缩后的表是只读的，当然你也可以通过myisampack来解压数据文件<br>
+。<br>
+在MySQL 5.0版本之前，MyISAM默认支持的表大小为4G，如果需要支持大于4G的MyISAM表时，则需要制定MAXROWS和 AVGROW_LENGTH属性。从MySQL 5.0版本开始，MyISAM默认支持256T的单表数据，这足够满足一般应用的需求。</p>
+<p><strong>注意</strong>：对于MyISAM存储引擎表，MySQL数据库只缓存其索引文件，数据文件的缓存交由操作系统本身来完成，这与其他使用LRU算法缓存数据 的大部分数据库大不相同。此外，在MySQL 5.1.23版本之前，无论是在32位还是64位操作系统环境下，缓存索引的缓冲区最大只能设置为4G。在之后的版本中，64位系统可以支持大于4G的索引缓冲区。</p>
+<h2 id="innodb存储引擎">InnoDB存储引擎</h2>
+<p>InnoDB存储引擎最大的亮点就是支持事务性，支持回滚。它支持Hash/B-tree索引类型。<br>
+InnoDB的锁级别是行锁，行锁在锁定上带来的消耗大于表锁，但是在系统并发访问量较高时，InnoDB整体性能远高于MyISAM。InnoDB的索引不仅缓存索引本身，也缓存数据，所以InnoDB需要更大的内存。</p>
+<p>InnoDB存储引擎支持事务，主要面向在线事务处理（OLTP）方面的应用。其特点是行锁设计、支持外键，并支持类似于Oracle的非锁定读，即默认情况下读取操作不会产生锁。MySQL在Windows版本下的InnoDB是默认的存储引擎，同时InnoDB默认地被包含在所有的MySQL二进制发布版本中。</p>
+<p>InnoDB存储引擎将数据放在一个逻辑的表空间中，这个表空间就像黑盒一样由InnoDB自身进行管理。从MySQL 4.1（包括4.1）版本开始，它可以将每个InnoDB存储引擎的表单独存放到一个独立的ibd文件中。与Oracle类似，InnoDB存储引擎同样可以使用裸设备（row disk）来建立其表空间。</p>
+<p>InnoDB通过使用多版本并发控制（MVCC）来获得高并发性，并且实现了SQL标准的4种隔离级别，默认为REPEATABLE级别。同时使用一种被称为next-key locking 的策略来避免幻读（phantom）现象的产生。除此之外，InnoDB储存引擎还提供了插入缓冲（insert buffer）、二次写（double write）、自适应哈希索引（adaptive hash index）、预读（read ahead）等高性能和高可用的功能。</p>
+<p>对于表中数据的存储，InnoDB存储引擎采用了聚簇（clustered）的方式，这种方式类似于Oracle的索引聚集表（index organized table，IOT）。</p>
+<p>每张表的存储都按主键的顺序存放，如果没有显式地在表定义时指定主键，InnoDB存储引擎会为每一行生成一个6字节的 ROWID，并以此作为主键。</p>
+<h2 id="memory存储引擎">Memory存储引擎</h2>
+<p>Memory存储引擎是一个内存级的存储引擎，它将所有数据都存储在内存中，所以它能够存储的数据量是比较小的。而因为内存的特性，Memory存储引擎对于数据的一致性支持教差。Memory的锁级别和MyISAM一样，是表锁；并且不支持事务性。</p>
+<p>Memory存储引擎（之前称为HEAP存储引擎）将表中的数据存放在内存中，如果数据库重启或发生崩溃，表中的数据都将消失。它非常适合用于存储临时数据的临时表，以及数据仓库中的纬度表。它默认使用哈希索引，而不是我们熟悉的B+树索引。</p>
+<p>虽然Memory存储引擎速度非常快，但在使用上还是有一定的限制。比如，其只支持表锁，并发性能较差，并且不支持TEXT和BLOB列类型。最重要的是，存储变长字段（varchar）时是按照定常字段（char）的方式进行的，因此会浪费内存（这个问题之前已经提到，eBay的Igor Chernyshev工程师已经给出了Patch方案）。<br>
+此外有一点常被忽视的是，MySQL数据库使用Memory存储引擎作为临时表来存放查询的中间结果集（intermediate result）。如果中间结果集大于Memory存储引擎表的容量设置，又或者中间结果含有TEXT或BLOB列类型字段，则MySQL数据库会把其转换到MyISAM存储引擎表而存放到磁盘。之前提到MyISAM不缓存数据文件，因此这时产生的临时表的性能对于查询会有损失。</p>
+<h2 id="ndb存储引擎">NDB存储引擎</h2>
+<p>2003年，MySQL AB公司从Sony Ericsson公司收购了NDB 集群引擎。NDB存储引擎是一个集群存储引擎，类似于Oracle的RAC集群；不过，与Oracle RAC share everything结构不同的是，其结构是share nothing的集群架构，因此能提供更高级别的高可用性。NDB的特点是数据全部放在内存中（从5.1版本开始，可以将非索引数据放在磁盘上），因此主键查找（primary key lookup）的速度极快，并且通过添加NDB数据存储节点（Data Node）可以线性地提高数据库性能，是高可用、高性能的集群系统。</p>
+<p>关于NDB存储引擎，有一个问题值得注意，那就是NDB存储引擎的连接操作（JOIN）是在MySQL数据库层完成的，而不是在存储引擎层完成的。这意味着，复杂的连接操作需要巨大的网络开销，因此查询速度很慢。如果解决了这个问题，NDB存储引擎的市场应该是非常巨大的。</p>
+<p><strong>注意</strong>：MySQL NDB Cluster存储引擎有社区版本和企业版本，并且NDB Cluster已作为Carrier Grade Edition单独下载版本而存在，可以通过[http://dev.mysql.com/ downloads/cluster/index.html](http://dev.mysql.com/ downloads/cluster/index.html)获得最新版本的NDB Cluster存储引擎。</p>
+<h2 id="archive存储引擎">Archive存储引擎</h2>
+<p>Archive存储引擎只支持INSERT和SELECT操作，MySQL 5.1开始支持索引。其使用zlib算法将数据行（row）进行压缩后存储，压缩比率一般可达1∶10。正如其名称所示，Archive存储引擎非常适合存储归档数据，如日志信息。Archive存储引擎使用行锁来实现高并发的插入操作，但是本身并不是事物安全的存储引擎，其设计目标主要是提供高速的插入 和压缩功能。</p>
+<h2 id="federated存储引擎">Federated存储引擎</h2>
+<p>Federated存储引擎表并不存放数据，它只是指向一台远程MySQL数据库服务器上的表。这非常类似于SQL Server的链接服务器和Oracle的透明网关，不同的是，当前Federated存储引擎只支持MySQL数据库表，不支持异构数据库表。</p>
+<h2 id="maria存储引擎">Maria存储引擎</h2>
+<p>Maria存储引擎是新开发的引擎，设计目标主要是用来取代原有的MyISAM存储引擎，从而成为MySQL的默认存储引擎，开发者是MySQL 的创始人之一的Michael Widenius。因此，它可以看作是MyISAM的后续版本。其特点是：缓存数据和索引文件，行锁设计，提供MVCC功能，支持事务和非事务安全的选项 支持，以及更好的BLOB字符类型的处理性能。</p>
+<p>##其他存储引擎</p>
+<p>除了上面提到的7种存储引擎外，还有很多其他的存储引擎，包括Merge、CSV、Sphinx和Infobright，它们都有各自适用的场合，这里不再一一做介绍了。了解了MySQL拥有这么多存储引擎后，现在我可以回答1.2节中提到的问题了。</p>
+<p>为什么MySQL不支持全文索引？不！MySQL支持，MyISAM、Sphinx存储引擎支持全文索引。<br>
+MySQL快是因为不支持事务吗？错！MySQL MyISAM存储引擎不支持事务，但是InnoDB支持。快是相对于不同应用来说的，对于ETL这种操作，MyISAM当然有其优势。<br>
+当表的数据量大于1000W时，MySQL的性能会急剧下降吗？不！MySQL是数据库，不是文件，随着数据行数的增加，性能当然会有所下降，但是这些下降不是线性的，如果 你选择了正确的存储引擎以及正确的配置，再大的数据量MySQL也是能承受的。如官方手册上提及的，Mytrix和Inc.在InnoDB上存储了超过 1TB的数据，还有一些其他网站使用InnoDB存储引擎处理平均每秒800次插入/更新的操作。</p>
+<h2 id="myisam和innodb差别">MyISAM和InnoDB差别</h2>
+<h3 id="构成差别">构成差别</h3>
+<p>每个MyISAM在磁盘上存储成三个文件，文件的名字以表的名字开始，.frm文件存储表定义，.MYI(MYIndex)为索引文件，.MYD(MYData)为数据文件。</p>
+<p>基于磁盘的资源是InnoDB表空间数据文件和它的日志文件，InnoDB表的大小只受限于操作系统文件的大小，一般为2GB。</p>
+<h3 id="事务处理差别">事务处理差别</h3>
+<p>MyISAM类型的表强调性能，执行速度比InnoDB快，但是不支持事务处理等高级功能。</p>
+<p>InnoDB提供事务支持、外部键等高级数据库功能。</p>
+<h3 id="crud操作">CRUD操作</h3>
+<p>如果执行大量SELECT查询操作，MyISAM是最好的选择。</p>
+<p>如果执行大量的UPDATE或者INSERT操作，出于性能方面考虑，应该使用InnoDB。<code>DELETE from table</code>时，InnoDB不会重新建立表，而是一行一行的删除。<br>
+<code>LOAD TABLE FROM MASTER</code>操作对InnoDB不起作用，解决方法是首先把InnoDB表改成MyISAM表，导入数据后再改成InnoDB表，但是对于使用的额外的InnoDB特性（例如外键）的表不适用。</p>
+<h3 id="auto_increment操作">AUTO_INCREMENT操作</h3>
+<p>MyISAM为INSERT和UPDATE操作自动更新这一列，这使得AUTO_INCREMENT列更快（10%+），在序列项的值删除后就不能再利用。(当AUTO_INCREMENT列被定义为多列索引的最后一列，可以出现重使用从序列顶部删除的值的情况）。<br>
+AUTO_INCREMENT值可用ALTER TABLE或myisamch来重置。</p>
+<p>对于AUTO_INCREMENT类型的字段，InnoDB中必须包含只有该字段的索引，但 是在MyISAM表中，可以和其他字段一起建立联合索引。<br>
+如果你为一个表指定AUTO_INCREMENT列，在数据词典里的InnoDB表句柄包含一个名为自动增长计数器的计数器，它被用在为该列赋新值。InnoDB自动增长计数器仅被存储在主内存中，而不是存在磁盘上。</p>
+<h3 id="表的具体行数">表的具体行数</h3>
+<p><code>select count(*) from table</code>，MyISAM只要简单的读出保存好的行数。注意的是，当count(*)语句包含 where 条件时，两种类型表的操作是一样的。</p>
+<p>InnoDB 中不保存表的具体行数。也就是说，执行<code>select count(*) from table</code>时，InnoDB要扫描一遍整个表来计算有多少行。</p>
+<h3 id="锁">锁</h3>
+<p>MyISAM的锁是在表级别。其并发写的性能一直是一个让人比较头疼的问题。</p>
+<p>InnoDB提供了行级别的锁(locking on row level)，提供与 Oracle类型一致的不加锁读取(non-locking read in SELECTs)。另外，InnoDB表的行锁也不是绝对的，如果在执行一个SQL语句时MySQL不能确定要扫描的范围，InnoDB表同样会锁全表，例如<code>update table set num=1 where name like '%aaa%'</code>。</p>
+<h3 id="索引">索引</h3>
+<p>MyISAM的索引和数据是分开的，并且索引是有压缩的，内存使用率就对应提高了不少。能加载更多索引。</p>
+<p>Innodb是索引和数据是存放在相同的文件，没有使用压缩从而会造成Innodb比MyISAM体积庞大不小。Innodb 的数据存放格式也比较独特,每个Innodb表 都会将主键以聚簇索引的形式创建。所有的数据都是以主键来作为升序排列在物理磁盘上面,所以主键 查询并且以主键排序的查询效率也会非常高。</p>
+<h2 id="如何选择合适的引擎">如何选择合适的引擎</h2>
+<h3 id="采用myisam引擎">采用MyISAM引擎</h3>
+<p>R/W &gt; 100 ，并且Update较少 (R/W:读写比)<br>
+并发不高，不需要支持事务<br>
+表数据量小<br>
+需要进行全文搜索</p>
+<h3 id="采用innodb引擎">采用InnoDB引擎</h3>
+<p>R/W比较小，频繁更新大字段<br>
+表数据量超过千万，高并发<br>
+安全性和可用性要求高</p>
+<h3 id="采用memory引擎">采用Memory引擎</h3>
+<p>有足够的内存<br>
+对数据一致性要求不高，如session/在线人数等<br>
+需要定期归档的数据</p>
+<h2 id="参考资料">参考资料</h2>
+<p>http://www.ha97.com/4197.html<br>
+http://php100.com/<br>
+http://imysql.com/2015/07/23/something-important-about-mysql-design-reference.shtml<br>
+http://www.2liang.me/archives/254<br>
+http://simpleframework.net/news/view?newsId=63cd772590e8495bbff4d713e092f772</p>
+
+            </div>
+            
+              <div class="post-footer">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong class="language" data-lan="author">本文作者：</strong>
+      Goroyal
+    </li>
+    <li class="post-copyright-link">
+      <strong class="language" data-lan="link">本文链接：</strong>
+      <a href="http://goroyal.github.io/post/mysql-storage-engine/" title="MySQL不同的存储引擎">http://goroyal.github.io/post/mysql-storage-engine/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong class="language" data-lan="copyright">版权声明： </strong>
+      本博客所有文章除特别声明外，均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i> BY-NC-SA</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+  <div class="tags">
+    
+      <a href="http://goroyal.github.io/tag/8q5LigPjO/"># Database</a>
+    
+  </div>
+  <div class="nav">
+    <div class="nav-prev">
+      
+    </div>
+    <div class="nav-next">
+      
+        <a class="nav-pc-next" title="【数据结构】数组和链表" href="http://goroyal.github.io/post/array-and-linkedlist/">【数据结构】数组和链表</a>
+        <a class="nav-mobile-next" title="【数据结构】数组和链表" href="http://goroyal.github.io/post/array-and-linkedlist/">下一篇</a>
+        <i class="fa fa-chevron-right"></i>
       
     </div>
   </div>
 </div>
-          </section>
+            
+            
+  
+
+          </div>
         </div>
       </div>
     </div>
@@ -532,6 +896,36 @@
 
     // 代码高亮
     hljs.initHighlightingOnLoad();
+</script>
+    <div class="light-box" id="light_box"></div>
+<script>
+  let imgs = document.querySelectorAll('.post-body img');
+  let lightBox = document.querySelector('#light_box');
+  lightBox.addEventListener('mousedown', (e) => {
+    e.preventDefault()
+  })
+  lightBox.addEventListener('mousewheel', (e) => {
+    e.preventDefault()
+  })
+  let width = window.innerWidth * 0.8;
+  lightBox.onclick = () => {
+    let img = lightBox.querySelector('img');
+    lightBox.style = '';
+    img && img.remove();
+  }
+  imgs.forEach(item => {
+    item.onclick = function (e) {
+      let lightImg = document.createElement('img');
+      lightImg.src = this.src;
+      lightBox.style = `height: 100%; opacity: 1; background-color: rgba(0, 0, 0, 0.5);cursor: zoom-out;`;
+      lightImg.style = `width: ${width}px; border: 1px solid #fff; border-radius: 2px;`;
+      lightImg.onclick = function () {
+        lightBox.style = '';
+        this.remove();
+      }
+      lightBox.append(lightImg);
+    }
+  })
 </script>
   </div>
 </body>
@@ -1838,7 +2232,6 @@ final String string2 = &amp;quot;string2&amp;quot;;
     speed: 200
   });
 </script>
-
 
 
 
