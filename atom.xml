@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>http://goroyal.github.io</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2020-07-10T08:41:27.201Z</updated>
+    <updated>2020-07-10T08:41:57.643Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="http://goroyal.github.io"/>
     <link rel="self" href="http://goroyal.github.io/atom.xml"/>
@@ -220,8 +220,8 @@ AUTO_INCREMENT值可用ALTER TABLE或myisamch来重置。</p>
 <h2 id="参考资料">参考资料</h2>
 <ul>
 <li><a href="http://www.ha97.com/4197.html">MySQL存储引擎MyISAM与InnoDB的主要区别对比</a></li>
-<li><a href="http://imysql.com/2015/07/23/something-important-about-mysql-design-reference.shtml">老叶观点：MySQL开发规范之我见</a><br>
-<a href="http://simpleframework.net/news/view?newsId=63cd772590e8495bbff4d713e092f772">《MySQL技术内幕:InnoDB存储引擎》-- 第1章 MySQL体系结构和存储引擎</a></li>
+<li><a href="http://imysql.com/2015/07/23/something-important-about-mysql-design-reference.shtml">老叶观点：MySQL开发规范之我见</a></li>
+<li><a href="http://simpleframework.net/news/view?newsId=63cd772590e8495bbff4d713e092f772">《MySQL技术内幕:InnoDB存储引擎》-- 第1章 MySQL体系结构和存储引擎</a></li>
 </ul>
 ]]></content>
     </entry>
