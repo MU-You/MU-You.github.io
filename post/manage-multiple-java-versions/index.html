@@ -9,7 +9,7 @@
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
 <title>在Shell里管理多个Java版本 | Goroyal&#39;s blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1595243211754">
+<link rel="shortcut icon" href="/favicon.ico?v=1595245374600">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -1133,17 +1133,69 @@ AUTO_INCREMENT值可用ALTER TABLE或myisamch来重置。&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;code&gt;task_struct&lt;/code&gt; 就是 Linux 对于一个进程的描述，也可以称之为进程描述符。其中的 &lt;code&gt;files&lt;/code&gt; 指针指向一个数组，表示当前进程打开的所有文件。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;每个进程被创建时，&lt;code&gt;files&lt;/code&gt; 指向的数组前三位被填入默认值，分别指向标准输入流、标准输出流、标准错误流。我们常说的「文件描述符」就是指这个文件指针数组的索引，所以程序的文件描述符默认情况下 0 是输入，1 是输出，2 是错误。&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;:::&lt;strong&gt;tip&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;提示：&lt;/strong&gt;&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Linux 中的所有设备都是抽象成文件的，设备可以当作文件一样读和写。&lt;/p&gt;
 &lt;/blockquote&gt;
+&lt;p&gt;上述所说的文件描述符如下表：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;类型&lt;/th&gt;
+&lt;th&gt;文件描述符&lt;/th&gt;
+&lt;th&gt;默认情况&lt;/th&gt;
+&lt;th&gt;对应文件句柄位置&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;标准输入（standard input）&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;从键盘获得输入&lt;/td&gt;
+&lt;td&gt;/proc/slef/fd/0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;标准输出（standard output）&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;输出到屏幕（即控制台）&lt;/td&gt;
+&lt;td&gt;/proc/slef/fd/1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;错误输出（error output）&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;输出到屏幕（即控制台）&lt;/td&gt;
+&lt;td&gt;/proc/slef/fd/2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 &lt;h2 id=&#34;重定向&#34;&gt;重定向&lt;/h2&gt;
 &lt;p&gt;Linux shell 里通过 &lt;code&gt;&amp;gt;&lt;/code&gt;、&lt;code&gt;&amp;lt;&lt;/code&gt;进行输出、输入的重定向。&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;&amp;gt;&lt;/code&gt;：将 shell 命令的输出指向某个地方，可以是文件，也可以是内存里的某个变量。比如 &lt;code&gt;ls -l &amp;gt; file.txt&lt;/code&gt; 就是把当前路径下的文件信息保存到 file.txt 文本中，如果没有这个重定向，它会将结果输出到显示器屏幕上。&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;&amp;lt;&lt;/code&gt;：从某个地方读取内容作为 shell 命令的输入，可以是文件，也可以是内存里的某个变量。比如 &lt;code&gt;{command} &amp;lt; file.txt&lt;/code&gt;，如果没有这个重定向，它会从键盘读取输入。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;此外，shell 还可以通过 &lt;code&gt;|&lt;/code&gt; 将前一个命令的输出作为下一个命令的输入，比如：&lt;/p&gt;
+&lt;p&gt;当使用&lt;code&gt;&amp;gt;&lt;/code&gt;进行输出重定向时，默认是把某个命令的标准输出进行重定向。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;# 把标准输出重定向到新文件中
+command &amp;gt;filename
+
+# 把标准输出重定向到新文件中
+command 1&amp;gt;filename
+
+# 把标准错误重定向到新文件中
+command 2&amp;gt;filename
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;当使用&lt;code&gt;&amp;lt;&lt;/code&gt;进行输入重定向时，默认时把它右边的内容作为标准输入。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;# 以filename文件作为标准输入
+command &amp;lt;filename
+
+# 以filename文件作为标准输入
+command 0&amp;lt;filename
+
+# 从标准输入中读入，直到遇到delimiter分隔符
+command &amp;lt;&amp;lt;delimiter
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;管道&#34;&gt;管道&lt;/h3&gt;
+&lt;p&gt;shell 还可以通过 &lt;code&gt;|&lt;/code&gt; 这样的管道将前一个命令的输出作为下一个命令的输入，比如：&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;# 在命令历史中找到包含 ssh 字符串的命令
 history | grep ssh
 &lt;/code&gt;&lt;/pre&gt;
@@ -1154,10 +1206,18 @@ history | grep ssh
 &lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;# 删除当前路径下的folder目录，如果不存在则忽略错误
 rm -r folder 2&amp;gt; /dev/null
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;:::&lt;strong&gt;caution&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意：&lt;/strong&gt;&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;code&gt;2&lt;/code&gt;和&lt;code&gt;&amp;gt;&lt;/code&gt;之间不能有空格&lt;/p&gt;
 &lt;/blockquote&gt;
+&lt;h3 id=&#34;更多用法&#34;&gt;更多用法&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;2&amp;gt;&amp;amp;1&lt;/code&gt;：将错误输出绑定到标准输出上。由于此时的标准输出是默认值，也就是输出到屏幕，所以错误输出会输出到屏幕。这种写法的好处是可以避免同样的输出文件的描述符不用打开两次，标准输出和错误输出也不会抢占性往文件输出内容。&lt;br&gt;
+&lt;code&gt;&amp;gt; /dev/null&lt;/code&gt;：将标准输出1重定向到&lt;code&gt;/dev/null&lt;/code&gt;中。&lt;br&gt;
+&lt;code&gt;&amp;gt; /dev/null 2&amp;gt;&amp;amp;1&lt;/code&gt;：就是让标准输出和错误输出重定向到&lt;code&gt;/dev/null&lt;/code&gt;中（就是所有输出都丢弃了）。错误输出由于重用了标准输出的描述符，所以错误输出也被定向到了&lt;code&gt;/dev/null&lt;/code&gt;中，错误输出同样也被丢弃了。执行了这条命令之后，该条shell命令将不会输出任何信息到控制台，也不会有任何信息输出到文件中。&lt;br&gt;
+&lt;code&gt;2&amp;gt;&amp;amp;1 &amp;gt;/dev/null&lt;/code&gt;：标准输出丢弃，错误输出显示在屏幕上。&lt;/p&gt;
+&lt;p&gt;我们会用&lt;code&gt;nohup&lt;/code&gt;命令在后台启动Java程序，为了不让一些执行信息输出到控制台，会用如下命令丢弃输出：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;nohup java -jar xxxx.jar &amp;gt;/dev/null 2&amp;gt;&amp;amp;1 &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://bash.cyberciti.biz/guide/What_is_a_Process%3F&#34;&gt;What is a Process?&lt;/a&gt;&lt;/li&gt;

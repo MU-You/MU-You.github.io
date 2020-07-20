@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>http://goroyal.github.io</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2020-07-20T11:06:54.543Z</updated>
+    <updated>2020-07-20T11:42:59.136Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="http://goroyal.github.io"/>
     <link rel="self" href="http://goroyal.github.io/atom.xml"/>
@@ -329,17 +329,69 @@ AUTO_INCREMENT值可用ALTER TABLE或myisamch来重置。</p>
 </code></pre>
 <p><code>task_struct</code> 就是 Linux 对于一个进程的描述，也可以称之为进程描述符。其中的 <code>files</code> 指针指向一个数组，表示当前进程打开的所有文件。</p>
 <p><strong>每个进程被创建时，<code>files</code> 指向的数组前三位被填入默认值，分别指向标准输入流、标准输出流、标准错误流。我们常说的「文件描述符」就是指这个文件指针数组的索引，所以程序的文件描述符默认情况下 0 是输入，1 是输出，2 是错误。</strong></p>
-<p>:::<strong>tip</strong></p>
+<p><strong>提示：</strong></p>
 <blockquote>
 <p>Linux 中的所有设备都是抽象成文件的，设备可以当作文件一样读和写。</p>
 </blockquote>
+<p>上述所说的文件描述符如下表：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>文件描述符</th>
+<th>默认情况</th>
+<th>对应文件句柄位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>标准输入（standard input）</td>
+<td>0</td>
+<td>从键盘获得输入</td>
+<td>/proc/slef/fd/0</td>
+</tr>
+<tr>
+<td>标准输出（standard output）</td>
+<td>1</td>
+<td>输出到屏幕（即控制台）</td>
+<td>/proc/slef/fd/1</td>
+</tr>
+<tr>
+<td>错误输出（error output）</td>
+<td>2</td>
+<td>输出到屏幕（即控制台）</td>
+<td>/proc/slef/fd/2</td>
+</tr>
+</tbody>
+</table>
 <h2 id="重定向">重定向</h2>
 <p>Linux shell 里通过 <code>&gt;</code>、<code>&lt;</code>进行输出、输入的重定向。</p>
 <ul>
 <li><code>&gt;</code>：将 shell 命令的输出指向某个地方，可以是文件，也可以是内存里的某个变量。比如 <code>ls -l &gt; file.txt</code> 就是把当前路径下的文件信息保存到 file.txt 文本中，如果没有这个重定向，它会将结果输出到显示器屏幕上。</li>
 <li><code>&lt;</code>：从某个地方读取内容作为 shell 命令的输入，可以是文件，也可以是内存里的某个变量。比如 <code>{command} &lt; file.txt</code>，如果没有这个重定向，它会从键盘读取输入。</li>
 </ul>
-<p>此外，shell 还可以通过 <code>|</code> 将前一个命令的输出作为下一个命令的输入，比如：</p>
+<p>当使用<code>&gt;</code>进行输出重定向时，默认是把某个命令的标准输出进行重定向。</p>
+<pre><code class="language-shell"># 把标准输出重定向到新文件中
+command &gt;filename
+
+# 把标准输出重定向到新文件中
+command 1&gt;filename
+
+# 把标准错误重定向到新文件中
+command 2&gt;filename
+</code></pre>
+<p>当使用<code>&lt;</code>进行输入重定向时，默认时把它右边的内容作为标准输入。</p>
+<pre><code class="language-shell"># 以filename文件作为标准输入
+command &lt;filename
+
+# 以filename文件作为标准输入
+command 0&lt;filename
+
+# 从标准输入中读入，直到遇到delimiter分隔符
+command &lt;&lt;delimiter
+</code></pre>
+<h3 id="管道">管道</h3>
+<p>shell 还可以通过 <code>|</code> 这样的管道将前一个命令的输出作为下一个命令的输入，比如：</p>
 <pre><code class="language-shell"># 在命令历史中找到包含 ssh 字符串的命令
 history | grep ssh
 </code></pre>
@@ -350,10 +402,18 @@ history | grep ssh
 <pre><code class="language-shell"># 删除当前路径下的folder目录，如果不存在则忽略错误
 rm -r folder 2&gt; /dev/null
 </code></pre>
-<p>:::<strong>caution</strong></p>
+<p><strong>注意：</strong></p>
 <blockquote>
 <p><code>2</code>和<code>&gt;</code>之间不能有空格</p>
 </blockquote>
+<h3 id="更多用法">更多用法</h3>
+<p><code>2&gt;&amp;1</code>：将错误输出绑定到标准输出上。由于此时的标准输出是默认值，也就是输出到屏幕，所以错误输出会输出到屏幕。这种写法的好处是可以避免同样的输出文件的描述符不用打开两次，标准输出和错误输出也不会抢占性往文件输出内容。<br>
+<code>&gt; /dev/null</code>：将标准输出1重定向到<code>/dev/null</code>中。<br>
+<code>&gt; /dev/null 2&gt;&amp;1</code>：就是让标准输出和错误输出重定向到<code>/dev/null</code>中（就是所有输出都丢弃了）。错误输出由于重用了标准输出的描述符，所以错误输出也被定向到了<code>/dev/null</code>中，错误输出同样也被丢弃了。执行了这条命令之后，该条shell命令将不会输出任何信息到控制台，也不会有任何信息输出到文件中。<br>
+<code>2&gt;&amp;1 &gt;/dev/null</code>：标准输出丢弃，错误输出显示在屏幕上。</p>
+<p>我们会用<code>nohup</code>命令在后台启动Java程序，为了不让一些执行信息输出到控制台，会用如下命令丢弃输出：</p>
+<pre><code class="language-shell">nohup java -jar xxxx.jar &gt;/dev/null 2&gt;&amp;1 &amp;
+</code></pre>
 <h2 id="参考资料">参考资料</h2>
 <ul>
 <li><a href="https://bash.cyberciti.biz/guide/What_is_a_Process%3F">What is a Process?</a></li>
