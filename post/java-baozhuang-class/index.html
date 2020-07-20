@@ -8,7 +8,7 @@
 <meta name="keywords" content="Goroyal technical blog">
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
-<title>Java中的几种引用 | Goroyal&#39;s blog</title>
+<title>Java包装类的比较 | Goroyal&#39;s blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1595246352844">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -38,8 +38,8 @@
 
 
 
-  <meta name="description" content="Java中的几种引用" />
-  <meta name="keywords" content="" />
+  <meta name="description" content="Java包装类的比较" />
+  <meta name="keywords" content="Java" />
 </head>
 
 <body>
@@ -190,7 +190,8 @@
       <div class="sidebar-body gemini" id="sidebar_body">
         
           
-            
+            <div class="post-side-meta" id="post_side_meta">
+              
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -236,6 +237,197 @@
 
 
 </div>
+            </div>
+            <div class="post-toc sidebar-body-active" id="post_toc" style="opacity: 1;">
+              <div class="toc-box right-motion">
+  <div class="toc-wrapper auto-number auto"
+    id="toc_wrapper">
+    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#boolean">Boolean</a></li>
+<li><a href="#integer">Integer</a></li>
+<li><a href="#short-long">Short、Long</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+</div>
+
+<script>
+
+  let lastTop = 0, lList = [], hList = [], postBody, lastIndex = -1;
+  let active = 'active-show', activeClass = 'active-current';
+  let tocWrapper = document.querySelector('#toc_wrapper');
+  let tocContent = tocWrapper.children[0];
+  let autoNumber = tocWrapper && tocWrapper.classList.contains('auto-number');
+
+  function addTocNumber(elem, deep) {
+    if (!elem) {
+      return;
+    }
+    let prop = elem.__proto__;
+
+    if (prop === HTMLUListElement.prototype) {
+      for (let i = 0; i < elem.children.length; i++) {
+        addTocNumber(elem.children[i], deep + (i + 1) + '.');
+      }
+    } else if (prop === HTMLLIElement.prototype) {
+      // 保存li元素
+      if (elem.children[0].__proto__ === HTMLAnchorElement.prototype) {
+        lList.push(elem);
+      }
+      for (let i = 0; i < elem.children.length; i++) {
+        let cur = elem.children[i];
+        if (cur.__proto__ === HTMLAnchorElement.prototype) {
+          if (autoNumber) {
+            cur.text = deep + ' ' + cur.text;
+          }
+        } else if (cur.__proto__ === HTMLUListElement.prototype) {
+          addTocNumber(cur, deep);
+        }
+      }
+    }
+  }
+
+  function removeParentActiveClass() {
+    let parents = tocContent.querySelectorAll('.' + active)
+    parents.forEach(function (elem) {
+      elem.classList.remove(active);
+    });
+  }
+
+  function addActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.add(activeClass);
+    }
+  }
+
+  function removeActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.remove(activeClass);
+    }
+  }
+
+  function addActiveLiElemment(elem, parent) {
+    if (!elem || elem === parent) {
+      return;
+    } else {
+      if (elem.__proto__ === HTMLLIElement.prototype) {
+        elem.classList.add(active);
+      }
+      addActiveLiElemment(elem.parentElement, parent);
+    }
+  }
+
+  function showToc() {
+    if (tocWrapper) {
+      postBody = document.querySelector('#post_body');
+      for (let i = 0; i < postBody.children.length; i++) {
+        if (postBody.children[i].__proto__ === HTMLHeadingElement.prototype) {
+          hList.push(postBody.children[i]);
+        }
+      }
+      if (tocWrapper.classList.contains('compress')) {
+        tocContent.classList.add('closed');
+      } else if (tocWrapper.classList.contains('no_compress')) {
+        tocContent.classList.add('expanded');
+      } else {
+        if (hList.length > 10) {
+          active = 'active-hidden'
+          tocContent.classList.add('closed');
+        } else {
+          tocContent.classList.add('expanded');
+        }
+      }
+    }
+  }
+
+  (function () {
+    // 处理不是从#一级标题开始目录
+    if (tocContent.children.length === 1 && tocContent.children[0].__proto__ === HTMLLIElement.prototype) {
+      let con = tocContent.children[0].children[0];
+      tocContent.innerHTML = con.innerHTML;
+    }
+    let markdownItTOC = document.querySelector('.markdownIt-TOC');
+    let innerHeight = window.innerHeight;
+    markdownItTOC.style = `max-height: ${innerHeight - 80 > 0 ? innerHeight - 80 : innerHeight}px`
+    addTocNumber(tocContent, '');
+  })();
+
+  document.addEventListener('scroll', function (e) {
+    if (lList.length <= 0) {
+      return;
+    }
+    let scrollTop = document.scrollingElement.scrollTop + 10;
+    let dir;
+
+    if (lastTop - scrollTop > 0) {
+      dir = 'up';
+    } else {
+      dir = 'down';
+    }
+
+    lastTop = scrollTop;
+    if (scrollTop <= 0) {
+      if (lastIndex >= 0 && lastIndex < hList.length) {
+        lList[lastIndex].classList.remove(activeClass);
+      }
+      return;
+    }
+
+    let current = 0, hasFind = false;
+    for (let i = 0; i < hList.length; i++) {
+      if (hList[i].offsetTop > scrollTop) {
+        current = i;
+        hasFind = true;
+        break;
+      }
+    }
+    if (!hasFind && scrollTop > lList[lList.length - 1].offsetTop) {
+      current = hList.length - 1;
+    } else {
+      current--;
+    }
+    if (dir === 'down') {
+      if (current > lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex)
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    } else {
+      if (current < lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex);
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    }
+  });
+
+
+  window.addEventListener('load', function () {
+    showToc();
+    document.querySelector('#sidebar').style = 'display: block;';
+    tocWrapper.classList.add('toc-active');
+    setTimeout(function () {
+      if ("createEvent" in document) {
+        let evt = document.createEvent("HTMLEvents");
+        evt.initEvent("scroll", false, true);
+        document.dispatchEvent(evt);
+      }
+      else {
+        document.fireEvent("scroll");
+      }
+    }, 500)
+  })
+
+</script>
+            </div>
           
         
       </div>
@@ -323,8 +515,8 @@
           <div class="section bg-color post post-page">
             <header class="post-header">
     <h1 class="post-title">
-        <a class="post-title-link" href="http://goroyal.github.io/post/references-in-java/">
-            Java中的几种引用
+        <a class="post-title-link" href="http://goroyal.github.io/post/java-baozhuang-class/">
+            Java包装类的比较
         </a>
     </h1>
     <div class="post-meta">
@@ -332,23 +524,36 @@
                 <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-                <span>2018-01-11</span>
+                <span>2020-07-20</span>
                 <span class="post-meta-divider pc-show">|</span>
                 </span>
                 
+                    <span class="meta-item">
+      <i class="fa fa-folder-o"></i>
+      <span class="pc-show language" data-lan="category-in">分类于</span>
+                    
+                        
+                            <a href="http://goroyal.github.io/tag/Ke7gk0EO5/">
+                                <span>Java</span>
+                            </a>
+                            
+                                    
+                                        </span>
+                                        <span class="post-meta-divider">|</span>
+                                        
                                             <span class="meta-item">
       <i class="fa fa-clock-o"></i>
-      <span>4<span class="language" data-lan="minute">分钟</span></span>
+      <span>1<span class="language" data-lan="minute">分钟</span></span>
                                             </span>
                                             <span class="meta-item">
       <span class="post-meta-divider">|</span>
                                             <i class="fa fa-file-word-o"></i>
-                                            <span>921<span class="pc-show language" data-lan="words">字数</span></span>
+                                            <span>138<span class="pc-show language" data-lan="words">字数</span></span>
                                             </span>
                                             
                                                 
                                                     
-                                                                <!-- <span id="/post/references-in-java/" data-flag-title="Java中的几种引用" class="meta-item pc-show leancloud_visitors">
+                                                                <!-- <span id="/post/java-baozhuang-class/" data-flag-title="Java包装类的比较" class="meta-item pc-show leancloud_visitors">
       <span class="post-meta-divider">|</span>
       <i class="fa fa-eye"></i>
       <span><span class="language" data-lan="view">浏览量</span>：<span class="leancloud-visitors-count"></span></span>
@@ -357,20 +562,18 @@
     </div>
 </header>
             <div class="post-body next-md-body" id="post_body">
-              <p>Java中的引用主要有以下几种类型：<br>
-• 强引用（StrongReference）：强引用是使用最普遍的引用。如果一个对象具有强引用，那垃圾回收器绝不会回收它。当内存空间不足，Java虚拟机宁愿抛出OutOfMemoryError错误，使程序异常终止，也不会靠随意回收具有强引用的对象来解决内存不足的问题。</p>
-<p>• 软引用（SoftReference）：如果一个对象只具有软引用，则内存空间足够，垃圾回收器就不会回收它；如果内存空间不足了，就会回收这些对象的内存。只要垃圾回收器没有回收它，该对象就可以被程序使用。软引用可用来实现内存敏感的高速缓存。软引用可以和一个引用队列（ReferenceQueue）联合使用，如果软引用所引用的对象被垃圾回收器回收，Java虚拟机就会把这个软引用加入到与之关联的引用队列中。</p>
-<p>• 弱引用（WeakReference）：弱引用与软引用的区别在于：只具有弱引用的对象拥有更短暂的生命周期。在垃圾回收器线程扫描它所管辖的内存区域的过程中，一旦发现了只具有弱引用的对象，不管当前内存空间足够与否，都会回收它的内存。不过，由于垃圾回收器是一个优先级很低的线程，因此不一定会很快发现那些只具有弱引用的对象。弱引用可以和一个引用队列（ReferenceQueue）联合使用，如果弱引用所引用的对象被垃圾回收，Java虚拟机就会把这个弱引用加入到与之关联的引用队列中。</p>
-<p>• 虚引用（PhantomReference）：“虚引用”顾名思义，就是形同虚设，与其他几种引用都不同，虚引用并不会决定对象的生命周期。如果一个对象仅持有虚引用，那么它就和没有任何引用一样，在任何时候都可能被垃圾回收器回收。</p>
-<hr>
-<p>下面主要来谈谈软引用。<br>
-对于软引用对象本身，至少有两个强引用指向它：由应用创建的原始的强引用，还有就是JVM创建的在所引对象队列上的一个新的强引用。软引用本质上是一个比较大的、最近最久未用的对象池。获得较好性能的关键是确保它们会被及时清理。</p>
-<p>不要使用太多软引用，它们很容易填满整个堆。</p>
-<p>当问题中的所引对象会同时被几个线程使用时，应该考虑弱引用。否则，弱引用很可能会被垃圾收集器回收：只有弱引用的对象在每个GC周期都可以回收。当强引用被移除时，弱引用会立即释放。</p>
-<p>软：只要有足够内存，而且看上去有人会偶尔访问它，就留着它。<br>
-弱：只要有其他人对这个对象感兴趣就让我知道它在哪，但是如果他们不再需要它了，就丢了，我自己会重新创建。</p>
-<p>软引用的对象通常可以存活几分钟甚至几小时，但是只要所引读写仍然存在，弱引用对象就会一直存活（下一个GC周期会清理）。</p>
-<p><strong>在Java中，集合类经常是内存泄露的根源。比如某个应用将对象放入一个HashMap对象中，但从不移除。随着时间推移，这个HashMap对象会越来越大，而且消耗堆。</strong></p>
+              <h2 id="boolean">Boolean</h2>
+<p><code>Boolean</code>内部维护了两个常量：</p>
+<pre><code class="language-Java">public static final Boolean TRUE = new Boolean(true);
+public static final Boolean FALSE = new Boolean(false);
+</code></pre>
+<p>所以对于<code>Boolean a = true; Boolean b = true;</code>，<code>a == b</code>是得到true的。</p>
+<h2 id="integer">Integer</h2>
+<p><code>Integer</code>对一段范围内的数字有个缓存：IntegerCache.low ~ IntegerCache.high<br>
+如果数字在这个范围内，两个integer <code>==</code>是返回true的；否则就会new一个对象返回，肯定是不相等的。<br>
+<code>IntegerCache</code>的low是固定死的-128，high默认127，可以通过这个配置修改<code>-XX:AutoBoxCacheMax</code>。</p>
+<h2 id="short-long">Short、Long</h2>
+<p>和Integer差不多，但是它们的high是固定的127。</p>
 
             </div>
             
@@ -382,7 +585,7 @@
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="http://goroyal.github.io/post/references-in-java/" title="Java中的几种引用">http://goroyal.github.io/post/references-in-java/</a>
+      <a href="http://goroyal.github.io/post/java-baozhuang-class/" title="Java包装类的比较">http://goroyal.github.io/post/java-baozhuang-class/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -391,19 +594,21 @@
   </ul>
   <div class="tags">
     
+      <a href="http://goroyal.github.io/tag/Ke7gk0EO5/"># Java</a>
+    
   </div>
   <div class="nav">
     <div class="nav-prev">
       
         <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="SUSE Linux中安装Oracle数据库" href="http://goroyal.github.io/post/install-oracle-db-in-suse/">SUSE Linux中安装Oracle数据库</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="SUSE Linux中安装Oracle数据库" href="http://goroyal.github.io/post/install-oracle-db-in-suse/">上一篇</a>
+        <a class="nav-pc-next" title="Java包装类的比较" href="http://goroyal.github.io/post/java-bao-zhuang-lei-de-bi-jiao/">Java包装类的比较</a class="nav-pc-next">
+        <a class="nav-mobile-prev" title="Java包装类的比较" href="http://goroyal.github.io/post/java-bao-zhuang-lei-de-bi-jiao/">上一篇</a>
       
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="Java 抽象类和接口" href="http://goroyal.github.io/post/abstract-class-and-interface/">Java 抽象类和接口</a>
-        <a class="nav-mobile-next" title="Java 抽象类和接口" href="http://goroyal.github.io/post/abstract-class-and-interface/">下一篇</a>
+        <a class="nav-pc-next" title="Java中的线程" href="http://goroyal.github.io/post/java-thread/">Java中的线程</a>
+        <a class="nav-mobile-next" title="Java中的线程" href="http://goroyal.github.io/post/java-thread/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>

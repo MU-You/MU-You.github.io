@@ -9,7 +9,7 @@
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
 <title>Java中的final、finally和finalize | Goroyal&#39;s blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1595245775563">
+<link rel="shortcut icon" href="/favicon.ico?v=1595246352844">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -213,7 +213,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">22</span>
+        <span class="site-item-stat-count">24</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -879,6 +879,40 @@ final String string2 = &quot;string2&quot;;
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/java-bao-zhuang-lei-de-bi-jiao/"" data-c="
+          &lt;h2 id=&#34;boolean&#34;&gt;Boolean&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;Boolean&lt;/code&gt;内部维护了两个常量：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-Java&#34;&gt;public static final Boolean TRUE = new Boolean(true);
+public static final Boolean FALSE = new Boolean(false);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;所以对于&lt;code&gt;Boolean a = true; Boolean b = true;&lt;/code&gt;，&lt;code&gt;a == b&lt;/code&gt;是得到true的。&lt;/p&gt;
+&lt;h2 id=&#34;integer&#34;&gt;Integer&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;Integer&lt;/code&gt;对一段范围内的数字有个缓存：IntegerCache.low ~ IntegerCache.high&lt;br&gt;
+如果数字在这个范围内，两个integer &lt;code&gt;==&lt;/code&gt;是返回true的；否则就会new一个对象返回，肯定是不相等的。&lt;br&gt;
+&lt;code&gt;IntegerCache&lt;/code&gt;的low是固定死的-128，high默认127，可以通过这个配置修改&lt;code&gt;-XX:AutoBoxCacheMax&lt;/code&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;short-long&#34;&gt;Short、Long&lt;/h2&gt;
+&lt;p&gt;和Integer差不多，但是它们的high是固定的127。&lt;/p&gt;
+">Java包装类的比较</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/java-baozhuang-class/"" data-c="
+          &lt;h2 id=&#34;boolean&#34;&gt;Boolean&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;Boolean&lt;/code&gt;内部维护了两个常量：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-Java&#34;&gt;public static final Boolean TRUE = new Boolean(true);
+public static final Boolean FALSE = new Boolean(false);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;所以对于&lt;code&gt;Boolean a = true; Boolean b = true;&lt;/code&gt;，&lt;code&gt;a == b&lt;/code&gt;是得到true的。&lt;/p&gt;
+&lt;h2 id=&#34;integer&#34;&gt;Integer&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;Integer&lt;/code&gt;对一段范围内的数字有个缓存：IntegerCache.low ~ IntegerCache.high&lt;br&gt;
+如果数字在这个范围内，两个integer &lt;code&gt;==&lt;/code&gt;是返回true的；否则就会new一个对象返回，肯定是不相等的。&lt;br&gt;
+&lt;code&gt;IntegerCache&lt;/code&gt;的low是固定死的-128，high默认127，可以通过这个配置修改&lt;code&gt;-XX:AutoBoxCacheMax&lt;/code&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;short-long&#34;&gt;Short、Long&lt;/h2&gt;
+&lt;p&gt;和Integer差不多，但是它们的high是固定的127。&lt;/p&gt;
+">Java包装类的比较</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/java-thread/"" data-c="
