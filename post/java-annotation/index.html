@@ -9,7 +9,7 @@
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
 <title>Java中的注解 | Goroyal&#39;s blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1595245374600">
+<link rel="shortcut icon" href="/favicon.ico?v=1595245775563">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -1199,6 +1199,11 @@ AUTO_INCREMENT值可用ALTER TABLE或myisamch来重置。&lt;/p&gt;
 &lt;p&gt;数组的好处显而易见，它的存储结构比较紧凑，相对节省空间。每个元素都有唯一的索引，支持随机访问。但是数组所需要的空间需要一次分配够，当数组容量满时，新加入元素就要对数组进行扩容。扩容时，往往不能在原地直接扩，因为后面的内存可能已经分配给其他数据结构了，所以要重新申请一块新的更大的内存空间，将原有的数组里的元素全部复制到新的数组里，再释放原有数组的空间，这个过程时间复杂度是O(n)，可以参考Java的&lt;code&gt;ArrayList&lt;/code&gt;。如果不加以合理的维护，内存中将产生大量碎片。&lt;/p&gt;
 &lt;h2 id=&#34;链表&#34;&gt;链表&lt;/h2&gt;
 &lt;p&gt;链表有效地解决里数组需要扩容的问题，因为链表里的每个元素节点都不需要连续，链表的节点通过指针进行索引，每个节点只能找到它指针指向的下一个节点。正常的单向链表是从头节点开始，每个节点依次有一个指针指向它后面的节点，尾部节点指向NULL。有时候为了方便拿到前驱节点，我们会采用双向链表，也就是每个节点既包含一个指针指向后面的，也包含一个指针指向前面的。还有一种链表是循环链表，也就是说尾节点指向了头节点。&lt;/p&gt;
+&lt;h3 id=&#34;dummy-node&#34;&gt;Dummy Node&lt;/h3&gt;
+&lt;p&gt;翻译为哑节点或者假人头节点。&lt;/p&gt;
+&lt;p&gt;Dummy node 是一个虚拟节点，也可以认为是标杆节点。Dummy node 就是在链表表头 head 前加一个节点指向 head，即dummy -&amp;gt; head。Dummy node 的使用多针对单链表没有前向指针的问题，保证链表的 head 不会在删除操作中丢失。还有一种用法比较少见，就是使用 dummy node 来进行head的删除操作。所以，当链表的 head 有可能变化（被修改或者被删除）时，使用 dummy node 可以很好的简化代码，最终返回&lt;code&gt;dummy.next&lt;/code&gt;即新的链表。&lt;/p&gt;
+&lt;h3 id=&#34;快慢指针&#34;&gt;快慢指针&lt;/h3&gt;
+&lt;p&gt;快慢指针指的是2个指针沿着链表向前移动的步数不一样，比如一个每次移2步，另一个每次移1步。可以通过它找到链表中间的节点以及判断链表是否循环。&lt;/p&gt;
 ">【数据结构】数组和链表</a>
       </div>
       
