@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>http://goroyal.github.io</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2020-07-20T10:58:47.508Z</updated>
+    <updated>2020-07-20T11:06:54.543Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="http://goroyal.github.io"/>
     <link rel="self" href="http://goroyal.github.io/atom.xml"/>
@@ -10,6 +10,36 @@
     <logo>http://goroyal.github.io/images/avatar.png</logo>
     <icon>http://goroyal.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Goroyal&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Java中的线程]]></title>
+        <id>http://goroyal.github.io/post/java-thread/</id>
+        <link href="http://goroyal.github.io/post/java-thread/">
+        </link>
+        <updated>2020-07-20T11:00:46.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="线程状态">线程状态</h2>
+<ol>
+<li>新建：创建后尚未启动的线程处于这种状态</li>
+<li>运行：运行状态包括操作系统中的运行态和就绪态，也就是说这个状态下的线程可能正在执行，也有可能在等待CPU为它分配执行时间；</li>
+<li>无限期等待：处于这种状态的线程不会被分配CPU，它们要被其它进程显式唤醒。可能进入这种状态的操作有：
+<ul>
+<li>没有设置时间参数的wait和join方法；</li>
+<li>LockSupport.park()方法；</li>
+</ul>
+</li>
+<li>限期等待：处于这种状态的线程也不会被分配执行时间，不过不需要其它线程唤醒，等一段时间之后就会由系统自动唤醒。可能进入这种状态的有：
+<ul>
+<li>设置了时间参数的wait和join方法；</li>
+<li>sleep方法；</li>
+<li>LockSupport.parkNanos()方法、LockSupport.parkUntil()方法；</li>
+</ul>
+</li>
+<li>阻塞状态：线程被阻塞了，阻塞状态和等待状态的区别是：阻塞状态在等待着获得一个排它锁。而等待状态则是在等待一段时间，或者唤醒动作发生。在程序进入同步区域的时候，线程将进入这种状态。</li>
+<li>结束：已终止线程的线程状态，线程已经结束执行。</li>
+</ol>
+<h2 id="线程安全">线程安全</h2>
+<p>当多个线程访问一个对象的时候，如果不用考虑这些线程在运行时环境下的调度和交替执行，也不需要进行额外的同步，或者在调用方进行任何其他的协调操作，调用这个对象的行为都可以获得正确的结果，那么这个对象是线程安全的。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[【数据结构】Java里的各种Map]]></title>
         <id>http://goroyal.github.io/post/java-map/</id>
@@ -380,7 +410,7 @@ sudo mv jdk-12.jdk /Library/Java/JavaVirtualMachines
 <p>会显示<code>/Library/Java/JavaVirtualMachines/jdk-12.jdk/Contents/Home</code>，这个就是它的Java Home。那么就能通过export设置当前的JAVA_HOME环境变量了。比如：</p>
 <pre><code>export JAVA_HOME=`/usr/libexec/java_home -v 12`
 </code></pre>
-<h2 id="便利管理多版本">便利管理多版本</h2>
+<h2 id="便捷管理多版本">便捷管理多版本</h2>
 <p>Linux或者macOS都有bash或者其他shell，以bash为例，bash在每个用户目录下都有<code>.bashrc</code>文件用于配置用户相关的环境变量（如果没有可以自己创建），可以在该文件下面写如下代码：</p>
 <pre><code class="language-shell"># type 'java7' at command prompt to switch to java 7
 function java7() {
@@ -469,65 +499,6 @@ try {
 <p>当每层代码都经过单元测试确保自己这层没问题之后，整个逻辑的链条其实问题不大了。覆盖率不是简简单单为了覆盖而覆盖，单元测试都要有断言，就是如果跟测试目的产生不一致的结果这个测试必须显示失败，否则光数据好看是没用的。<strong>单元测试也不可能做到100%覆盖，但是可以尽可能做得高</strong>，覆盖不到的地方再通过集成测试或者系统层面的测试去做。至于做不到100%覆盖的原因，比如代码里有对外部依赖的地方，再怎么抽离，总有地方需要去初始化。那么对于这个情况，尽可能把这个对外依赖范围缩小，其他地方用的时候传递接口。</p>
 <p>关于面向接口编程和减少耦合，还可以了解下依赖注入，能帮助解耦调用模块和具体实现类模块。</p>
 <p>为了代码可扩展性高、良好设计、易测试，可能会出现一个复杂业务逻辑的代码一层套一层的情况，一个逻辑看完可能经历了若干个类，这也是人们常常吐槽的Java这种语言的一个“啰嗦”之处。这个我也没有什么更好的想法，如果你有，可以分享一下。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[HTTP 响应状态码]]></title>
-        <id>http://goroyal.github.io/post/http-response-code/</id>
-        <link href="http://goroyal.github.io/post/http-response-code/">
-        </link>
-        <updated>2019-04-06T12:14:38.000Z</updated>
-        <summary type="html"><![CDATA[<p>目前HTTP在Web开发中被广泛使用，REST (Representational State Transfer) 很多人应该或多或少都知道些。当然了，比较熟悉的可能主要是GET、POST方法。这篇文章不是介绍REST的定义和如何创建符合REST风格的API，而是讲讲在Web开发中通用的不同HTTP响应状态码的含义。在普通网站开发、分布式集群开发、团队协作方面，如果采用了HTTP作为组件之间交互的协议，遵守通用的响应状态码是很有必要的（一是有充分的信息量、二是避免歧义）。</p>
-<p>HTTP响应状态共有5大类，分别是数字1、2、3、4、5开头。</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>目前HTTP在Web开发中被广泛使用，REST (Representational State Transfer) 很多人应该或多或少都知道些。当然了，比较熟悉的可能主要是GET、POST方法。这篇文章不是介绍REST的定义和如何创建符合REST风格的API，而是讲讲在Web开发中通用的不同HTTP响应状态码的含义。在普通网站开发、分布式集群开发、团队协作方面，如果采用了HTTP作为组件之间交互的协议，遵守通用的响应状态码是很有必要的（一是有充分的信息量、二是避免歧义）。</p>
-<p>HTTP响应状态共有5大类，分别是数字1、2、3、4、5开头。</p>
-<!-- more -->
-<h2 id="1xx">1XX</h2>
-<p>信息性状态码，表示接收的请求正在处理。</p>
-<ul>
-<li>100：说明收到了请求的初始部分，请客户端继续。发送了这个状态码之后，服务器在收到请求之后必须进行响应</li>
-<li>101：说明服务器正在根据客户端的指定，将协议切换成Update 首部所列的协议</li>
-</ul>
-<h2 id="2xx">2XX</h2>
-<p>成功状态码，表示请求正常处理完毕</p>
-<ul>
-<li>200：OK，实体的主体部分包含了所请求的资源。（正常请求很多是这种状态）</li>
-<li>201： Created，表示创建资源成功，响应的实体主体部分中应该包含各种引用了已创建的资源的URL，Location 首部包含的则是最具体的引用。（REST里面，POST或者PUT常常返回这样的状态）</li>
-<li>202， Accepted， 请求已被接受，但服务器还未对其执行任何动作。不能保证服务器会完成这个请求；这只是意味着接受请求时，它看起来是有效的。</li>
-<li>204：No Content，响应不包含实体的主体部分，通常在更新服务器上资源的时候成功的情况下不要求返回实体内容就会产生这个状态码。</li>
-<li>206：Partial Content，成功执行了一个部分或Range（范围）请求。</li>
-</ul>
-<h2 id="3xx">3XX</h2>
-<p>重定向状态码，表示需要进行附加操作以完成请求。</p>
-<ul>
-<li>301：Moved Permanently，永久性重定向，表示请求的资源被分配了新的URI，以后应使用资源现在所指的URI。</li>
-<li>302：Found，临时性重定向，表示请求的资源被分配了新的URI，希望用户本次使用新的URI访问。</li>
-<li>303：See Other，表示请求对应的资源存在这另一个URI，应使用GET方法定向获取请求的资源。</li>
-<li>304：Not Modified，表示客户端发送附带条件的请求时，服务器端允许请求访问资源，但未满足条件。304状态码返回时不包含响应的主体部分（附带条件指：If-Match、If-Modified-Since、If-None-Match、If-Range、If-Unmodified-Since中任一首部）。304表明了客户端中所请求资源的缓存仍然是有效的,也就是说该资源从上次缓存到现在并没有被修改过.条件请求可以在确保客户端的资源是最新的同时避免因每次都请求完整资源给服务器带来的性能问题。另一种情况是,如果服务器认为客户端缓存的资源已经过期了，那么服务器就会返回HTTP/200 OK响应，响应体就是该资源当前最新的内容。客户端收到200响应后，就会用新的响应体覆盖掉旧的缓存资源。</li>
-<li>305：Use Proxy， 用来说明必须通过一个代理来访问资源；代理的位置由Location首部给出。很重要的一点是，客户端是相对某个特定资源来解析这条响应的，不能假定所有请求，甚至所有对持有所请求资源的服务器的请求都通过这个代理进行。如果客户端错误地让代理介入了某条请求，可能会引发破坏性的行为，而且会造成安全漏洞。</li>
-<li>307：Temporary Redirect，临时重定向，与302有相同的含义。尽管302标准禁止POST变幻成GET，实际大家并未遵守。307会遵照浏览器标准，不会从POST变为GET，但是对于处理响应时的行为每种浏览器可能出现不同的情况。</li>
-</ul>
-<h2 id="4xx">4XX</h2>
-<p>客户端错误状态码，表示服务器无法处理请求。</p>
-<ul>
-<li>400：Bad Request， 用于告知客户端它发送了一个错误的请求，比方说请求体不符合预先定义的规则</li>
-<li>401：Unauthorized，表示发送的请求需要有通过HTTP认证的认证信息，若之前已进行过请求，则表示认证失败。返回含有401的响应必须包含一个适用于被请求资源的WWW-Authenticate手部质询用户信息。</li>
-<li>403：Forbidden，表明请求资源的访问被服务器拒绝了。</li>
-<li>404：Not Found，用于说明服务器无法找到请求的URL所对应的资源。</li>
-<li>405：Method Not Allowed，发起的请求中带有所请求的URL 不支持的方法时，使用此状态码。应该在响应中包含Allow 首部，以告知客户端对所请求的资源可以使用哪些方法。</li>
-<li>406：Not Acceptable，客户端可以指定参数来说明它们愿意接收什么类型的实体。服务器没有与客户端可接受的URL 相匹配的资源时，使用此代码。</li>
-<li>413： Request Entity Too Large， 客户端发送的实体主体部分比服务器能够或者希望处理的要大时，返回此状态码。</li>
-<li>429：Too Many Requests，表示客户端在给定时间范围内发送了太多请求。</li>
-</ul>
-<h2 id="5xx">5XX</h2>
-<p>服务器错误状态码，表示服务器处理请求出错</p>
-<ul>
-<li>500：Intenernal Server Error，服务器在执行请求时发生了错误</li>
-<li>501：Not Implemented，客户端发起的请求超出服务器的能力范围（比如，使用了服务器不支持的请求方法）</li>
-<li>502：Bad Gateway， 作为代理或网关使用的服务器从请求响应链的下一条链路上收到了一条伪响应（比如，它无法连接到其父网关）。</li>
-<li>503：Service Unavailable 服务器暂时处于超负载或正在进行停机维护，现在无法处理请求。如果事先得知解除以上状况所需时间，最好写入Retry-After首部字段返回给客户端。</li>
-</ul>
 ]]></content>
     </entry>
 </feed>

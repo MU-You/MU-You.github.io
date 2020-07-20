@@ -9,7 +9,7 @@
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
 <title>发布！软件的设计与部署 | Goroyal&#39;s blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1595242722995">
+<link rel="shortcut icon" href="/favicon.ico?v=1595243211754">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -213,7 +213,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">21</span>
+        <span class="site-item-stat-count">22</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -832,6 +832,33 @@
     <div class="result" id="result">
       
       <div class="item">
+        <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/java-thread/"" data-c="
+          &lt;h2 id=&#34;线程状态&#34;&gt;线程状态&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;新建：创建后尚未启动的线程处于这种状态&lt;/li&gt;
+&lt;li&gt;运行：运行状态包括操作系统中的运行态和就绪态，也就是说这个状态下的线程可能正在执行，也有可能在等待CPU为它分配执行时间；&lt;/li&gt;
+&lt;li&gt;无限期等待：处于这种状态的线程不会被分配CPU，它们要被其它进程显式唤醒。可能进入这种状态的操作有：
+&lt;ul&gt;
+&lt;li&gt;没有设置时间参数的wait和join方法；&lt;/li&gt;
+&lt;li&gt;LockSupport.park()方法；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;限期等待：处于这种状态的线程也不会被分配执行时间，不过不需要其它线程唤醒，等一段时间之后就会由系统自动唤醒。可能进入这种状态的有：
+&lt;ul&gt;
+&lt;li&gt;设置了时间参数的wait和join方法；&lt;/li&gt;
+&lt;li&gt;sleep方法；&lt;/li&gt;
+&lt;li&gt;LockSupport.parkNanos()方法、LockSupport.parkUntil()方法；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;阻塞状态：线程被阻塞了，阻塞状态和等待状态的区别是：阻塞状态在等待着获得一个排它锁。而等待状态则是在等待一段时间，或者唤醒动作发生。在程序进入同步区域的时候，线程将进入这种状态。&lt;/li&gt;
+&lt;li&gt;结束：已终止线程的线程状态，线程已经结束执行。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;线程安全&#34;&gt;线程安全&lt;/h2&gt;
+&lt;p&gt;当多个线程访问一个对象的时候，如果不用考虑这些线程在运行时环境下的调度和交替执行，也不需要进行额外的同步，或者在调用方进行任何其他的协调操作，调用这个对象的行为都可以获得正确的结果，那么这个对象是线程安全的。&lt;/p&gt;
+">Java中的线程</a>
+      </div>
+      
+      <div class="item">
         <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/java-map/"" data-c="
           &lt;p&gt;&lt;code&gt;Map&lt;/code&gt;就如它字面意思，是一个从键（key）到值（value）的映射。我们在Map里面存储键值对，根据键得到值，因此键是不能重复的（如果插入一个有重复键的记录，则会覆盖原有的值），但是值可以重复。&lt;/p&gt;
 &lt;p&gt;Java里面基于对Map的不同访问需求创建了它的不同实现类：&lt;/p&gt;
@@ -1135,7 +1162,7 @@ sudo mv jdk-12.jdk /Library/Java/JavaVirtualMachines
 &lt;p&gt;会显示&lt;code&gt;/Library/Java/JavaVirtualMachines/jdk-12.jdk/Contents/Home&lt;/code&gt;，这个就是它的Java Home。那么就能通过export设置当前的JAVA_HOME环境变量了。比如：&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;export JAVA_HOME=`/usr/libexec/java_home -v 12`
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;便利管理多版本&#34;&gt;便利管理多版本&lt;/h2&gt;
+&lt;h2 id=&#34;便捷管理多版本&#34;&gt;便捷管理多版本&lt;/h2&gt;
 &lt;p&gt;Linux或者macOS都有bash或者其他shell，以bash为例，bash在每个用户目录下都有&lt;code&gt;.bashrc&lt;/code&gt;文件用于配置用户相关的环境变量（如果没有可以自己创建），可以在该文件下面写如下代码：&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;# type &#39;java7&#39; at command prompt to switch to java 7
 function java7() {
