@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>http://goroyal.github.io</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2020-08-02T09:21:33.184Z</updated>
+    <updated>2020-08-02T09:22:56.910Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="http://goroyal.github.io"/>
     <link rel="self" href="http://goroyal.github.io/atom.xml"/>
@@ -10,6 +10,91 @@
     <logo>http://goroyal.github.io/images/avatar.png</logo>
     <icon>http://goroyal.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Goroyal&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[常用的Git命令]]></title>
+        <id>http://goroyal.github.io/post/git-commands/</id>
+        <link href="http://goroyal.github.io/post/git-commands/">
+        </link>
+        <updated>2020-08-02T09:21:54.000Z</updated>
+        <content type="html"><![CDATA[<p>配置账号信息</p>
+<pre><code class="language-shell">git config --global user.name &quot;your username&quot;
+git config --global user.email &quot;your email&quot;
+</code></pre>
+<p>查看配置相关的信息</p>
+<pre><code class="language-shell">git config --list # 查看配置的信息
+git help config # 获取帮助信息
+</code></pre>
+<p>配置自动换行</p>
+<pre><code class="language-shell">git config --global core.autocrlf input # 提交到git时是否自动将换行符转换为lf
+</code></pre>
+<p>配置密钥</p>
+<pre><code class="language-shell">ssh-keygen -t rsa -C &quot;your email&quot; # 生成密钥
+ssh -T git@github.com # 测试是否成功
+</code></pre>
+<p>新建仓库</p>
+<pre><code class="language-shell">git init # 初始化本地仓库
+git clone &lt;url&gt; # 克隆远程版本库
+git add –all # 添加所有文件到暂存区（stage，index）
+git status # 查看当前git状态
+git remote add origin https://github.com/freshdgq/test.git # 关联到远程仓库地址
+git push -u origin master # 第一次推送master分支的所有内容
+</code></pre>
+<p>修改和提交</p>
+<pre><code class="language-shell">git status # 查看git当前状态
+git diff # 查看改动后和改动前的不同之处
+git add . # 跟踪所有改动过的文件
+git add &lt;file&gt; # 跟踪指定的文件
+git mv &lt;old&gt; &lt;new&gt; # 文件改名
+git rm &lt;file&gt; # 删除指定文件
+git rm --cached &lt;file&gt; # 停止跟踪文件但不删除
+git commit -m &quot;message&quot; # 提交修改的文件到当前分支
+git commit --amend # 修改最后一次提交
+</code></pre>
+<p>状态与版本处理</p>
+<pre><code class="language-shell">git log # 查看提交的历史记录
+git log -p &lt;file&gt; # 查看指定文件的提交记录
+git blame &lt;file&gt; # 以列表方式查看指定文件的提交历史
+git reset --hard HEAD  # 撤销工作目录中所有未提交文件的修改内容
+git checkout HEAD &lt;file&gt; # 撤销指定的未提交文件的修改内容
+git revert &lt;commit&gt; 撤销指定的提交
+git reset --hard HEAD^ # 回退本地分支到上一个版本
+git reset --hard HEAD~n # 回退本地分支到上n个版本
+git checkout – readme.txt # 把readme.txt文件在工作区的修改全部撤销
+</code></pre>
+<p>分支与标签处理</p>
+<pre><code class="language-shell">git branch # 查看本地所有分支
+git checkout &lt;branch/tag&gt; # 切换到指定分支或标签
+
+git branch &lt;new-branch&gt; # 创建新分支
+git checkout -b &lt;new-branch&gt; # 创建并切换到新分支
+git branch -d &lt;branch&gt; # 删除本地分支
+
+git merge &lt;branch&gt; # 合并指定分支到当前分支
+git rebase &lt;branch&gt; # 衍合指定分支到当前分支
+
+git tag # 列出所有本地标签
+git tag &lt;tagname&gt; # 基于最新提交创建标签
+git tag -d &lt;tagname&gt; # 删除标签
+</code></pre>
+<p>本地远程</p>
+<pre><code class="language-shell">git remote # 获得远程库列表
+git remote v # 查看远程版本库信息
+git remote show &lt;remote&gt; # 查看指定远程版本库信息
+git remote add &lt;remote&gt;&lt;url&gt; # 添加远程版本库
+git remote rm &lt;name&gt; # 删除对应的远程库
+git branch -u origin/master master # 本地跟踪远程
+
+git fetch &lt;remote&gt; # 从远程库获取代码
+git pull &lt;remote&gt;&lt;branch&gt; # 拉取远程指定分支代码并快速合并
+git push &lt;remote&gt;&lt;branch&gt; # 推送代码到远程指定分支并快速合并
+git push &lt;remote&gt;:&lt;branch/tag-name&gt; # 删除远程分支或标签
+git push --tags # 上传所有标签
+
+git pull origin master # 从远程的master分支拉取代码到本地
+git push origin master # 推送最新修改到远程的主分支
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[网页里面引起脚本执行的方式]]></title>
         <id>http://goroyal.github.io/post/execute-script-in-web-page/</id>
@@ -483,59 +568,6 @@ rm -r folder 2&gt; /dev/null
 <p>占位符，待更。</p>
 <p>https://llh911001.gitbooks.io/mostly-adequate-guide-chinese/content/ch3.html#%E8%BF%BD%E6%B1%82%E2%80%9C%E7%BA%AF%E2%80%9D%E7%9A%84%E7%90%86%E7%94%B1<br>
 https://www.jiqizhixin.com/articles/2018-10-22-15</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[在Shell里管理多个Java版本]]></title>
-        <id>http://goroyal.github.io/post/manage-multiple-java-versions/</id>
-        <link href="http://goroyal.github.io/post/manage-multiple-java-versions/">
-        </link>
-        <updated>2019-06-26T16:30:26.000Z</updated>
-        <summary type="html"><![CDATA[<p>自从Oracle宣布Java开始收费之后，越来越多的人会考虑从[Open JDK][1]下载安装Java环境。可能自己机器上也会同时并存好几个Java版本，本文以macOS为例介绍一下如何从Open JDK安装并进行管理多版本。</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>自从Oracle宣布Java开始收费之后，越来越多的人会考虑从[Open JDK][1]下载安装Java环境。可能自己机器上也会同时并存好几个Java版本，本文以macOS为例介绍一下如何从Open JDK安装并进行管理多版本。</p>
-<!-- more -->
-<h2 id="下载安装">下载安装</h2>
-<pre><code class="language-shell">curl -O https://download.java.net/java/GA/jdk12/33/GPL/openjdk-12_osx-x64_bin.tar.gz 
-tar xvf openjdk-12_osx-x64_bin.tar.gz
-
-# 解压后文件夹比如名为jdk-12.jdk，移动到macOS管理的JVM目录中去
-sudo mv jdk-12.jdk /Library/Java/JavaVirtualMachines
-</code></pre>
-<p>此时，可以输入如下命令查看本机上有几种Java版本：</p>
-<pre><code class="language-shell">/usr/libexec/java_home -V
-</code></pre>
-<p>比如生成如下内容：</p>
-<pre><code>Matching Java Virtual Machines (2):
-    12, x86_64:	&quot;OpenJDK 12&quot;	/Library/Java/JavaVirtualMachines/jdk-12.jdk/Contents/Home
-    1.7.0_76, x86_64:	&quot;Java SE 7&quot;	/Library/Java/JavaVirtualMachines/jdk1.7.0_76.jdk/Contents/Home
-</code></pre>
-<p>也可以输入小写v参数查看具体的版本信息，比如查刚刚下载的Java 12：</p>
-<pre><code class="language-shell">/usr/libexec/java_home -v 12
-</code></pre>
-<p>会显示<code>/Library/Java/JavaVirtualMachines/jdk-12.jdk/Contents/Home</code>，这个就是它的Java Home。那么就能通过export设置当前的JAVA_HOME环境变量了。比如：</p>
-<pre><code>export JAVA_HOME=`/usr/libexec/java_home -v 12`
-</code></pre>
-<h2 id="便捷管理多版本">便捷管理多版本</h2>
-<p>Linux或者macOS都有bash或者其他shell，以bash为例，bash在每个用户目录下都有<code>.bashrc</code>文件用于配置用户相关的环境变量（如果没有可以自己创建），可以在该文件下面写如下代码：</p>
-<pre><code class="language-shell"># type 'java7' at command prompt to switch to java 7
-function java7() {
-    export JAVA_HOME=`/usr/libexec/java_home -v 1.7`
-    echo &quot;JAVA_HOME is $JAVA_HOME&quot;
-    java -version
-}
-
-# type 'java12' at command prompt to switch to java 12
-function java12() {
-    export JAVA_HOME=`/usr/libexec/java_home -v 12`
-    echo &quot;JAVA_HOME is $JAVA_HOME&quot;
-    java -version
-}
-</code></pre>
-<p>保存之后，输入命令<code>source .bashrc</code>，然后可以通过命令<code>java12</code>或者<code>java7</code>来便捷切换所使用的Java版本。</p>
-<p>[1]:</p>
-<!-- more -->
-<p>https://openjdk.java.net/install/</p>
 ]]></content>
     </entry>
 </feed>
