@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>http://goroyal.github.io</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2020-08-02T09:25:38.279Z</updated>
+    <updated>2020-08-02T09:31:19.307Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="http://goroyal.github.io"/>
     <link rel="self" href="http://goroyal.github.io/atom.xml"/>
@@ -10,6 +10,39 @@
     <logo>http://goroyal.github.io/images/avatar.png</logo>
     <icon>http://goroyal.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Goroyal&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Java ReetrantLock]]></title>
+        <id>http://goroyal.github.io/post/java-reetrantlock/</id>
+        <link href="http://goroyal.github.io/post/java-reetrantlock/">
+        </link>
+        <updated>2020-08-02T09:28:10.000Z</updated>
+        <summary type="html"><![CDATA[<p><code>ReetrantLock</code>是一个可重入排它锁，和使用<code>synchronized</code>方法和语句的隐式监视器锁有着相同的基本行为和语义，但是性能有所扩展。</p>
+<p><code>ReentrantLock</code>由上次成功加锁但是还没有解锁的线程所持有。在锁没有被其他线程持有时，一个线程调用<code>lock</code>将返回成功获取锁。如果当前线程已经持有锁那么该方法将立即返回。这个可以使用方法<code>isHeldByCurrentThread</code>和<code>getHoldCount</code>检查。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p><code>ReetrantLock</code>是一个可重入排它锁，和使用<code>synchronized</code>方法和语句的隐式监视器锁有着相同的基本行为和语义，但是性能有所扩展。</p>
+<p><code>ReentrantLock</code>由上次成功加锁但是还没有解锁的线程所持有。在锁没有被其他线程持有时，一个线程调用<code>lock</code>将返回成功获取锁。如果当前线程已经持有锁那么该方法将立即返回。这个可以使用方法<code>isHeldByCurrentThread</code>和<code>getHoldCount</code>检查。</p>
+<!-- more -->
+<p>这个类的构造器接收一个可选的公平性参数。当设为 true 时，在争用的情况下，锁倾向于授权给等待时间最长的线程。另外，这个锁不保证任何特定访问顺序。使用被多个线程访问的公平锁的程序将呈现比使用默认设置的情况较低的总吞吐量（也就是变慢了，通常是慢很多），但是在获取锁和保证不饥饿的时间上有较小的方差。</p>
+<p>公平锁可以保证锁的获取按照FIFO原则，而代价是进行大量的线程切换。非公平性锁虽然可能造成线程饥饿，但是较少线程切换，保证了很大的吞吐量。</p>
+<p>同样需要注意的是，不计时的<code>tryLock()</code>方法不赞成公平设置。如果锁是可用的它将成功获得锁，而不管其他线程是否正在等待。</p>
+<p>建议实践时永远在<code>lock</code>后面立即跟上一个<code>try</code>块，大多数典型的在构造之前/之后的情况是：</p>
+<pre><code class="language-java">class X {
+	private final ReentrantLock lock = new ReentrantLock();
+	//...
+	public void m(){
+		lock.lock(); // block until condition holds
+		try{
+			// ... method body
+		} finally {
+			lock.unlock();
+		}
+	}
+}
+</code></pre>
+<p>除了实现<code>Lock</code>接口，<code>ReetrantLock</code>类定义了大量 public 和 protected 方法来检查锁的状态，其中有一些方法只用于仪表和监控。这个类的序列化和内置锁的行为方式一致：反序列化的锁是处于解锁状态，在序列化的时候不管当前它的状态。</p>
+<p>这个锁支持相同线程递归锁最大2147483647次。尝试超过这个限制将导致从加锁方法抛出<code>Error</code>。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[常用的Git命令]]></title>
         <id>http://goroyal.github.io/post/git-commands/</id>
@@ -551,23 +584,6 @@ rm -r folder 2&gt; /dev/null
 <li><a href="https://github.com/labuladong/fucking-algorithm/blob/master/%E6%8A%80%E6%9C%AF/linux%E8%BF%9B%E7%A8%8B.md">Linux的进程、线程、文件描述符是什么</a></li>
 <li><a href="https://zh.wikipedia.org/wiki//dev/null">维基百科：/dev/null</a></li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[面向对象编程与纯函数]]></title>
-        <id>http://goroyal.github.io/post/oop-and-pure-function/</id>
-        <link href="http://goroyal.github.io/post/oop-and-pure-function/">
-        </link>
-        <updated>2019-06-26T16:51:40.000Z</updated>
-        <summary type="html"><![CDATA[<p>在面向对象编程里面，我们常常对现实世界建模抽象成一个个类，然后创建它们的对象，通过对象的方法行为去描述逻辑。</p>
-<p>纯函数是一种特殊的函数，给它相同的输入永远会得到相同的输出，而且没有任何可观察的副作用。</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>在面向对象编程里面，我们常常对现实世界建模抽象成一个个类，然后创建它们的对象，通过对象的方法行为去描述逻辑。</p>
-<p>纯函数是一种特殊的函数，给它相同的输入永远会得到相同的输出，而且没有任何可观察的副作用。</p>
-<!-- more -->
-<p>占位符，待更。</p>
-<p>https://llh911001.gitbooks.io/mostly-adequate-guide-chinese/content/ch3.html#%E8%BF%BD%E6%B1%82%E2%80%9C%E7%BA%AF%E2%80%9D%E7%9A%84%E7%90%86%E7%94%B1<br>
-https://www.jiqizhixin.com/articles/2018-10-22-15</p>
 ]]></content>
     </entry>
 </feed>

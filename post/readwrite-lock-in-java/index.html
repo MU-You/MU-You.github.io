@@ -9,7 +9,7 @@
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
 <title>Java中的ReadWriteLock | Goroyal&#39;s blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1596360173991">
+<link rel="shortcut icon" href="/favicon.ico?v=1596360670826">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -213,7 +213,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">25</span>
+        <span class="site-item-stat-count">26</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -830,6 +830,33 @@
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/java-reetrantlock/"" data-c="
+          &lt;p&gt;&lt;code&gt;ReetrantLock&lt;/code&gt;是一个可重入排它锁，和使用&lt;code&gt;synchronized&lt;/code&gt;方法和语句的隐式监视器锁有着相同的基本行为和语义，但是性能有所扩展。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ReentrantLock&lt;/code&gt;由上次成功加锁但是还没有解锁的线程所持有。在锁没有被其他线程持有时，一个线程调用&lt;code&gt;lock&lt;/code&gt;将返回成功获取锁。如果当前线程已经持有锁那么该方法将立即返回。这个可以使用方法&lt;code&gt;isHeldByCurrentThread&lt;/code&gt;和&lt;code&gt;getHoldCount&lt;/code&gt;检查。&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;p&gt;这个类的构造器接收一个可选的公平性参数。当设为 true 时，在争用的情况下，锁倾向于授权给等待时间最长的线程。另外，这个锁不保证任何特定访问顺序。使用被多个线程访问的公平锁的程序将呈现比使用默认设置的情况较低的总吞吐量（也就是变慢了，通常是慢很多），但是在获取锁和保证不饥饿的时间上有较小的方差。&lt;/p&gt;
+&lt;p&gt;公平锁可以保证锁的获取按照FIFO原则，而代价是进行大量的线程切换。非公平性锁虽然可能造成线程饥饿，但是较少线程切换，保证了很大的吞吐量。&lt;/p&gt;
+&lt;p&gt;同样需要注意的是，不计时的&lt;code&gt;tryLock()&lt;/code&gt;方法不赞成公平设置。如果锁是可用的它将成功获得锁，而不管其他线程是否正在等待。&lt;/p&gt;
+&lt;p&gt;建议实践时永远在&lt;code&gt;lock&lt;/code&gt;后面立即跟上一个&lt;code&gt;try&lt;/code&gt;块，大多数典型的在构造之前/之后的情况是：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;class X {
+	private final ReentrantLock lock = new ReentrantLock();
+	//...
+	public void m(){
+		lock.lock(); // block until condition holds
+		try{
+			// ... method body
+		} finally {
+			lock.unlock();
+		}
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;除了实现&lt;code&gt;Lock&lt;/code&gt;接口，&lt;code&gt;ReetrantLock&lt;/code&gt;类定义了大量 public 和 protected 方法来检查锁的状态，其中有一些方法只用于仪表和监控。这个类的序列化和内置锁的行为方式一致：反序列化的锁是处于解锁状态，在序列化的时候不管当前它的状态。&lt;/p&gt;
+&lt;p&gt;这个锁支持相同线程递归锁最大2147483647次。尝试超过这个限制将导致从加锁方法抛出&lt;code&gt;Error&lt;/code&gt;。&lt;/p&gt;
+">Java ReetrantLock</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/git-commands/"" data-c="
