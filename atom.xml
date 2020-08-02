@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>http://goroyal.github.io</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2020-08-02T09:31:19.307Z</updated>
+    <updated>2020-08-02T09:34:09.853Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="http://goroyal.github.io"/>
     <link rel="self" href="http://goroyal.github.io/atom.xml"/>
@@ -10,6 +10,45 @@
     <logo>http://goroyal.github.io/images/avatar.png</logo>
     <icon>http://goroyal.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Goroyal&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Java synchronized]]></title>
+        <id>http://goroyal.github.io/post/java-synchronized/</id>
+        <link href="http://goroyal.github.io/post/java-synchronized/">
+        </link>
+        <updated>2020-08-02T09:32:20.000Z</updated>
+        <content type="html"><![CDATA[<p>synchronized，我们谓之锁，主要用来给方法、代码块加锁。当某个方法或者代码块使用synchronized时，那么在同一时刻至多仅有有一个线程在执行该段代码。当有多个线程访问同一对象的加锁方法/代码块时，同一时间只有一个线程在执行，其余线程必须要等待当前线程执行完之后才能执行该代码段。但是，其余线程是可以访问该对象中的非加锁代码块的。</p>
+<p>synchronized主要包括两种方法：synchronized 方法、synchronized 代码块。</p>
+<p>synchronized 方法通过在方法声明中加入 synchronized关键字来声明 synchronized 方法。如：</p>
+<pre><code class="language-java">public synchronized void getResult();
+</code></pre>
+<p>synchronized方法控制对类成员变量的访问。它是如何来避免类成员变量的访问控制呢？我们知道方法使用了synchronized关键字表明该方法已加锁，在任一线程在访问改方法时都必须要判断该方法是否有其他线程在“独占”。每个类实例对应一个把锁，每个synchronized方法都必须调用该方法的类实例的锁方能执行，否则所属线程阻塞，方法一旦执行，就独占该锁，直到从该方法返回时才将锁释放，被阻塞的线程方能获得该锁。</p>
+<p>其实synchronized方法是存在缺陷的，如果我们将一个很大的方法声明为synchronized将会大大影响效率的。如果多个线程在访问一个synchronized方法，那么同一时刻只有一个线程在执行该方法，而其他线程都必须等待，但是如果该方法没有使用synchronized，则所有线程可以在同一时刻执行它，减少了执行的总时间。所以如果我们知道一个方法不会被多个线程执行到或者说不存在资源共享的问题，则不需要使用synchronized关键字。但是如果一定要使用synchronized关键字，那么我们可以synchronized代码块来替换synchronized方法。</p>
+<p>synchronized代码块所起到的作用和synchronized方法一样，只不过它使临界区变的尽可能短了，换句话说：它只把需要的共享数据保护起来，其余的长代码块留出此操作。语法如下：</p>
+<pre><code class="language-java">synchronized(object) {  
+    //允许访问控制的代码  
+}
+</code></pre>
+<p>如果我们需要以这种方式来使用synchronized关键字,那么必须要通过一个对象引用来作为参数,通常这个参数我们常使用为this.</p>
+<pre><code class="language-java">synchronized (this) {
+    //允许访问控制的代码 
+}
+</code></pre>
+<p>对于synchronized(this)有如下理解：</p>
+<ul>
+<li>当两个并发线程访问同一个对象object中的这个synchronized(this)同步代码块时，一个时间内只能有一个线程得到执行。另一个线程必须等待当前线程执行完这个代码块以后才能执行该代码块。</li>
+<li>然而，当一个线程访问object的一个synchronized(this)同步代码块时，另一个线程仍然可以访问object中的非synchronized(this)同步代码块。</li>
+<li>尤其关键的是，当一个线程访问object的一个synchronized(this)同步代码块时，其他线程对object中所有其他synchronized(this)同步代码块得访问将被阻塞。</li>
+<li>第三个例子同样适用其他同步代码块。也就是说，当一个线程访问object的一个synchronized(this)同步代码块时，它就获得了这个object的对象锁。结果，其他线程对该object对象所有同步代码部分的访问都将被暂时阻塞。</li>
+<li>以上规则对其他对象锁同样适用</li>
+</ul>
+<p>Java中每一个对象都可以作为锁，它主要体现在下面三个方面：</p>
+<ul>
+<li>对于同步方法，锁是当前实例对象。</li>
+<li>对于同步方法块，锁是Synchonized括号里配置的对象。</li>
+<li>对于静态同步方法，锁是当前对象的Class对象。</li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Java ReetrantLock]]></title>
         <id>http://goroyal.github.io/post/java-reetrantlock/</id>
@@ -452,138 +491,6 @@ AUTO_INCREMENT值可用ALTER TABLE或myisamch来重置。</p>
 <p>Dummy node 是一个虚拟节点，也可以认为是标杆节点。Dummy node 就是在链表表头 head 前加一个节点指向 head，即dummy -&gt; head。Dummy node 的使用多针对单链表没有前向指针的问题，保证链表的 head 不会在删除操作中丢失。还有一种用法比较少见，就是使用 dummy node 来进行head的删除操作。所以，当链表的 head 有可能变化（被修改或者被删除）时，使用 dummy node 可以很好的简化代码，最终返回<code>dummy.next</code>即新的链表。</p>
 <h3 id="快慢指针">快慢指针</h3>
 <p>快慢指针指的是2个指针沿着链表向前移动的步数不一样，比如一个每次移2步，另一个每次移1步。可以通过它找到链表中间的节点以及判断链表是否循环。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Linux 中的 2> /dev/null]]></title>
-        <id>http://goroyal.github.io/post/linux-redirect-dev-null/</id>
-        <link href="http://goroyal.github.io/post/linux-redirect-dev-null/">
-        </link>
-        <updated>2020-05-21T15:12:33.000Z</updated>
-        <summary type="html"><![CDATA[<p>本文亦发布于<a href="https://thinkbucket.cn/blog/2020/05/21/linux-redirect-dev-null">ThinkBucket</a>。<br>
-在 Linux 的 shell 命令或者脚本中，我们经常看到这样的命令：</p>
-<pre><code class="language-shell">2&gt; /dev/null
-</code></pre>
-<p>这是何意？</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>本文亦发布于<a href="https://thinkbucket.cn/blog/2020/05/21/linux-redirect-dev-null">ThinkBucket</a>。<br>
-在 Linux 的 shell 命令或者脚本中，我们经常看到这样的命令：</p>
-<pre><code class="language-shell">2&gt; /dev/null
-</code></pre>
-<p>这是何意？</p>
- <!-- more --> 
-<h2 id="linux-进程">Linux 进程</h2>
-<p>以 bash 为例，shell 中执行一个命令时，其实是由 bash shell fork 出一个子进程，然后在这个子进程中运行相应的命令，直至退出。Linux 里的进程的数据结构如下：</p>
-<pre><code class="language-C">struct task_struct {
-	// 进程状态
-	long state;
-	// 虚拟内存结构体
-	struct mm_struct *mm;
-	// 进程号
-	pid_t pid;
-	// 指向父进程的指针
-	struct task_struct __rcu *parent;
-	// 子进程列表
-	struct list_head children;
-	// 存放文件系统信息的指针
-	struct fs_struct *fs;
-	// 一个数组，包含该进程打开的文件指针
-	struct files_struct *files;
-};
-</code></pre>
-<p><code>task_struct</code> 就是 Linux 对于一个进程的描述，也可以称之为进程描述符。其中的 <code>files</code> 指针指向一个数组，表示当前进程打开的所有文件。</p>
-<p><strong>每个进程被创建时，<code>files</code> 指向的数组前三位被填入默认值，分别指向标准输入流、标准输出流、标准错误流。我们常说的「文件描述符」就是指这个文件指针数组的索引，所以程序的文件描述符默认情况下 0 是输入，1 是输出，2 是错误。</strong></p>
-<p><strong>提示：</strong></p>
-<blockquote>
-<p>Linux 中的所有设备都是抽象成文件的，设备可以当作文件一样读和写。</p>
-</blockquote>
-<p>上述所说的文件描述符如下表：</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>文件描述符</th>
-<th>默认情况</th>
-<th>对应文件句柄位置</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>标准输入（standard input）</td>
-<td>0</td>
-<td>从键盘获得输入</td>
-<td>/proc/slef/fd/0</td>
-</tr>
-<tr>
-<td>标准输出（standard output）</td>
-<td>1</td>
-<td>输出到屏幕（即控制台）</td>
-<td>/proc/slef/fd/1</td>
-</tr>
-<tr>
-<td>错误输出（error output）</td>
-<td>2</td>
-<td>输出到屏幕（即控制台）</td>
-<td>/proc/slef/fd/2</td>
-</tr>
-</tbody>
-</table>
-<h2 id="重定向">重定向</h2>
-<p>Linux shell 里通过 <code>&gt;</code>、<code>&lt;</code>进行输出、输入的重定向。</p>
-<ul>
-<li><code>&gt;</code>：将 shell 命令的输出指向某个地方，可以是文件，也可以是内存里的某个变量。比如 <code>ls -l &gt; file.txt</code> 就是把当前路径下的文件信息保存到 file.txt 文本中，如果没有这个重定向，它会将结果输出到显示器屏幕上。</li>
-<li><code>&lt;</code>：从某个地方读取内容作为 shell 命令的输入，可以是文件，也可以是内存里的某个变量。比如 <code>{command} &lt; file.txt</code>，如果没有这个重定向，它会从键盘读取输入。</li>
-</ul>
-<p>当使用<code>&gt;</code>进行输出重定向时，默认是把某个命令的标准输出进行重定向。</p>
-<pre><code class="language-shell"># 把标准输出重定向到新文件中
-command &gt;filename
-
-# 把标准输出重定向到新文件中
-command 1&gt;filename
-
-# 把标准错误重定向到新文件中
-command 2&gt;filename
-</code></pre>
-<p>当使用<code>&lt;</code>进行输入重定向时，默认时把它右边的内容作为标准输入。</p>
-<pre><code class="language-shell"># 以filename文件作为标准输入
-command &lt;filename
-
-# 以filename文件作为标准输入
-command 0&lt;filename
-
-# 从标准输入中读入，直到遇到delimiter分隔符
-command &lt;&lt;delimiter
-</code></pre>
-<h3 id="管道">管道</h3>
-<p>shell 还可以通过 <code>|</code> 这样的管道将前一个命令的输出作为下一个命令的输入，比如：</p>
-<pre><code class="language-shell"># 在命令历史中找到包含 ssh 字符串的命令
-history | grep ssh
-</code></pre>
-<h2 id="2-devnull">2&gt; /dev/null</h2>
-<p>通过上面的章节可以知道，<code>2</code> 表示标准错误，<code>&gt;</code> 表示将标准错误重定向到某个地方。</p>
-<p><code>/dev/null</code> 是一个特殊文件，在Unix系统中称为 null 设备。 通俗地说，它也称为比特桶（bit bucket，也译作比特垃圾桶）或黑洞（blackhole），因为它会立即丢弃写入其中的任何内容，并且在读取时仅返回文件结束EOF。</p>
-<p>所以这个命令合起来就是将忽略执行命令产生的错误。比如：</p>
-<pre><code class="language-shell"># 删除当前路径下的folder目录，如果不存在则忽略错误
-rm -r folder 2&gt; /dev/null
-</code></pre>
-<p><strong>注意：</strong></p>
-<blockquote>
-<p><code>2</code>和<code>&gt;</code>之间不能有空格</p>
-</blockquote>
-<h3 id="更多用法">更多用法</h3>
-<p><code>2&gt;&amp;1</code>：将错误输出绑定到标准输出上。由于此时的标准输出是默认值，也就是输出到屏幕，所以错误输出会输出到屏幕。这种写法的好处是可以避免同样的输出文件的描述符不用打开两次，标准输出和错误输出也不会抢占性往文件输出内容。<br>
-<code>&gt; /dev/null</code>：将标准输出1重定向到<code>/dev/null</code>中。<br>
-<code>&gt; /dev/null 2&gt;&amp;1</code>：就是让标准输出和错误输出重定向到<code>/dev/null</code>中（就是所有输出都丢弃了）。错误输出由于重用了标准输出的描述符，所以错误输出也被定向到了<code>/dev/null</code>中，错误输出同样也被丢弃了。执行了这条命令之后，该条shell命令将不会输出任何信息到控制台，也不会有任何信息输出到文件中。<br>
-<code>2&gt;&amp;1 &gt;/dev/null</code>：标准输出丢弃，错误输出显示在屏幕上。</p>
-<p>我们会用<code>nohup</code>命令在后台启动Java程序，为了不让一些执行信息输出到控制台，会用如下命令丢弃输出：</p>
-<pre><code class="language-shell">nohup java -jar xxxx.jar &gt;/dev/null 2&gt;&amp;1 &amp;
-</code></pre>
-<h2 id="参考资料">参考资料</h2>
-<ul>
-<li><a href="https://bash.cyberciti.biz/guide/What_is_a_Process%3F">What is a Process?</a></li>
-<li><a href="https://github.com/labuladong/fucking-algorithm/blob/master/%E6%8A%80%E6%9C%AF/linux%E8%BF%9B%E7%A8%8B.md">Linux的进程、线程、文件描述符是什么</a></li>
-<li><a href="https://zh.wikipedia.org/wiki//dev/null">维基百科：/dev/null</a></li>
-</ul>
 ]]></content>
     </entry>
 </feed>

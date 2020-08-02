@@ -8,7 +8,7 @@
 <meta name="keywords" content="Goroyal technical blog">
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
-<title>Java中的线程 | Goroyal&#39;s blog</title>
+<title>Java synchronized | Goroyal&#39;s blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1596360846135">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -38,8 +38,8 @@
 
 
 
-  <meta name="description" content="Java中的线程" />
-  <meta name="keywords" content="Java" />
+  <meta name="description" content="Java synchronized" />
+  <meta name="keywords" content="" />
 </head>
 
 <body>
@@ -190,8 +190,7 @@
       <div class="sidebar-body gemini" id="sidebar_body">
         
           
-            <div class="post-side-meta" id="post_side_meta">
-              
+            
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -237,196 +236,6 @@
 
 
 </div>
-            </div>
-            <div class="post-toc sidebar-body-active" id="post_toc" style="opacity: 1;">
-              <div class="toc-box right-motion">
-  <div class="toc-wrapper auto-number auto"
-    id="toc_wrapper">
-    <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81">线程状态</a></li>
-<li><a href="#%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8">线程安全</a></li>
-</ul>
-</li>
-</ul>
-
-  </div>
-</div>
-
-<script>
-
-  let lastTop = 0, lList = [], hList = [], postBody, lastIndex = -1;
-  let active = 'active-show', activeClass = 'active-current';
-  let tocWrapper = document.querySelector('#toc_wrapper');
-  let tocContent = tocWrapper.children[0];
-  let autoNumber = tocWrapper && tocWrapper.classList.contains('auto-number');
-
-  function addTocNumber(elem, deep) {
-    if (!elem) {
-      return;
-    }
-    let prop = elem.__proto__;
-
-    if (prop === HTMLUListElement.prototype) {
-      for (let i = 0; i < elem.children.length; i++) {
-        addTocNumber(elem.children[i], deep + (i + 1) + '.');
-      }
-    } else if (prop === HTMLLIElement.prototype) {
-      // 保存li元素
-      if (elem.children[0].__proto__ === HTMLAnchorElement.prototype) {
-        lList.push(elem);
-      }
-      for (let i = 0; i < elem.children.length; i++) {
-        let cur = elem.children[i];
-        if (cur.__proto__ === HTMLAnchorElement.prototype) {
-          if (autoNumber) {
-            cur.text = deep + ' ' + cur.text;
-          }
-        } else if (cur.__proto__ === HTMLUListElement.prototype) {
-          addTocNumber(cur, deep);
-        }
-      }
-    }
-  }
-
-  function removeParentActiveClass() {
-    let parents = tocContent.querySelectorAll('.' + active)
-    parents.forEach(function (elem) {
-      elem.classList.remove(active);
-    });
-  }
-
-  function addActiveClass(index) {
-    if (index >= 0 && index < hList.length) {
-      lList[index].classList.add(activeClass);
-    }
-  }
-
-  function removeActiveClass(index) {
-    if (index >= 0 && index < hList.length) {
-      lList[index].classList.remove(activeClass);
-    }
-  }
-
-  function addActiveLiElemment(elem, parent) {
-    if (!elem || elem === parent) {
-      return;
-    } else {
-      if (elem.__proto__ === HTMLLIElement.prototype) {
-        elem.classList.add(active);
-      }
-      addActiveLiElemment(elem.parentElement, parent);
-    }
-  }
-
-  function showToc() {
-    if (tocWrapper) {
-      postBody = document.querySelector('#post_body');
-      for (let i = 0; i < postBody.children.length; i++) {
-        if (postBody.children[i].__proto__ === HTMLHeadingElement.prototype) {
-          hList.push(postBody.children[i]);
-        }
-      }
-      if (tocWrapper.classList.contains('compress')) {
-        tocContent.classList.add('closed');
-      } else if (tocWrapper.classList.contains('no_compress')) {
-        tocContent.classList.add('expanded');
-      } else {
-        if (hList.length > 10) {
-          active = 'active-hidden'
-          tocContent.classList.add('closed');
-        } else {
-          tocContent.classList.add('expanded');
-        }
-      }
-    }
-  }
-
-  (function () {
-    // 处理不是从#一级标题开始目录
-    if (tocContent.children.length === 1 && tocContent.children[0].__proto__ === HTMLLIElement.prototype) {
-      let con = tocContent.children[0].children[0];
-      tocContent.innerHTML = con.innerHTML;
-    }
-    let markdownItTOC = document.querySelector('.markdownIt-TOC');
-    let innerHeight = window.innerHeight;
-    markdownItTOC.style = `max-height: ${innerHeight - 80 > 0 ? innerHeight - 80 : innerHeight}px`
-    addTocNumber(tocContent, '');
-  })();
-
-  document.addEventListener('scroll', function (e) {
-    if (lList.length <= 0) {
-      return;
-    }
-    let scrollTop = document.scrollingElement.scrollTop + 10;
-    let dir;
-
-    if (lastTop - scrollTop > 0) {
-      dir = 'up';
-    } else {
-      dir = 'down';
-    }
-
-    lastTop = scrollTop;
-    if (scrollTop <= 0) {
-      if (lastIndex >= 0 && lastIndex < hList.length) {
-        lList[lastIndex].classList.remove(activeClass);
-      }
-      return;
-    }
-
-    let current = 0, hasFind = false;
-    for (let i = 0; i < hList.length; i++) {
-      if (hList[i].offsetTop > scrollTop) {
-        current = i;
-        hasFind = true;
-        break;
-      }
-    }
-    if (!hasFind && scrollTop > lList[lList.length - 1].offsetTop) {
-      current = hList.length - 1;
-    } else {
-      current--;
-    }
-    if (dir === 'down') {
-      if (current > lastIndex) {
-        addActiveClass(current);
-        removeActiveClass(lastIndex)
-        lastIndex = current;
-        removeParentActiveClass();
-        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
-      }
-    } else {
-      if (current < lastIndex) {
-        addActiveClass(current);
-        removeActiveClass(lastIndex);
-        lastIndex = current;
-        removeParentActiveClass();
-        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
-      }
-    }
-  });
-
-
-  window.addEventListener('load', function () {
-    showToc();
-    document.querySelector('#sidebar').style = 'display: block;';
-    tocWrapper.classList.add('toc-active');
-    setTimeout(function () {
-      if ("createEvent" in document) {
-        let evt = document.createEvent("HTMLEvents");
-        evt.initEvent("scroll", false, true);
-        document.dispatchEvent(evt);
-      }
-      else {
-        document.fireEvent("scroll");
-      }
-    }, 500)
-  })
-
-</script>
-            </div>
           
         
       </div>
@@ -514,8 +323,8 @@
           <div class="section bg-color post post-page">
             <header class="post-header">
     <h1 class="post-title">
-        <a class="post-title-link" href="http://goroyal.github.io/post/java-thread/">
-            Java中的线程
+        <a class="post-title-link" href="http://goroyal.github.io/post/java-synchronized/">
+            Java synchronized
         </a>
     </h1>
     <div class="post-meta">
@@ -523,36 +332,23 @@
                 <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-                <span>2020-07-20</span>
+                <span>2020-08-02</span>
                 <span class="post-meta-divider pc-show">|</span>
                 </span>
                 
-                    <span class="meta-item">
-      <i class="fa fa-folder-o"></i>
-      <span class="pc-show language" data-lan="category-in">分类于</span>
-                    
-                        
-                            <a href="http://goroyal.github.io/tag/Ke7gk0EO5/">
-                                <span>Java</span>
-                            </a>
-                            
-                                    
-                                        </span>
-                                        <span class="post-meta-divider">|</span>
-                                        
                                             <span class="meta-item">
       <i class="fa fa-clock-o"></i>
-      <span>2<span class="language" data-lan="minute">分钟</span></span>
+      <span>4<span class="language" data-lan="minute">分钟</span></span>
                                             </span>
                                             <span class="meta-item">
       <span class="post-meta-divider">|</span>
                                             <i class="fa fa-file-word-o"></i>
-                                            <span>424<span class="pc-show language" data-lan="words">字数</span></span>
+                                            <span>1006<span class="pc-show language" data-lan="words">字数</span></span>
                                             </span>
                                             
                                                 
                                                     
-                                                                <!-- <span id="/post/java-thread/" data-flag-title="Java中的线程" class="meta-item pc-show leancloud_visitors">
+                                                                <!-- <span id="/post/java-synchronized/" data-flag-title="Java synchronized" class="meta-item pc-show leancloud_visitors">
       <span class="post-meta-divider">|</span>
       <i class="fa fa-eye"></i>
       <span><span class="language" data-lan="view">浏览量</span>：<span class="leancloud-visitors-count"></span></span>
@@ -561,28 +357,37 @@
     </div>
 </header>
             <div class="post-body next-md-body" id="post_body">
-              <h2 id="线程状态">线程状态</h2>
-<ol>
-<li>新建：创建后尚未启动的线程处于这种状态</li>
-<li>运行：运行状态包括操作系统中的运行态和就绪态，也就是说这个状态下的线程可能正在执行，也有可能在等待CPU为它分配执行时间；</li>
-<li>无限期等待：处于这种状态的线程不会被分配CPU，它们要被其它进程显式唤醒。可能进入这种状态的操作有：
+              <p>synchronized，我们谓之锁，主要用来给方法、代码块加锁。当某个方法或者代码块使用synchronized时，那么在同一时刻至多仅有有一个线程在执行该段代码。当有多个线程访问同一对象的加锁方法/代码块时，同一时间只有一个线程在执行，其余线程必须要等待当前线程执行完之后才能执行该代码段。但是，其余线程是可以访问该对象中的非加锁代码块的。</p>
+<p>synchronized主要包括两种方法：synchronized 方法、synchronized 代码块。</p>
+<p>synchronized 方法通过在方法声明中加入 synchronized关键字来声明 synchronized 方法。如：</p>
+<pre><code class="language-java">public synchronized void getResult();
+</code></pre>
+<p>synchronized方法控制对类成员变量的访问。它是如何来避免类成员变量的访问控制呢？我们知道方法使用了synchronized关键字表明该方法已加锁，在任一线程在访问改方法时都必须要判断该方法是否有其他线程在“独占”。每个类实例对应一个把锁，每个synchronized方法都必须调用该方法的类实例的锁方能执行，否则所属线程阻塞，方法一旦执行，就独占该锁，直到从该方法返回时才将锁释放，被阻塞的线程方能获得该锁。</p>
+<p>其实synchronized方法是存在缺陷的，如果我们将一个很大的方法声明为synchronized将会大大影响效率的。如果多个线程在访问一个synchronized方法，那么同一时刻只有一个线程在执行该方法，而其他线程都必须等待，但是如果该方法没有使用synchronized，则所有线程可以在同一时刻执行它，减少了执行的总时间。所以如果我们知道一个方法不会被多个线程执行到或者说不存在资源共享的问题，则不需要使用synchronized关键字。但是如果一定要使用synchronized关键字，那么我们可以synchronized代码块来替换synchronized方法。</p>
+<p>synchronized代码块所起到的作用和synchronized方法一样，只不过它使临界区变的尽可能短了，换句话说：它只把需要的共享数据保护起来，其余的长代码块留出此操作。语法如下：</p>
+<pre><code class="language-java">synchronized(object) {  
+    //允许访问控制的代码  
+}
+</code></pre>
+<p>如果我们需要以这种方式来使用synchronized关键字,那么必须要通过一个对象引用来作为参数,通常这个参数我们常使用为this.</p>
+<pre><code class="language-java">synchronized (this) {
+    //允许访问控制的代码 
+}
+</code></pre>
+<p>对于synchronized(this)有如下理解：</p>
 <ul>
-<li>没有设置时间参数的wait和join方法；</li>
-<li>LockSupport.park()方法；</li>
+<li>当两个并发线程访问同一个对象object中的这个synchronized(this)同步代码块时，一个时间内只能有一个线程得到执行。另一个线程必须等待当前线程执行完这个代码块以后才能执行该代码块。</li>
+<li>然而，当一个线程访问object的一个synchronized(this)同步代码块时，另一个线程仍然可以访问object中的非synchronized(this)同步代码块。</li>
+<li>尤其关键的是，当一个线程访问object的一个synchronized(this)同步代码块时，其他线程对object中所有其他synchronized(this)同步代码块得访问将被阻塞。</li>
+<li>第三个例子同样适用其他同步代码块。也就是说，当一个线程访问object的一个synchronized(this)同步代码块时，它就获得了这个object的对象锁。结果，其他线程对该object对象所有同步代码部分的访问都将被暂时阻塞。</li>
+<li>以上规则对其他对象锁同样适用</li>
 </ul>
-</li>
-<li>限期等待：处于这种状态的线程也不会被分配执行时间，不过不需要其它线程唤醒，等一段时间之后就会由系统自动唤醒。可能进入这种状态的有：
+<p>Java中每一个对象都可以作为锁，它主要体现在下面三个方面：</p>
 <ul>
-<li>设置了时间参数的wait和join方法；</li>
-<li>sleep方法；</li>
-<li>LockSupport.parkNanos()方法、LockSupport.parkUntil()方法；</li>
+<li>对于同步方法，锁是当前实例对象。</li>
+<li>对于同步方法块，锁是Synchonized括号里配置的对象。</li>
+<li>对于静态同步方法，锁是当前对象的Class对象。</li>
 </ul>
-</li>
-<li>阻塞状态：线程被阻塞了，阻塞状态和等待状态的区别是：阻塞状态在等待着获得一个排它锁。而等待状态则是在等待一段时间，或者唤醒动作发生。在程序进入同步区域的时候，线程将进入这种状态。</li>
-<li>结束：已终止线程的线程状态，线程已经结束执行。</li>
-</ol>
-<h2 id="线程安全">线程安全</h2>
-<p>当多个线程访问一个对象的时候，如果不用考虑这些线程在运行时环境下的调度和交替执行，也不需要进行额外的同步，或者在调用方进行任何其他的协调操作，调用这个对象的行为都可以获得正确的结果，那么这个对象是线程安全的。</p>
 
             </div>
             
@@ -594,7 +399,7 @@
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="http://goroyal.github.io/post/java-thread/" title="Java中的线程">http://goroyal.github.io/post/java-thread/</a>
+      <a href="http://goroyal.github.io/post/java-synchronized/" title="Java synchronized">http://goroyal.github.io/post/java-synchronized/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -603,21 +408,15 @@
   </ul>
   <div class="tags">
     
-      <a href="http://goroyal.github.io/tag/Ke7gk0EO5/"># Java</a>
-    
   </div>
   <div class="nav">
     <div class="nav-prev">
       
-        <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="Java包装类的比较" href="http://goroyal.github.io/post/java-baozhuang-class/">Java包装类的比较</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="Java包装类的比较" href="http://goroyal.github.io/post/java-baozhuang-class/">上一篇</a>
-      
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="【数据结构】Java里的各种Map" href="http://goroyal.github.io/post/java-map/">【数据结构】Java里的各种Map</a>
-        <a class="nav-mobile-next" title="【数据结构】Java里的各种Map" href="http://goroyal.github.io/post/java-map/">下一篇</a>
+        <a class="nav-pc-next" title="Java ReetrantLock" href="http://goroyal.github.io/post/java-reetrantlock/">Java ReetrantLock</a>
+        <a class="nav-mobile-next" title="Java ReetrantLock" href="http://goroyal.github.io/post/java-reetrantlock/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>
