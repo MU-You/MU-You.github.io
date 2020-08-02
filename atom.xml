@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>http://goroyal.github.io</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2020-08-02T11:56:11.808Z</updated>
+    <updated>2020-08-02T11:56:51.340Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="http://goroyal.github.io"/>
     <link rel="self" href="http://goroyal.github.io/atom.xml"/>
@@ -217,9 +217,9 @@ lock前缀指令实际上相当于一个内存屏障（也成内存栅栏），�
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[线程中的3个特性]]></title>
-        <id>http://goroyal.github.io/post/xian-cheng-zhong-de-3-ge-te-xing/</id>
-        <link href="http://goroyal.github.io/post/xian-cheng-zhong-de-3-ge-te-xing/">
+        <title type="html"><![CDATA[Java 线程中的3个特性]]></title>
+        <id>http://goroyal.github.io/post/java-thread-feature/</id>
+        <link href="http://goroyal.github.io/post/java-thread-feature/">
         </link>
         <updated>2020-08-02T11:22:08.000Z</updated>
         <content type="html"><![CDATA[<h2 id="原子性">原子性</h2>

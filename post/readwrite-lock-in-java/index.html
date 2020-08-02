@@ -9,7 +9,7 @@
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
 <title>Java中的ReadWriteLock | Goroyal&#39;s blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1596369367640">
+<link rel="shortcut icon" href="/favicon.ico?v=1596369408447">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -1035,7 +1035,7 @@ lock前缀指令实际上相当于一个内存屏障（也成内存栅栏），�
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/xian-cheng-zhong-de-3-ge-te-xing/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/java-thread-feature/"" data-c="
           &lt;h2 id=&#34;原子性&#34;&gt;原子性&lt;/h2&gt;
 &lt;p&gt;在Java中，对基本数据类型的变量的读取和赋值操作是原子性操作，即这些操作是不可被中断的，要么执行，要么不执行。&lt;br&gt;
 上面一句话虽然看起来简单，但是理解起来并不是那么容易。看下面一个例子i：&lt;br&gt;
@@ -1077,7 +1077,7 @@ x = x + 1;     //语句4
 &lt;p&gt;第二条规则也比较容易理解，也就是说无论在单线程中还是多线程中，同一个锁如果出于被锁定的状态，那么必须先对锁进行了释放操作，后面才能继续进行lock操作。&lt;/p&gt;
 &lt;p&gt;第三条规则是一条比较重要的规则，如果一个线程先去写一个变量，然后一个线程去进行读取，那么写入操作肯定会先行发生于读操作。&lt;/p&gt;
 &lt;p&gt;第四条规则实际上就是体现happens-before原则具备传递性。&lt;/p&gt;
-">线程中的3个特性</a>
+">Java 线程中的3个特性</a>
       </div>
       
       <div class="item">
