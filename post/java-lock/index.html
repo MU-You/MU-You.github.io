@@ -8,7 +8,7 @@
 <meta name="keywords" content="Goroyal technical blog">
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
-<title>Goroyal&#39;s blog</title>
+<title>Java锁 | Goroyal&#39;s blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1596361159741">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -38,6 +38,8 @@
 
 
 
+  <meta name="description" content="Java锁" />
+  <meta name="keywords" content="Java" />
 </head>
 
 <body>
@@ -170,10 +172,26 @@
   <div class="main-continer">
     
     <div
-      class="section-layout  gemini">
+      class="section-layout gemini ">
       <div class="section-layout-wrapper">
-        <div id="sidebarMeta" class="sidebar">
-    
+        
+
+<div class="sidebar">
+  
+    <div class="sidebar-box box-shadow-wrapper bg-color right-motion" id="sidebar">
+      
+        <div class="post-list-sidebar">
+          <div class="sidebar-title">
+            <span id="tocSideBar" class="sidebar-title-item sidebar-title-active language" data-lan="index">文章目录</span>
+            <span id="metaSideBar" class="sidebar-title-item language" data-lan="preview">站点概览</span>
+          </div>
+        </div>
+      
+      <div class="sidebar-body gemini" id="sidebar_body">
+        
+          
+            <div class="post-side-meta" id="post_side_meta">
+              
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -219,225 +237,438 @@
 
 
 </div>
+            </div>
+            <div class="post-toc sidebar-body-active" id="post_toc" style="opacity: 1;">
+              <div class="toc-box right-motion">
+  <div class="toc-wrapper auto-number auto"
+    id="toc_wrapper">
+    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E9%94%81%E7%8A%B6%E6%80%81">锁状态</a></li>
+<li><a href="#%E5%8A%A0%E9%94%81%E6%96%B9%E5%BC%8F">加锁方式</a></li>
+<li><a href="#%E9%94%81%E7%9A%84%E5%85%AC%E5%B9%B3%E6%80%A7">锁的公平性</a></li>
+<li><a href="#%E9%94%81%E7%9A%84%E5%8F%AF%E9%87%8D%E5%85%A5%E6%80%A7">锁的可重入性</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
 </div>
+
 <script>
-  let sidebarMeta = document.querySelector('#sidebarMeta');
-  let scheme = 'gemini';
-  let sidebarWrapper = document.querySelector('.sidebar-wrapper');
-  if (sidebarMeta && (scheme === 'pisces' || scheme === 'gemini')) {
-    document.addEventListener('scroll', function(e) {
-      if (document.scrollingElement.scrollTop > parseInt(sidebarMeta.style.marginTop) + 10) {
-        sidebarWrapper.classList.add('home-sidebar-fixed')
-      } else {
-        sidebarWrapper.classList.remove('home-sidebar-fixed')
+
+  let lastTop = 0, lList = [], hList = [], postBody, lastIndex = -1;
+  let active = 'active-show', activeClass = 'active-current';
+  let tocWrapper = document.querySelector('#toc_wrapper');
+  let tocContent = tocWrapper.children[0];
+  let autoNumber = tocWrapper && tocWrapper.classList.contains('auto-number');
+
+  function addTocNumber(elem, deep) {
+    if (!elem) {
+      return;
+    }
+    let prop = elem.__proto__;
+
+    if (prop === HTMLUListElement.prototype) {
+      for (let i = 0; i < elem.children.length; i++) {
+        addTocNumber(elem.children[i], deep + (i + 1) + '.');
       }
+    } else if (prop === HTMLLIElement.prototype) {
+      // 保存li元素
+      if (elem.children[0].__proto__ === HTMLAnchorElement.prototype) {
+        lList.push(elem);
+      }
+      for (let i = 0; i < elem.children.length; i++) {
+        let cur = elem.children[i];
+        if (cur.__proto__ === HTMLAnchorElement.prototype) {
+          if (autoNumber) {
+            cur.text = deep + ' ' + cur.text;
+          }
+        } else if (cur.__proto__ === HTMLUListElement.prototype) {
+          addTocNumber(cur, deep);
+        }
+      }
+    }
+  }
+
+  function removeParentActiveClass() {
+    let parents = tocContent.querySelectorAll('.' + active)
+    parents.forEach(function (elem) {
+      elem.classList.remove(active);
     });
   }
-  </script>
-        <div class="section-box tag-line box-shadow-wrapper">
-          <section class="section tags-section posts-expand bg-color">
-            <div class="padding-wrapper">
-  <div class="tag-timeline-box">
-    <div class="tag-timeline-wrapper">
-      <div class="tag-timeline-title">
-        <h2>
-          Java
-          <small class="language" data-lan="tag">标签</small>
-        </h2>
+
+  function addActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.add(activeClass);
+    }
+  }
+
+  function removeActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.remove(activeClass);
+    }
+  }
+
+  function addActiveLiElemment(elem, parent) {
+    if (!elem || elem === parent) {
+      return;
+    } else {
+      if (elem.__proto__ === HTMLLIElement.prototype) {
+        elem.classList.add(active);
+      }
+      addActiveLiElemment(elem.parentElement, parent);
+    }
+  }
+
+  function showToc() {
+    if (tocWrapper) {
+      postBody = document.querySelector('#post_body');
+      for (let i = 0; i < postBody.children.length; i++) {
+        if (postBody.children[i].__proto__ === HTMLHeadingElement.prototype) {
+          hList.push(postBody.children[i]);
+        }
+      }
+      if (tocWrapper.classList.contains('compress')) {
+        tocContent.classList.add('closed');
+      } else if (tocWrapper.classList.contains('no_compress')) {
+        tocContent.classList.add('expanded');
+      } else {
+        if (hList.length > 10) {
+          active = 'active-hidden'
+          tocContent.classList.add('closed');
+        } else {
+          tocContent.classList.add('expanded');
+        }
+      }
+    }
+  }
+
+  (function () {
+    // 处理不是从#一级标题开始目录
+    if (tocContent.children.length === 1 && tocContent.children[0].__proto__ === HTMLLIElement.prototype) {
+      let con = tocContent.children[0].children[0];
+      tocContent.innerHTML = con.innerHTML;
+    }
+    let markdownItTOC = document.querySelector('.markdownIt-TOC');
+    let innerHeight = window.innerHeight;
+    markdownItTOC.style = `max-height: ${innerHeight - 80 > 0 ? innerHeight - 80 : innerHeight}px`
+    addTocNumber(tocContent, '');
+  })();
+
+  document.addEventListener('scroll', function (e) {
+    if (lList.length <= 0) {
+      return;
+    }
+    let scrollTop = document.scrollingElement.scrollTop + 10;
+    let dir;
+
+    if (lastTop - scrollTop > 0) {
+      dir = 'up';
+    } else {
+      dir = 'down';
+    }
+
+    lastTop = scrollTop;
+    if (scrollTop <= 0) {
+      if (lastIndex >= 0 && lastIndex < hList.length) {
+        lList[lastIndex].classList.remove(activeClass);
+      }
+      return;
+    }
+
+    let current = 0, hasFind = false;
+    for (let i = 0; i < hList.length; i++) {
+      if (hList[i].offsetTop > scrollTop) {
+        current = i;
+        hasFind = true;
+        break;
+      }
+    }
+    if (!hasFind && scrollTop > lList[lList.length - 1].offsetTop) {
+      current = hList.length - 1;
+    } else {
+      current--;
+    }
+    if (dir === 'down') {
+      if (current > lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex)
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    } else {
+      if (current < lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex);
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    }
+  });
+
+
+  window.addEventListener('load', function () {
+    showToc();
+    document.querySelector('#sidebar').style = 'display: block;';
+    tocWrapper.classList.add('toc-active');
+    setTimeout(function () {
+      if ("createEvent" in document) {
+        let evt = document.createEvent("HTMLEvents");
+        evt.initEvent("scroll", false, true);
+        document.dispatchEvent(evt);
+      }
+      else {
+        document.fireEvent("scroll");
+      }
+    }, 500)
+  })
+
+</script>
+            </div>
+          
+        
       </div>
-      
-      
-      
-      <a href="http://goroyal.github.io/post/java-lock/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              08-02
-              <small>Java锁</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      <a href="http://goroyal.github.io/post/java-reetrantlock/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              08-02
-              <small>Java ReetrantLock</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <a href="http://goroyal.github.io/post/java-baozhuang-class/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              07-20
-              <small>Java包装类的比较</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="http://goroyal.github.io/post/java-thread/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              07-20
-              <small>Java中的线程</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      <a href="http://goroyal.github.io/post/java-map/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              07-10
-              <small>【数据结构】Java里的各种Map</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <a href="http://goroyal.github.io/post/java-annotation/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              02-06
-              <small>Java中的注解</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <a href="http://goroyal.github.io/post/abstract-class-and-interface/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              10-14
-              <small>Java 抽象类和接口</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      <a href="http://goroyal.github.io/post/final-finally-finalize-in-java/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              05-03
-              <small>Java中的final、finally和finalize</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+    </div>
+  
+</div>
+<script>
+  const SIDEBAR_TITLE_ACTIVE = 'sidebar-title-active';
+  const SIDEBAR_BODY_ACTIVE = 'sidebar-body-active';
+  const SLIDE_UP_IN = 'slide-up-in';
+
+  let sidebar = document.querySelector('#sidebar'),
+  tocSideBar = document.querySelector('#tocSideBar'),
+  metaSideBar = document.querySelector('#metaSideBar'),
+  postToc = document.querySelector('#post_toc'),
+  postSiteMeta = document.querySelector('#post_side_meta'),
+  sidebarTitle = document.querySelector('.sidebar-title'),
+  sidebarBody = document.querySelector('#sidebar_body');
+
+  tocSideBar && tocSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  metaSideBar && metaSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  function toggleSidebar(e) {
+    let currentTitle = document.querySelector("."+SIDEBAR_TITLE_ACTIVE);
+    if (currentTitle == e.srcElement) {
+      return ;
+    }
+    let current, showElement, hideElement;
+    if (e.srcElement == metaSideBar) {
+      showElement = postSiteMeta;
+      hideElement = postToc;
+    } else if (e.srcElement == tocSideBar){
+      showElement = postToc;
+      hideElement = postSiteMeta;
+    }
+    currentTitle.classList.remove(SIDEBAR_TITLE_ACTIVE);
+    e.srcElement.classList.add(SIDEBAR_TITLE_ACTIVE);
+
+    window.Velocity(hideElement, 'stop');
+    window.Velocity(hideElement, 'transition.slideUpOut', {
+      display: 'none',
+      duration: 200,
+      complete: function () {
+        window.Velocity(showElement, 'transition.slideDownIn', {
+          duration: 200
+        });
+      }
+    })
+    hideElement.classList.remove(SIDEBAR_BODY_ACTIVE);
+    showElement.classList.add(SIDEBAR_BODY_ACTIVE);
+  }
+
+  postToc && postToc.addEventListener('transitionend', function() {
+    this.classList.remove(SLIDE_UP_IN);
+  });
+
+  if (sidebarBody) {
+    if (sidebarBody.classList.contains('pisces') || sidebarBody.classList.contains('gemini')) {
+      let hasFix = false;
+      let scrollEl = document.querySelector('.main-continer');
+      let limitTop = document.querySelector('#nav_ul').children.length * 42 + 162;
+      window.addEventListener('scroll', function(e) {
+        if (document.scrollingElement.scrollTop >= limitTop) {
+          if (!hasFix) {
+            sidebar.classList.add('sidebar-fixed');
+            hasFix = true;
+          }
+        } else {
+          if (hasFix) {
+            sidebar.classList.remove('sidebar-fixed');
+            hasFix = false;
+          }
+        }
+      });
+    }
+  }
+  
+</script>
+        <div class="section-box box-shadow-wrapper">
+          <div class="section bg-color post post-page">
+            <header class="post-header">
+    <h1 class="post-title">
+        <a class="post-title-link" href="http://goroyal.github.io/post/java-lock/">
+            Java锁
+        </a>
+    </h1>
+    <div class="post-meta">
+        
+                <span class="meta-item pc-show">
+      <i class="fa fa-calendar-o"></i>
+      <span class="language" data-lan="publish">发布于</span>
+                <span>2020-08-02</span>
+                <span class="post-meta-divider pc-show">|</span>
+                </span>
+                
+                    <span class="meta-item">
+      <i class="fa fa-folder-o"></i>
+      <span class="pc-show language" data-lan="category-in">分类于</span>
+                    
+                        
+                            <a href="http://goroyal.github.io/tag/Ke7gk0EO5/">
+                                <span>Java</span>
+                            </a>
+                            
+                                    
+                                        </span>
+                                        <span class="post-meta-divider">|</span>
+                                        
+                                            <span class="meta-item">
+      <i class="fa fa-clock-o"></i>
+      <span>7<span class="language" data-lan="minute">分钟</span></span>
+                                            </span>
+                                            <span class="meta-item">
+      <span class="post-meta-divider">|</span>
+                                            <i class="fa fa-file-word-o"></i>
+                                            <span>1784<span class="pc-show language" data-lan="words">字数</span></span>
+                                            </span>
+                                            
+                                                
+                                                    
+                                                                <!-- <span id="/post/java-lock/" data-flag-title="Java锁" class="meta-item pc-show leancloud_visitors">
+      <span class="post-meta-divider">|</span>
+      <i class="fa fa-eye"></i>
+      <span><span class="language" data-lan="view">浏览量</span>：<span class="leancloud-visitors-count"></span></span>
+    </span> -->
+                                                                
+    </div>
+</header>
+            <div class="post-body next-md-body" id="post_body">
+              <h2 id="锁状态">锁状态</h2>
+<p>Java中锁一共有四种状态，无锁状态，偏向锁状态，轻量级锁状态和重量级锁状态，它会随着竞争情况逐渐升级。锁可以升级但不能降级，意味着偏向锁升级成轻量级锁后不能降级成偏向锁。这种锁升级却不能降级的策略，目的是为了提高获得锁和释放锁的效率。</p>
+<p><strong>锁自旋</strong><br>
+我们知道在当某个线程在进入同步方法/代码块时若发现该同步方法/代码块被其他现在所占，则它就要等待，进入阻塞状态，这个过程性能是低下的。</p>
+<p>在遇到锁的争用或许等待事，线程可以不那么着急进入阻塞状态，而是等一等，看看锁是不是马上就释放了，这就是锁自旋。锁自旋在一定程度上可以对线程进行优化处理。</p>
+<p><strong>偏向锁</strong><br>
+偏向锁主要为了解决在没有竞争情况下锁的性能问题。在大多数情况下锁锁不仅不存在多线程竞争，而且总是由同一线程多次获得，为了让线程获得锁的代价更低而引入了偏向锁。当某个线程获得锁的情况，该线程是可以多次锁住该对象，但是每次执行这样的操作都会因为CAS（CPU的Compare-And-Swap指令）操作而造成一些开销消耗性能，为了减少这种开销，这个锁会偏向于第一个获得它的线程，如果在接下来的执行过程中，该锁没有被其他的线程获取，则持有偏向锁的线程将永远不需要再进行同步。</p>
+<p>当有其他线程在尝试着竞争偏向锁时，持有偏向锁的线程就会释放锁。</p>
+<p><strong>锁膨胀</strong><br>
+多个或多次调用粒度太小的锁，进行加锁解锁的消耗，反而还不如一次大粒度的锁调用来得高效。</p>
+<p><strong>轻量级锁</strong><br>
+轻量级锁能提升程序同步性能的依据是“对于绝大部分的锁，在整个同步周期内都是不存在竞争的”，这是一个经验数据。轻量级锁在当前线程的栈帧中建立一个名为锁记录的空间，用于存储锁对象目前的指向和状态。如果没有竞争，轻量级锁使用CAS操作避免了使用互斥量的开销，但如果存在锁竞争，除了互斥量的开销外，还额外发生了CAS操作，因此在有竞争的情况下，轻量级锁会比传统的重量级锁更慢。</p>
+<h2 id="加锁方式">加锁方式</h2>
+<p>在使用synchronized时，我们是这样使用锁的：</p>
+<pre><code class="language-java">public class ThreadTest {
+    public void test(){
+        synchronized(this){
+            //do something
+        }
+    }
+}
+</code></pre>
+<p>synchronized可以确保在同一时间内只有一个线程在执行dosomething。下面是使用lock替代synchronized：</p>
+<pre><code class="language-java">public class ThreadTest {
+    Lock lock = new Lock();
+    public void test(){
+        lock.lock();
+        //do something
+        lock.unlock();
+    }
+}
+</code></pre>
+<p>lock()方法会对Lock实例对象进行加锁，因此所有对该对象调用lock()方法的线程都会被阻塞，直到该Lock对象的unlock()方法被调用。</p>
+<h2 id="锁的公平性">锁的公平性</h2>
+<p>公平性的对立面是饥饿。那么什么是“饥饿”呢？如果一个线程因为其他线程在一直抢占着CPU而得不到CPU运行时间，那么我们就称该线程被“饥饿致死”。而解决饥饿的方案则被称之为“公平性”——所有线程均可以公平地获得CPU运行机会。</p>
+<p>导致线程饥饿主要有如下几个原因：<br>
+高优先级线程吞噬所有的低优先级线程的CPU时间。我们可以为每个线程单独设置其优先级，从1到10。优先级越高的线程获得CPU的时间越多。对大多数应用来说，我们最好是不要改变其优先级值。</p>
+<p>线程被永久堵塞在一个等待进入同步块的状态。Java的同步代码区是导致线程饥饿的重要因素。Java的同步代码块并不会保证进入它的线程的先后顺序。这就意味着理论上存在一个或者多个线程在试图进入同步代码区时永远被堵塞着，因为其他线程总是不断优于他获得访问权，导致它一直得到不到CPU运行机会被“饥饿致死”。</p>
+<p>线程在等待一个本身也处于永久等待完成的对象。如果多个线程处在<code>wait()</code>方法执行上，而对其调用<code>notify()</code>不会保证哪一个线程会获得唤醒，任何线程都有可能处于继续等待的状态。因此存在这样一个风险：一个等待线程从来得不到唤醒，因为其他等待线程总是能被获得唤醒。</p>
+<p>为了解决线程“饥饿”的问题，我们可以使用锁实现公平性。</p>
+<h2 id="锁的可重入性">锁的可重入性</h2>
+<p>我们知道当线程请求一个由其它线程持有锁的对象时，该线程会阻塞，但是当线程请求由自己持有锁的对象时，是否可以成功呢？答案是可以成功的，成功的保障就是线程锁的“可重入性”。<br>
+“可重入”意味着自己可以再次获得自己的内部锁，而不需要阻塞。如下：</p>
+<pre><code class="language-java">public class Father {
+    public synchronized void method(){
+        //do something
+    }
+}
+public class Child extends Father{
+    public synchronized void method(){
+        //do something 
+        super.method();
+    }
+}
+</code></pre>
+<p>如果所是不可重入的，上面的代码就会死锁，因为调用child的method(),首先会获取父类Father的内置锁然后获取Child的内置锁，当调用父类的方法时，需要再次后去父类的内置锁，如果不可重入，可能会陷入死锁。</p>
+<p>java多线程的可重入性的实现是通过每个锁关联一个请求计算和一个占有它的线程，当计数为0时，认为该锁是没有被占有的，那么任何线程都可以获得该锁的占有权。当某一个线程请求成功后，JVM会记录该锁的持有线程 并且将计数设置为1，如果这时其他线程请求该锁时则必须等待。当该线程再次请求请求获得锁时，计数会+1；当占有线程退出同步代码块时，计数就会-1，直到为0时，释放该锁。这时其他线程才有机会获得该锁的占有权。</p>
+<ul>
+<li>ReentrantLock：一个可重入的互斥锁，为lock接口的主要实现。</li>
+<li>ReadWriteLock：ReadWriteLock 维护了一对相关的锁，一个用于只读操作，另一个用于写入操作。</li>
+<li>ReentrantReadWriteLock：可重入读写锁</li>
+<li>Semaphore：一个计数信号量。</li>
+<li>Condition:锁的关联条件，目的是允许线程获取锁并且查看等待的某一个条件是否满足。</li>
+<li>CyclicBarrier：一个同步辅助类，它允许一组线程互相等待，直到到达某个公共屏障点。</li>
+</ul>
+
+            </div>
+            
+              <div class="post-footer">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong class="language" data-lan="author">本文作者：</strong>
+      Goroyal
+    </li>
+    <li class="post-copyright-link">
+      <strong class="language" data-lan="link">本文链接：</strong>
+      <a href="http://goroyal.github.io/post/java-lock/" title="Java锁">http://goroyal.github.io/post/java-lock/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong class="language" data-lan="copyright">版权声明： </strong>
+      本博客所有文章除特别声明外，均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i> BY-NC-SA</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+  <div class="tags">
+    
+      <a href="http://goroyal.github.io/tag/Ke7gk0EO5/"># Java</a>
+    
+  </div>
+  <div class="nav">
+    <div class="nav-prev">
+      
+    </div>
+    <div class="nav-next">
+      
+        <a class="nav-pc-next" title="Java synchronized" href="http://goroyal.github.io/post/java-synchronized/">Java synchronized</a>
+        <a class="nav-mobile-next" title="Java synchronized" href="http://goroyal.github.io/post/java-synchronized/">下一篇</a>
+        <i class="fa fa-chevron-right"></i>
       
     </div>
   </div>
 </div>
-          </section>
+            
+            
+  
+
+          </div>
         </div>
       </div>
     </div>
@@ -612,6 +843,36 @@
 
     // 代码高亮
     hljs.initHighlightingOnLoad();
+</script>
+    <div class="light-box" id="light_box"></div>
+<script>
+  let imgs = document.querySelectorAll('.post-body img');
+  let lightBox = document.querySelector('#light_box');
+  lightBox.addEventListener('mousedown', (e) => {
+    e.preventDefault()
+  })
+  lightBox.addEventListener('mousewheel', (e) => {
+    e.preventDefault()
+  })
+  let width = window.innerWidth * 0.8;
+  lightBox.onclick = () => {
+    let img = lightBox.querySelector('img');
+    lightBox.style = '';
+    img && img.remove();
+  }
+  imgs.forEach(item => {
+    item.onclick = function (e) {
+      let lightImg = document.createElement('img');
+      lightImg.src = this.src;
+      lightBox.style = `height: 100%; opacity: 1; background-color: rgba(0, 0, 0, 0.5);cursor: zoom-out;`;
+      lightImg.style = `width: ${width}px; border: 1px solid #fff; border-radius: 2px;`;
+      lightImg.onclick = function () {
+        lightBox.style = '';
+        this.remove();
+      }
+      lightBox.append(lightImg);
+    }
+  })
 </script>
   </div>
 </body>
@@ -2356,7 +2617,6 @@ final String string2 = &amp;quot;string2&amp;quot;;
     speed: 200
   });
 </script>
-
 
 
 
