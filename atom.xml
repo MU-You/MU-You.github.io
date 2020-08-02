@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>http://goroyal.github.io</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2020-07-20T12:00:20.184Z</updated>
+    <updated>2020-08-02T09:21:33.184Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="http://goroyal.github.io"/>
     <link rel="self" href="http://goroyal.github.io/atom.xml"/>
@@ -10,6 +10,25 @@
     <logo>http://goroyal.github.io/images/avatar.png</logo>
     <icon>http://goroyal.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Goroyal&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[网页里面引起脚本执行的方式]]></title>
+        <id>http://goroyal.github.io/post/execute-script-in-web-page/</id>
+        <link href="http://goroyal.github.io/post/execute-script-in-web-page/">
+        </link>
+        <updated>2020-08-02T09:16:09.000Z</updated>
+        <content type="html"><![CDATA[<p>在当前页面的执行环境里执行脚本的方式：</p>
+<ul>
+<li>直接嵌入<code>&lt;script&gt;</code>代码块</li>
+<li>通过<code>&lt;script src=...&gt;</code>加载远程代码</li>
+<li>在各种HTML和CSS参数里通过<code>javascript:URL</code>触发调用</li>
+<li>CSS <code>expression(...)</code>和某些浏览器里的XBL绑定</li>
+<li>事件处理器（Event Handlers），譬如onclick、onerror、onload等</li>
+<li>定时器Timers（setTimeout，setInterval）</li>
+<li><code>eval(...)</code>调用</li>
+</ul>
+<p>表面上这些方法组合起来使用也很正常，但往往会造成极其难以预料的危险解析链传递。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Java包装类的比较]]></title>
         <id>http://goroyal.github.io/post/java-baozhuang-class/</id>
@@ -517,35 +536,6 @@ function java12() {
 <p>[1]:</p>
 <!-- more -->
 <p>https://openjdk.java.net/install/</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Try with closable resources]]></title>
-        <id>http://goroyal.github.io/post/Try with closable resources/</id>
-        <link href="http://goroyal.github.io/post/Try with closable resources/">
-        </link>
-        <updated>2019-06-17T14:41:03.000Z</updated>
-        <content type="html"><![CDATA[<p>以前，拿到一个closable资源后，如果对它操作，都要先用try包起来，最后一定要在finally里面关掉：</p>
-<pre><code class="language-java">Closable resource = xxx; //此处为得到这个resource的逻辑
-try {
-	// 处理逻辑
-} finally {
-	if (resource != null) {
-		try {
-			resource.close();
-	}
-}
-</code></pre>
-<p>自从Java 7之后，根据官方文档<a href="http://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html">tryResouceClose</a>，任何实现了<code>java.lang.AutoClosable</code>，以及<code>java.io.Closable</code>接口的对象都可以在这段代码结束之后被关掉：</p>
-<pre><code class="language-java">try (Closable resource = xxx) {
-	// 处理逻辑
-}
-</code></pre>
-<p>.NET里面也有个类似的用法，C#里面一般实现了IDisposable接口的对象在使用时最好结束后调用它的dispose方法，也可以使用using的方式来帮助回收：</p>
-<pre><code class="language-csharp">using (IDisposable resource = xxx) {
-	// 处理逻辑
-}
-</code></pre>
 ]]></content>
     </entry>
 </feed>
