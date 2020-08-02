@@ -8,7 +8,7 @@
 <meta name="keywords" content="Goroyal technical blog">
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
-<title>Goroyal&#39;s blog</title>
+<title>JVM类加载机制 | Goroyal&#39;s blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1596380716844">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -38,6 +38,8 @@
 
 
 
+  <meta name="description" content="JVM类加载机制" />
+  <meta name="keywords" content="" />
 </head>
 
 <body>
@@ -73,7 +75,7 @@
             
               
             
-            <li class="nav-item nav-item-active">
+            <li class="nav-item ">
               
               
                 <a href="/" target="_self">
@@ -172,8 +174,24 @@
     <div
       class="section-layout gemini ">
       <div class="section-layout-wrapper">
-        <div id="sidebarMeta" class="sidebar">
-    
+        
+
+<div class="sidebar">
+  
+    <div class="sidebar-box box-shadow-wrapper bg-color right-motion" id="sidebar">
+      
+        <div class="post-list-sidebar">
+          <div class="sidebar-title">
+            <span id="tocSideBar" class="sidebar-title-item sidebar-title-active language" data-lan="index">文章目录</span>
+            <span id="metaSideBar" class="sidebar-title-item language" data-lan="preview">站点概览</span>
+          </div>
+        </div>
+      
+      <div class="sidebar-body gemini" id="sidebar_body">
+        
+          
+            <div class="post-side-meta" id="post_side_meta">
+              
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -219,253 +237,468 @@
 
 
 </div>
+            </div>
+            <div class="post-toc sidebar-body-active" id="post_toc" style="opacity: 1;">
+              <div class="toc-box right-motion">
+  <div class="toc-wrapper auto-number auto"
+    id="toc_wrapper">
+    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%AD%97%E8%8A%82%E7%A0%81%E7%94%9F%E6%88%90%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E7%9A%84%E5%AE%9E%E7%8E%B0">字节码生成技术与动态代理的实现</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
 </div>
+
 <script>
-  let sidebarMeta = document.querySelector('#sidebarMeta');
-  let scheme = 'gemini';
-  let sidebarWrapper = document.querySelector('.sidebar-wrapper');
-  if (sidebarMeta && (scheme === 'pisces' || scheme === 'gemini')) {
-    document.addEventListener('scroll', function(e) {
-      if (document.scrollingElement.scrollTop > parseInt(sidebarMeta.style.marginTop) + 10) {
-        sidebarWrapper.classList.add('home-sidebar-fixed')
-      } else {
-        sidebarWrapper.classList.remove('home-sidebar-fixed')
+
+  let lastTop = 0, lList = [], hList = [], postBody, lastIndex = -1;
+  let active = 'active-show', activeClass = 'active-current';
+  let tocWrapper = document.querySelector('#toc_wrapper');
+  let tocContent = tocWrapper.children[0];
+  let autoNumber = tocWrapper && tocWrapper.classList.contains('auto-number');
+
+  function addTocNumber(elem, deep) {
+    if (!elem) {
+      return;
+    }
+    let prop = elem.__proto__;
+
+    if (prop === HTMLUListElement.prototype) {
+      for (let i = 0; i < elem.children.length; i++) {
+        addTocNumber(elem.children[i], deep + (i + 1) + '.');
       }
+    } else if (prop === HTMLLIElement.prototype) {
+      // 保存li元素
+      if (elem.children[0].__proto__ === HTMLAnchorElement.prototype) {
+        lList.push(elem);
+      }
+      for (let i = 0; i < elem.children.length; i++) {
+        let cur = elem.children[i];
+        if (cur.__proto__ === HTMLAnchorElement.prototype) {
+          if (autoNumber) {
+            cur.text = deep + ' ' + cur.text;
+          }
+        } else if (cur.__proto__ === HTMLUListElement.prototype) {
+          addTocNumber(cur, deep);
+        }
+      }
+    }
+  }
+
+  function removeParentActiveClass() {
+    let parents = tocContent.querySelectorAll('.' + active)
+    parents.forEach(function (elem) {
+      elem.classList.remove(active);
     });
   }
-  </script>
-        <div class="section-box gemini">
-          <section class="section  posts-expand slide-down-in">
-            
-  <article class="post-list-box  post box-shadow-wrapper">
-    <div class="article-wrapper bg-color">
-      <header class="post-header">
-    <h1 class="post-title">
-        <a class="post-title-link" href="http://goroyal.github.io/post/release-it-design-and-deploy-production-ready-software/">
-            发布！软件的设计与部署
-        </a>
-    </h1>
-    <div class="post-meta">
-        
-                <span class="meta-item pc-show">
-      <i class="fa fa-calendar-o"></i>
-      <span class="language" data-lan="publish">发布于</span>
-                <span>2016-06-11</span>
-                <span class="post-meta-divider pc-show">|</span>
-                </span>
-                
-                                            <span class="meta-item">
-      <i class="fa fa-clock-o"></i>
-      <span>3<span class="language" data-lan="minute">分钟</span></span>
-                                            </span>
-                                            <span class="meta-item">
-      <span class="post-meta-divider">|</span>
-                                            <i class="fa fa-file-word-o"></i>
-                                            <span>737<span class="pc-show language" data-lan="words">字数</span></span>
-                                            </span>
-                                            
-    </div>
-</header>
-      <div class="post-body">
-        
-        
+
+  function addActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.add(activeClass);
+    }
+  }
+
+  function removeActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.remove(activeClass);
+    }
+  }
+
+  function addActiveLiElemment(elem, parent) {
+    if (!elem || elem === parent) {
+      return;
+    } else {
+      if (elem.__proto__ === HTMLLIElement.prototype) {
+        elem.classList.add(active);
+      }
+      addActiveLiElemment(elem.parentElement, parent);
+    }
+  }
+
+  function showToc() {
+    if (tocWrapper) {
+      postBody = document.querySelector('#post_body');
+      for (let i = 0; i < postBody.children.length; i++) {
+        if (postBody.children[i].__proto__ === HTMLHeadingElement.prototype) {
+          hList.push(postBody.children[i]);
+        }
+      }
+      if (tocWrapper.classList.contains('compress')) {
+        tocContent.classList.add('closed');
+      } else if (tocWrapper.classList.contains('no_compress')) {
+        tocContent.classList.add('expanded');
+      } else {
+        if (hList.length > 10) {
+          active = 'active-hidden'
+          tocContent.classList.add('closed');
+        } else {
+          tocContent.classList.add('expanded');
+        }
+      }
+    }
+  }
+
+  (function () {
+    // 处理不是从#一级标题开始目录
+    if (tocContent.children.length === 1 && tocContent.children[0].__proto__ === HTMLLIElement.prototype) {
+      let con = tocContent.children[0].children[0];
+      tocContent.innerHTML = con.innerHTML;
+    }
+    let markdownItTOC = document.querySelector('.markdownIt-TOC');
+    let innerHeight = window.innerHeight;
+    markdownItTOC.style = `max-height: ${innerHeight - 80 > 0 ? innerHeight - 80 : innerHeight}px`
+    addTocNumber(tocContent, '');
+  })();
+
+  document.addEventListener('scroll', function (e) {
+    if (lList.length <= 0) {
+      return;
+    }
+    let scrollTop = document.scrollingElement.scrollTop + 10;
+    let dir;
+
+    if (lastTop - scrollTop > 0) {
+      dir = 'up';
+    } else {
+      dir = 'down';
+    }
+
+    lastTop = scrollTop;
+    if (scrollTop <= 0) {
+      if (lastIndex >= 0 && lastIndex < hList.length) {
+        lList[lastIndex].classList.remove(activeClass);
+      }
+      return;
+    }
+
+    let current = 0, hasFind = false;
+    for (let i = 0; i < hList.length; i++) {
+      if (hList[i].offsetTop > scrollTop) {
+        current = i;
+        hasFind = true;
+        break;
+      }
+    }
+    if (!hasFind && scrollTop > lList[lList.length - 1].offsetTop) {
+      current = hList.length - 1;
+    } else {
+      current--;
+    }
+    if (dir === 'down') {
+      if (current > lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex)
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    } else {
+      if (current < lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex);
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    }
+  });
+
+
+  window.addEventListener('load', function () {
+    showToc();
+    document.querySelector('#sidebar').style = 'display: block;';
+    tocWrapper.classList.add('toc-active');
+    setTimeout(function () {
+      if ("createEvent" in document) {
+        let evt = document.createEvent("HTMLEvents");
+        evt.initEvent("scroll", false, true);
+        document.dispatchEvent(evt);
+      }
+      else {
+        document.fireEvent("scroll");
+      }
+    }, 500)
+  })
+
+</script>
+            </div>
           
         
-        
-        <div class="post-button text-center">
-          <a class="btn language" data-lan="read-more" href="http://goroyal.github.io/post/release-it-design-and-deploy-production-ready-software/" rel="contents">
-            阅读全文 »
-          </a>
-        </div>
-        
       </div>
-      
     </div>
-  </article>
-
-  <article class="post-list-box  post box-shadow-wrapper">
-    <div class="article-wrapper bg-color">
-      <header class="post-header">
-    <h1 class="post-title">
-        <a class="post-title-link" href="http://goroyal.github.io/post/handle-password-expire-in-oracle/">
-            Oracle用户密码过期解决
-        </a>
-    </h1>
-    <div class="post-meta">
-        
-                <span class="meta-item pc-show">
-      <i class="fa fa-calendar-o"></i>
-      <span class="language" data-lan="publish">发布于</span>
-                <span>2015-12-02</span>
-                <span class="post-meta-divider pc-show">|</span>
-                </span>
-                
-                                            <span class="meta-item">
-      <i class="fa fa-clock-o"></i>
-      <span>2<span class="language" data-lan="minute">分钟</span></span>
-                                            </span>
-                                            <span class="meta-item">
-      <span class="post-meta-divider">|</span>
-                                            <i class="fa fa-file-word-o"></i>
-                                            <span>254<span class="pc-show language" data-lan="words">字数</span></span>
-                                            </span>
-                                            
-    </div>
-</header>
-      <div class="post-body">
-        
-        
-          
-        
-        
-        <div class="post-button text-center">
-          <a class="btn language" data-lan="read-more" href="http://goroyal.github.io/post/handle-password-expire-in-oracle/" rel="contents">
-            阅读全文 »
-          </a>
-        </div>
-        
-      </div>
-      
-    </div>
-  </article>
-
-  <article class="post-list-box  post box-shadow-wrapper">
-    <div class="article-wrapper bg-color">
-      <header class="post-header">
-    <h1 class="post-title">
-        <a class="post-title-link" href="http://goroyal.github.io/post/reetrantlock-in-java/">
-            Java中的可重入锁ReetrantLock
-        </a>
-    </h1>
-    <div class="post-meta">
-        
-                <span class="meta-item pc-show">
-      <i class="fa fa-calendar-o"></i>
-      <span class="language" data-lan="publish">发布于</span>
-                <span>2015-08-28</span>
-                <span class="post-meta-divider pc-show">|</span>
-                </span>
-                
-                                            <span class="meta-item">
-      <i class="fa fa-clock-o"></i>
-      <span>2<span class="language" data-lan="minute">分钟</span></span>
-                                            </span>
-                                            <span class="meta-item">
-      <span class="post-meta-divider">|</span>
-                                            <i class="fa fa-file-word-o"></i>
-                                            <span>560<span class="pc-show language" data-lan="words">字数</span></span>
-                                            </span>
-                                            
-    </div>
-</header>
-      <div class="post-body">
-        
-        
-          <h2 id="类说明">类说明</h2>
-<p><code>ReetrantLock</code>是一个可重入排它<code>Lock</code>，和使用<code>synchronized</code>方法和语句的隐式监视器锁有着相同的基本行为和语义，但是有着扩展性能。</p>
-<p><code>ReentrantLock</code>由上次成功加锁但是还没有解锁的线程所持有。在锁没有被其他线程持有时，一个线程调用<code>lock</code>将返回成功获取锁。如果当前线程已经持有锁那么该方法将立即返回。这个可以使用方法<code>isHeldByCurrentThread</code>和<code>getHoldCount</code>检查。</p>
-
-        
-        
-        <div class="post-button text-center">
-          <a class="btn language" data-lan="read-more" href="http://goroyal.github.io/post/reetrantlock-in-java/" rel="contents">
-            阅读全文 »
-          </a>
-        </div>
-        
-      </div>
-      
-    </div>
-  </article>
-
-  <article class="post-list-box  post box-shadow-wrapper">
-    <div class="article-wrapper bg-color">
-      <header class="post-header">
-    <h1 class="post-title">
-        <a class="post-title-link" href="http://goroyal.github.io/post/readwrite-lock-in-java/">
-            Java中的ReadWriteLock
-        </a>
-    </h1>
-    <div class="post-meta">
-        
-                <span class="meta-item pc-show">
-      <i class="fa fa-calendar-o"></i>
-      <span class="language" data-lan="publish">发布于</span>
-                <span>2015-08-06</span>
-                <span class="post-meta-divider pc-show">|</span>
-                </span>
-                
-                                            <span class="meta-item">
-      <i class="fa fa-clock-o"></i>
-      <span>4<span class="language" data-lan="minute">分钟</span></span>
-                                            </span>
-                                            <span class="meta-item">
-      <span class="post-meta-divider">|</span>
-                                            <i class="fa fa-file-word-o"></i>
-                                            <span>922<span class="pc-show language" data-lan="words">字数</span></span>
-                                            </span>
-                                            
-    </div>
-</header>
-      <div class="post-body">
-        
-        
-          
-        
-        
-        <div class="post-button text-center">
-          <a class="btn language" data-lan="read-more" href="http://goroyal.github.io/post/readwrite-lock-in-java/" rel="contents">
-            阅读全文 »
-          </a>
-        </div>
-        
-      </div>
-      
-    </div>
-  </article>
   
-            
-            
-<div class="page bg-color">
-  <ul class="pagination-ul">
-    
-      <li class="pagination-dir">
-        <a href="http://goroyal.github.io/page/3/">
-          <i class="fa fa-angle-left"></i>
-        </a>
-      </li>
-    
-    
-      
-        <li class="pagination-li ">
-            <a href="/page/../">
-              1
-            </a>
-        </li>
-      
-        <li class="pagination-li ">
-            <a href="/page/2">
-              2
-            </a>
-        </li>
-      
-        <li class="pagination-li ">
-            <a href="/page/3">
-              3
-            </a>
-        </li>
-      
-        <li class="pagination-li pagination-active">
-            <a href="/page/4">
-              4
-            </a>
-        </li>
-      
-    
-    
-  </ul>
 </div>
-          </section>
+<script>
+  const SIDEBAR_TITLE_ACTIVE = 'sidebar-title-active';
+  const SIDEBAR_BODY_ACTIVE = 'sidebar-body-active';
+  const SLIDE_UP_IN = 'slide-up-in';
+
+  let sidebar = document.querySelector('#sidebar'),
+  tocSideBar = document.querySelector('#tocSideBar'),
+  metaSideBar = document.querySelector('#metaSideBar'),
+  postToc = document.querySelector('#post_toc'),
+  postSiteMeta = document.querySelector('#post_side_meta'),
+  sidebarTitle = document.querySelector('.sidebar-title'),
+  sidebarBody = document.querySelector('#sidebar_body');
+
+  tocSideBar && tocSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  metaSideBar && metaSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  function toggleSidebar(e) {
+    let currentTitle = document.querySelector("."+SIDEBAR_TITLE_ACTIVE);
+    if (currentTitle == e.srcElement) {
+      return ;
+    }
+    let current, showElement, hideElement;
+    if (e.srcElement == metaSideBar) {
+      showElement = postSiteMeta;
+      hideElement = postToc;
+    } else if (e.srcElement == tocSideBar){
+      showElement = postToc;
+      hideElement = postSiteMeta;
+    }
+    currentTitle.classList.remove(SIDEBAR_TITLE_ACTIVE);
+    e.srcElement.classList.add(SIDEBAR_TITLE_ACTIVE);
+
+    window.Velocity(hideElement, 'stop');
+    window.Velocity(hideElement, 'transition.slideUpOut', {
+      display: 'none',
+      duration: 200,
+      complete: function () {
+        window.Velocity(showElement, 'transition.slideDownIn', {
+          duration: 200
+        });
+      }
+    })
+    hideElement.classList.remove(SIDEBAR_BODY_ACTIVE);
+    showElement.classList.add(SIDEBAR_BODY_ACTIVE);
+  }
+
+  postToc && postToc.addEventListener('transitionend', function() {
+    this.classList.remove(SLIDE_UP_IN);
+  });
+
+  if (sidebarBody) {
+    if (sidebarBody.classList.contains('pisces') || sidebarBody.classList.contains('gemini')) {
+      let hasFix = false;
+      let scrollEl = document.querySelector('.main-continer');
+      let limitTop = document.querySelector('#nav_ul').children.length * 42 + 162;
+      window.addEventListener('scroll', function(e) {
+        if (document.scrollingElement.scrollTop >= limitTop) {
+          if (!hasFix) {
+            sidebar.classList.add('sidebar-fixed');
+            hasFix = true;
+          }
+        } else {
+          if (hasFix) {
+            sidebar.classList.remove('sidebar-fixed');
+            hasFix = false;
+          }
+        }
+      });
+    }
+  }
+  
+</script>
+        <div class="section-box box-shadow-wrapper">
+          <div class="section bg-color post post-page">
+            <header class="post-header">
+    <h1 class="post-title">
+        <a class="post-title-link" href="http://goroyal.github.io/post/jvm-lei-jia-zai-ji-zhi/">
+            JVM类加载机制
+        </a>
+    </h1>
+    <div class="post-meta">
+        
+                <span class="meta-item pc-show">
+      <i class="fa fa-calendar-o"></i>
+      <span class="language" data-lan="publish">发布于</span>
+                <span>2020-08-02</span>
+                <span class="post-meta-divider pc-show">|</span>
+                </span>
+                
+                                            <span class="meta-item">
+      <i class="fa fa-clock-o"></i>
+      <span>13<span class="language" data-lan="minute">分钟</span></span>
+                                            </span>
+                                            <span class="meta-item">
+      <span class="post-meta-divider">|</span>
+                                            <i class="fa fa-file-word-o"></i>
+                                            <span>3399<span class="pc-show language" data-lan="words">字数</span></span>
+                                            </span>
+                                            
+                                                
+                                                    
+                                                                <!-- <span id="/post/jvm-lei-jia-zai-ji-zhi/" data-flag-title="JVM类加载机制" class="meta-item pc-show leancloud_visitors">
+      <span class="post-meta-divider">|</span>
+      <i class="fa fa-eye"></i>
+      <span><span class="language" data-lan="view">浏览量</span>：<span class="leancloud-visitors-count"></span></span>
+    </span> -->
+                                                                
+    </div>
+</header>
+            <div class="post-body next-md-body" id="post_body">
+              <p>Java里天生可以动态扩展的语言特性就是依赖运行期动态加载和动态连接这个特点实现的。如编写一个面向接口的应用程序，可以等到运行时再指定其实际的实现类。</p>
+<p>类从被加载到虚拟机内存开始，到卸载出内存为止，它的整个生命周期包括：加载、验证、准备、解析、初始化、使用和卸载7个阶段，其中验证、准备、解析三个部分统称为连接。</p>
+<p>加载、验证、准备、初始化和卸载这5个阶段的顺序是确定的，累的加载过程必须按照这种顺序按部就班地开始，而解析阶段则不一定：它在某些情况下可以在初始化阶段之后再开始，这是为了支持Java语言的运行时绑定。</p>
+<p>对于初始化阶段，虚拟机规范严格规定有且只有5种情况必须对类立即进行”初始化“（加载、验证、准备自然需要在此之前开始）：</p>
+<ul>
+<li>遇到new、getstatic、putstatic、invokestatic这4条指令码时，如果类没有进行过初始化，则需要先触发其初始化。这4个常见的Java代码场景：使用new关键字实例化对象时、读取或设置一个类的静态字段（被final修饰、已在编译器把结果放入常量池的静态字段除外）的时候、调用一个类的静态方法时。</li>
+<li>使用java.lang.reflect包的方法对类进行反射调用时，如果类没有进行过初始化，则需要。。</li>
+<li>当初始化一个类时，如果发现其父类还没有进行过初始化，需要。。</li>
+<li>当虚拟机启动时，用户需要指定一个要执行的主类（包含main()方法的那个类），需要。。</li>
+<li>当使用JDK 1.7的动态语言支持时，如果一个java.lang.MethodHandle实例最后的解析结果是REF_getStatic、REF_putStatic、REF_invokeStatic的方法句柄，并且这个方法句柄所对应的类没有进行过初始化，则需要。。</li>
+</ul>
+<p>加载类的过程：</p>
+<ul>
+<li>通过一个类的全限定名来获取定义此类的二进制字节流</li>
+<li>将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构</li>
+<li>在内存中生成一个代表这个类的java.lang.Class对象，作为方法区这个类的各种数据的访问入口。</li>
+</ul>
+<p>非数组类的加载是开发者可控性最强的，加载阶段既可以使用系统提供的引导类加载器，也可以使用用户自定义的类加载器去完成。</p>
+<p>对于数组类而言，情况有所不同，数组类本身不通过类加载器创建，是由Java虚拟机直接创建的。但数组类与类加载器仍有密切关系，因为数组类的元素类型最终是要靠类加载器去创建。一个数组类（下称为C）创建过程遵循以下规则：</p>
+<ul>
+<li>如果数组的组件类型（指的是数组去掉一个维度的类型）是引用类型，那就递归去加载这个组件类型，数组C将在加载该组件类型的类加载器的类名称空间上被标识。（一个类必须与类加载器一起确定唯一性）</li>
+<li>如果数组的组件类型不是引用类型（如int[]），Java虚拟机将会把数组C标记为与引导类加载器关联。</li>
+<li>数组类的可见性与它的组件类型的可见性一致，如果组件类型不是引用类型，那数组类的可见性将默认为public。</li>
+</ul>
+<p><strong>类加载器：</strong><br>
+虚拟机设计团队把”通过一个类的全限定名来获取此类的二进制字节流“这个动作放到Java虚拟机外部去实现，以便让应用程序自己决定如何去获取所需要的类，实现这个动作的代码模块称为”类加载器“。</p>
+<p>类加载器可以说是java语言的一项创新，它在类层次划分、OSGi、热部署、代码加密等领域大放异彩。</p>
+<p>每一个类加载器都拥有一个独立的类名称空间，比较两个类是否”相等“，只有这两个类是由同一个类加载器加载的前提下才有意义。这里的相等，包括代表类的Class对象的equals()方法、isAssignableFrom()方法、isInstance()方法的返回结果，也包括instanceOf关键字做对象所属关系判定等情况。</p>
+<p><strong>双亲委派模型：</strong><br>
+从java虚拟机的角度来讲，只存在两种不同的类加载器：一种是启动类加载器，这个类加载器在Hotspot虚拟机中使用C++实现，是虚拟机自身的一部分；另一种就是所有其他的类加载器，这些类加载器都由Java语言实现，独立于虚拟机外部，并且全部都继承自抽象类java.lang.ClassLoader。</p>
+<p>从开发人员角度看，大部分Java程序都会使用以下3种系统提供的类加载器：</p>
+<ul>
+<li>启动类加载器，它复杂将$JAVA_HOME/lib中的并且是虚拟机识别的（仅按照文件名识别，如rt.jar）类库加载到虚拟机内存中。启动类加载器无法被java程序直接引用，用户在编写自定义类加载器时，如果需要把加载请求委派给引导类加载器，那直接使用null代替即可。</li>
+<li>扩展类加载器，负责加载$JAVA_HOME/lib/ext中的所有类库，开发者可以直接使用扩展类加载器</li>
+<li>应用程序类加载器，它是ClassLoader中的getSystemClassLoader()方法的返回值，所以一般也称它为系统类加载器。它负责加载用户类路径（Classpath）上所指定的类库，开发者可以直接使用这个类加载器，如果app中没有自定义过，一般情况下这个就是程序中默认的类加载器。</li>
+</ul>
+<p>类加载器的双亲委派模型，除了要求顶层的启动类加载器外，其余的类加载器都应当有自己的父类加载器。这里类加载器之间的父子关系一般不会以继承（Inheritance）的关系来实现，而是都使用组合关系来复用父加载器代码。<br>
+自定义类加载器-&gt;应用程序类加载器-&gt;扩展类加载器-&gt;启动类加载器</p>
+<p>双亲委派模型的工作过程：如果一个类加载器收到了类加载的请求，它首先不会自己去 尝试加载这个类，而是把请求委派给父类加载器去完成，每一个层次的类加载器都是如此，因此所有的加载请求最终都应该传送到顶层的启动类加载器中，只有父加载器反馈自己无法完成这个加载请求（它的搜索范围内没有找到所需的类）时，子加载器才会尝试自己去加载。</p>
+<p>使用双亲委派模型来组织类加载器之间的关系的显而易见的好处是Java类随着它的类加载器一起具备了一种带有优先级的层次关系。如类java.lang.Object，它存放在rt.jar中，无论哪一个类加载器要加载这个类，最终都是委派给处于模型最顶端的启动类加载器去加载，因此Object类在程序的各种累加载器环境中都是同一个类。</p>
+<p>破坏双亲委派模型：</p>
+<ul>
+<li>JDK 1.2之前的loadClass方法，后期为了兼容性做了妥协</li>
+<li>JDNI服务，它的代码由启动类加载器去加载，但JNDI的目的就是对资源进行集中管理和查找，它需要调用由独立厂商实现并部署在应用程序的Classpath下的JNDI接口提供者（SPI，Service Provider Interface）的代码，但启动类加载器不可能”认识”这些代码，怎么处理？</li>
+</ul>
+<p>为了解决JNDI的问题，Java设计团队只好引入了一个不太优雅的设计：线程上下文类加载器（Thread Context ClassLoader），这个类加载器可以通过java.lang.Thread类的setContextClassLoader()方法进行设置，如果创建线程时还未设置，它将会从父线程中继承一个，如果在应用程序的全局范围内都没有设置过的话，那么这个类加载器默认就是应用程序类加载器。</p>
+<p>有了线程上下文类加载器，JNDI服务使用它去加载所需要的SPI代码，也就是父类加载器请求子类加载器去完成类加载的动作，这种行为实际上就是打通了双亲委派模型的层次结构来逆向使用类加载器，实际上已经违背了双亲委派模型的一般性原则。Java中所有涉及SPI的加载动作基本上都采用了这种方式，如JNDI、JDBC、JCE、JAXB、JBI等。</p>
+<p>双亲委派模型的第三次破坏是用户对程序动态性的追求导致的，如代码热替换、模块热部署。</p>
+<p>OSGi实现模块化热部署的关键则是它自定义的类加载器机制的实现。每一个程序模块（Bundle）都有一个自己的类加载器，当需要更换一个Bundle时，就把Bundle连同类加载器一起换掉以实现代码的热替换。</p>
+<p>在OSGi环境下，类加载器不再是双亲委派模型中的树状结构，而是进一步发展为更加复杂的网状结构。OSGi按照下面顺序进行类搜索：</p>
+<ul>
+<li>将以java.*开头的类委派给父类加载器加载；</li>
+<li>否则将委派列表名单内的类委派给父类加载器加载</li>
+<li>否则将import列表中的类委派给export这个类的Bundle的类加载器加载</li>
+<li>否则查找当前Bundle的Classpath，使用自己的类加载器加载</li>
+<li>否则查找类是否在自己的Fragment Bundle中，如果在，委派给Fragment Bundle的类加载器加载</li>
+<li>否则，查找Dynamic Import列表的Bundle，委派给对应Bundle的类加载器加载。</li>
+<li>否则类查找失败。</li>
+</ul>
+<h4 id="字节码生成技术与动态代理的实现">字节码生成技术与动态代理的实现</h4>
+<p>在java里面除了javac和字节码类库外，使用字节码生成的例子还有很多，如Web服务器中的JSP编译器，编译时植入的AOP框架，还有很常用的动态代理技术，甚至在使用反射的时候虚拟机都有可能会在运行时生成字节码来提高执行速度。我们选择其中相对简单的动态代理来看看字节码生成技术是如何影响程序运作的。<br>
+即使没有直接用过java.lang.reflect.Proxy或实现过java.lang.reflect.InvocationHandler接口，应该也用过Spring来做过Bean的组织管理。如果使用过Spring，那大多数情况都会用过动态代理，因为如果Bean是面向接口编程，那么在Spring内部都是通过动态代理的方式来对Bean进行增强的。动态代理中所谓的“动态”，是针对使用Java代码实际编写了代理类的“静态”代理而言的。它的优势不在于省去了编写代理类那一点工作量，而是实现了可以在原始类和接口还未知的时候，就确定代理类的代理行为，当代理类和原始类脱离直接联系后，就可以很灵活地重用与不同的应用场景之中。</p>
+<p>下面是最简单的动态代理用法：</p>
+<pre><code class="language-Java">public class DynamicProxyTest {
+	interface IHello {
+		void sayHello();
+	}
+	
+	static class Hello implements IHello {
+		@Override
+		public void sayHello() {
+			System.out.println(&quot;hello world&quot;);
+		}
+	}
+	
+	static class DynamicProxy implements InvocationHandler {
+		Object originalObj;
+		Object bind(Object originalObj){
+			this.originalObj = originalObj;
+			return Proxy.newProxyInstance(originalObj.getClass().getClassLoader(), originalObj.getClass().getInterfaces(), this);
+		}
+		
+		@Override
+		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+			System.out.println(&quot;welcome&quot;);
+			return method.invoke(originalObj, args);
+		}
+	}
+	
+	public static void main(String[] args) {
+		IHello hello = (IHello) new DynamicProxy().bind(new Hello());
+		hello.sayHello();
+	}
+}
+</code></pre>
+<p>运行结果如下：</p>
+<pre><code>welcome
+hello world
+``
+上述代码里唯一的“黑匣子”就是Proxy.newProxyInstance()方法，除此之外再没有任何特殊之处。这个方法返回了一个实现了IHello的接口，并且代理了new Hello()实例行为的对象。跟踪这个方法的源码可以看到程序进行了验证、优化、缓存、同步、生成字节码、显示类加载等操作，最后它调用了sun.misc.ProxyGenerator.generateProxyClass()方法来完成了字节码的动作，这个方法可以在运行时产生一个描述代理类的字节码byte[]数组。如果想看这个在运行时产生的代理类中写了什么，可以在main()方法加入：
+
+``` Java
+System.getProperties().put(&quot;sun.misc.ProxyGenerator.saveGeneratedFiles&quot;, true)；
+</code></pre>
+<p>反编译后的代理类实现里面，为传入接口的每个方法以及从Object类继承的equals()、hashCode()、toString()方法都生成了对应的实现，并且统一调用了InvocationHandler对象的invoke()方法来实现这些方法的内容，这个方法的区别不过是传入的参数和Method对象有所不同而已。所以无论调用动态代理的哪一个方法，实际上都是在执行InvocationHandler.invoke()中的代理逻辑。</p>
+
+            </div>
+            
+              <div class="post-footer">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong class="language" data-lan="author">本文作者：</strong>
+      Goroyal
+    </li>
+    <li class="post-copyright-link">
+      <strong class="language" data-lan="link">本文链接：</strong>
+      <a href="http://goroyal.github.io/post/jvm-lei-jia-zai-ji-zhi/" title="JVM类加载机制">http://goroyal.github.io/post/jvm-lei-jia-zai-ji-zhi/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong class="language" data-lan="copyright">版权声明： </strong>
+      本博客所有文章除特别声明外，均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i> BY-NC-SA</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+  <div class="tags">
+    
+  </div>
+  <div class="nav">
+    <div class="nav-prev">
+      
+    </div>
+    <div class="nav-next">
+      
+        <a class="nav-pc-next" title="JVM垃圾收集器" href="http://goroyal.github.io/post/jvm-la-ji-shou-ji-qi/">JVM垃圾收集器</a>
+        <a class="nav-mobile-next" title="JVM垃圾收集器" href="http://goroyal.github.io/post/jvm-la-ji-shou-ji-qi/">下一篇</a>
+        <i class="fa fa-chevron-right"></i>
+      
+    </div>
+  </div>
+</div>
+            
+            
+  
+
+          </div>
         </div>
       </div>
     </div>
@@ -3018,7 +3251,6 @@ final String string2 = &amp;quot;string2&amp;quot;;
     speed: 200
   });
 </script>
-
 
 
 
