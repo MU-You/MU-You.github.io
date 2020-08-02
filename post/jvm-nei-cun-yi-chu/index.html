@@ -8,7 +8,7 @@
 <meta name="keywords" content="Goroyal technical blog">
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
-<title>Goroyal&#39;s blog</title>
+<title>JVM内存溢出 | Goroyal&#39;s blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1596380601688">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -38,6 +38,8 @@
 
 
 
+  <meta name="description" content="JVM内存溢出" />
+  <meta name="keywords" content="" />
 </head>
 
 <body>
@@ -172,8 +174,24 @@
     <div
       class="section-layout gemini ">
       <div class="section-layout-wrapper">
-        <div id="sidebarMeta" class="sidebar">
-    
+        
+
+<div class="sidebar">
+  
+    <div class="sidebar-box box-shadow-wrapper bg-color right-motion" id="sidebar">
+      
+        <div class="post-list-sidebar">
+          <div class="sidebar-title">
+            <span id="tocSideBar" class="sidebar-title-item sidebar-title-active language" data-lan="index">文章目录</span>
+            <span id="metaSideBar" class="sidebar-title-item language" data-lan="preview">站点概览</span>
+          </div>
+        </div>
+      
+      <div class="sidebar-body gemini" id="sidebar_body">
+        
+          
+            <div class="post-side-meta" id="post_side_meta">
+              
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -219,69 +237,518 @@
 
 
 </div>
+            </div>
+            <div class="post-toc sidebar-body-active" id="post_toc" style="opacity: 1;">
+              <div class="toc-box right-motion">
+  <div class="toc-wrapper auto-number auto"
+    id="toc_wrapper">
+    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#java%E5%A0%86%E6%BA%A2%E5%87%BA">Java堆溢出</a></li>
+<li><a href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88%E5%92%8C%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88%E6%BA%A2%E5%87%BA">虚拟机栈和本地方法栈溢出</a></li>
+<li><a href="#%E6%96%B9%E6%B3%95%E5%8C%BA%E5%92%8C%E8%BF%90%E8%A1%8C%E6%97%B6%E5%B8%B8%E9%87%8F%E6%B1%A0%E6%BA%A2%E5%87%BA">方法区和运行时常量池溢出</a></li>
+<li><a href="#%E6%9C%AC%E6%9C%BA%E7%9B%B4%E6%8E%A5%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA">本机直接内存溢出</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
 </div>
+
 <script>
-  let sidebarMeta = document.querySelector('#sidebarMeta');
-  let scheme = 'gemini';
-  let sidebarWrapper = document.querySelector('.sidebar-wrapper');
-  if (sidebarMeta && (scheme === 'pisces' || scheme === 'gemini')) {
-    document.addEventListener('scroll', function(e) {
-      if (document.scrollingElement.scrollTop > parseInt(sidebarMeta.style.marginTop) + 10) {
-        sidebarWrapper.classList.add('home-sidebar-fixed')
-      } else {
-        sidebarWrapper.classList.remove('home-sidebar-fixed')
+
+  let lastTop = 0, lList = [], hList = [], postBody, lastIndex = -1;
+  let active = 'active-show', activeClass = 'active-current';
+  let tocWrapper = document.querySelector('#toc_wrapper');
+  let tocContent = tocWrapper.children[0];
+  let autoNumber = tocWrapper && tocWrapper.classList.contains('auto-number');
+
+  function addTocNumber(elem, deep) {
+    if (!elem) {
+      return;
+    }
+    let prop = elem.__proto__;
+
+    if (prop === HTMLUListElement.prototype) {
+      for (let i = 0; i < elem.children.length; i++) {
+        addTocNumber(elem.children[i], deep + (i + 1) + '.');
       }
+    } else if (prop === HTMLLIElement.prototype) {
+      // 保存li元素
+      if (elem.children[0].__proto__ === HTMLAnchorElement.prototype) {
+        lList.push(elem);
+      }
+      for (let i = 0; i < elem.children.length; i++) {
+        let cur = elem.children[i];
+        if (cur.__proto__ === HTMLAnchorElement.prototype) {
+          if (autoNumber) {
+            cur.text = deep + ' ' + cur.text;
+          }
+        } else if (cur.__proto__ === HTMLUListElement.prototype) {
+          addTocNumber(cur, deep);
+        }
+      }
+    }
+  }
+
+  function removeParentActiveClass() {
+    let parents = tocContent.querySelectorAll('.' + active)
+    parents.forEach(function (elem) {
+      elem.classList.remove(active);
     });
   }
-  </script>
-        <div class="section-box gemini box-shadow-wrapper">
-          <section class="friends-section bg-color slide-down-in">
-            <div class="firends-box">
-              <h1 class="firends-title" itemprop="name headline">友情链接</h1>
-              
-              
-              <a href="https://thinkbucket.cn" target="_blank">
-                <div class="firends-item">
-                  <img src="https://cosmos-x.oss-cn-hangzhou.aliyuncs.com/docsite-logo-white-mode.png" />
-                  <div class="right">
-                    <div class="top">
-                      ThinkBucket
-                    </div>
-                    <div class="bottom">
-                      
-                    </div>
-                  </div>
-                </div>
-              </a>
-              
-              
+
+  function addActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.add(activeClass);
+    }
+  }
+
+  function removeActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.remove(activeClass);
+    }
+  }
+
+  function addActiveLiElemment(elem, parent) {
+    if (!elem || elem === parent) {
+      return;
+    } else {
+      if (elem.__proto__ === HTMLLIElement.prototype) {
+        elem.classList.add(active);
+      }
+      addActiveLiElemment(elem.parentElement, parent);
+    }
+  }
+
+  function showToc() {
+    if (tocWrapper) {
+      postBody = document.querySelector('#post_body');
+      for (let i = 0; i < postBody.children.length; i++) {
+        if (postBody.children[i].__proto__ === HTMLHeadingElement.prototype) {
+          hList.push(postBody.children[i]);
+        }
+      }
+      if (tocWrapper.classList.contains('compress')) {
+        tocContent.classList.add('closed');
+      } else if (tocWrapper.classList.contains('no_compress')) {
+        tocContent.classList.add('expanded');
+      } else {
+        if (hList.length > 10) {
+          active = 'active-hidden'
+          tocContent.classList.add('closed');
+        } else {
+          tocContent.classList.add('expanded');
+        }
+      }
+    }
+  }
+
+  (function () {
+    // 处理不是从#一级标题开始目录
+    if (tocContent.children.length === 1 && tocContent.children[0].__proto__ === HTMLLIElement.prototype) {
+      let con = tocContent.children[0].children[0];
+      tocContent.innerHTML = con.innerHTML;
+    }
+    let markdownItTOC = document.querySelector('.markdownIt-TOC');
+    let innerHeight = window.innerHeight;
+    markdownItTOC.style = `max-height: ${innerHeight - 80 > 0 ? innerHeight - 80 : innerHeight}px`
+    addTocNumber(tocContent, '');
+  })();
+
+  document.addEventListener('scroll', function (e) {
+    if (lList.length <= 0) {
+      return;
+    }
+    let scrollTop = document.scrollingElement.scrollTop + 10;
+    let dir;
+
+    if (lastTop - scrollTop > 0) {
+      dir = 'up';
+    } else {
+      dir = 'down';
+    }
+
+    lastTop = scrollTop;
+    if (scrollTop <= 0) {
+      if (lastIndex >= 0 && lastIndex < hList.length) {
+        lList[lastIndex].classList.remove(activeClass);
+      }
+      return;
+    }
+
+    let current = 0, hasFind = false;
+    for (let i = 0; i < hList.length; i++) {
+      if (hList[i].offsetTop > scrollTop) {
+        current = i;
+        hasFind = true;
+        break;
+      }
+    }
+    if (!hasFind && scrollTop > lList[lList.length - 1].offsetTop) {
+      current = hList.length - 1;
+    } else {
+      current--;
+    }
+    if (dir === 'down') {
+      if (current > lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex)
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    } else {
+      if (current < lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex);
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    }
+  });
+
+
+  window.addEventListener('load', function () {
+    showToc();
+    document.querySelector('#sidebar').style = 'display: block;';
+    tocWrapper.classList.add('toc-active');
+    setTimeout(function () {
+      if ("createEvent" in document) {
+        let evt = document.createEvent("HTMLEvents");
+        evt.initEvent("scroll", false, true);
+        document.dispatchEvent(evt);
+      }
+      else {
+        document.fireEvent("scroll");
+      }
+    }, 500)
+  })
+
+</script>
             </div>
-            <hr>
-            <div style="text-align:center">
-              <span class="with-love">
-                <i class="fa fa-heart"></i>
-              </span>
-              <span class="language" data-lan="leave-message">留言添加友链</span>
-              <span class="with-love">
-                <i class="fa fa-heart"></i>
-              </span>
+          
+        
+      </div>
+    </div>
+  
+</div>
+<script>
+  const SIDEBAR_TITLE_ACTIVE = 'sidebar-title-active';
+  const SIDEBAR_BODY_ACTIVE = 'sidebar-body-active';
+  const SLIDE_UP_IN = 'slide-up-in';
+
+  let sidebar = document.querySelector('#sidebar'),
+  tocSideBar = document.querySelector('#tocSideBar'),
+  metaSideBar = document.querySelector('#metaSideBar'),
+  postToc = document.querySelector('#post_toc'),
+  postSiteMeta = document.querySelector('#post_side_meta'),
+  sidebarTitle = document.querySelector('.sidebar-title'),
+  sidebarBody = document.querySelector('#sidebar_body');
+
+  tocSideBar && tocSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  metaSideBar && metaSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  function toggleSidebar(e) {
+    let currentTitle = document.querySelector("."+SIDEBAR_TITLE_ACTIVE);
+    if (currentTitle == e.srcElement) {
+      return ;
+    }
+    let current, showElement, hideElement;
+    if (e.srcElement == metaSideBar) {
+      showElement = postSiteMeta;
+      hideElement = postToc;
+    } else if (e.srcElement == tocSideBar){
+      showElement = postToc;
+      hideElement = postSiteMeta;
+    }
+    currentTitle.classList.remove(SIDEBAR_TITLE_ACTIVE);
+    e.srcElement.classList.add(SIDEBAR_TITLE_ACTIVE);
+
+    window.Velocity(hideElement, 'stop');
+    window.Velocity(hideElement, 'transition.slideUpOut', {
+      display: 'none',
+      duration: 200,
+      complete: function () {
+        window.Velocity(showElement, 'transition.slideDownIn', {
+          duration: 200
+        });
+      }
+    })
+    hideElement.classList.remove(SIDEBAR_BODY_ACTIVE);
+    showElement.classList.add(SIDEBAR_BODY_ACTIVE);
+  }
+
+  postToc && postToc.addEventListener('transitionend', function() {
+    this.classList.remove(SLIDE_UP_IN);
+  });
+
+  if (sidebarBody) {
+    if (sidebarBody.classList.contains('pisces') || sidebarBody.classList.contains('gemini')) {
+      let hasFix = false;
+      let scrollEl = document.querySelector('.main-continer');
+      let limitTop = document.querySelector('#nav_ul').children.length * 42 + 162;
+      window.addEventListener('scroll', function(e) {
+        if (document.scrollingElement.scrollTop >= limitTop) {
+          if (!hasFix) {
+            sidebar.classList.add('sidebar-fixed');
+            hasFix = true;
+          }
+        } else {
+          if (hasFix) {
+            sidebar.classList.remove('sidebar-fixed');
+            hasFix = false;
+          }
+        }
+      });
+    }
+  }
+  
+</script>
+        <div class="section-box box-shadow-wrapper">
+          <div class="section bg-color post post-page">
+            <header class="post-header">
+    <h1 class="post-title">
+        <a class="post-title-link" href="http://goroyal.github.io/post/jvm-nei-cun-yi-chu/">
+            JVM内存溢出
+        </a>
+    </h1>
+    <div class="post-meta">
+        
+                <span class="meta-item pc-show">
+      <i class="fa fa-calendar-o"></i>
+      <span class="language" data-lan="publish">发布于</span>
+                <span>2020-08-02</span>
+                <span class="post-meta-divider pc-show">|</span>
+                </span>
+                
+                                            <span class="meta-item">
+      <i class="fa fa-clock-o"></i>
+      <span>10<span class="language" data-lan="minute">分钟</span></span>
+                                            </span>
+                                            <span class="meta-item">
+      <span class="post-meta-divider">|</span>
+                                            <i class="fa fa-file-word-o"></i>
+                                            <span>2576<span class="pc-show language" data-lan="words">字数</span></span>
+                                            </span>
+                                            
+                                                
+                                                    
+                                                                <!-- <span id="/post/jvm-nei-cun-yi-chu/" data-flag-title="JVM内存溢出" class="meta-item pc-show leancloud_visitors">
+      <span class="post-meta-divider">|</span>
+      <i class="fa fa-eye"></i>
+      <span><span class="language" data-lan="view">浏览量</span>：<span class="leancloud-visitors-count"></span></span>
+    </span> -->
+                                                                
+    </div>
+</header>
+            <div class="post-body next-md-body" id="post_body">
+              <p>JVM内存溢出经常有2种报错：</p>
+<ul>
+<li>OutOfMemory（OOM）</li>
+<li>StackOverFlow（SOF ）</li>
+</ul>
+<p>除了程序计数器外，虚拟机内存的其他几个运行时区域都有发生OutOfMemoryError异常的可能。为了进行试验，在运行时使用以下的JVM参数：</p>
+<pre><code>--verbose:gc -Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails -XX:SurvivorRatio=8
+</code></pre>
+<h2 id="java堆溢出">Java堆溢出</h2>
+<p>Java堆用于存储对象实例，只要不断地创建对象，并且保证GC Roots到对象之间有可达路径来避免垃圾回收机制清除这些对象，那么在对象数量到达最大堆的容量限制后就会产生内存溢出异常。</p>
+<pre><code class="language-java">/**
+ * VM Args: -Xms20m -Xmx20m -XX:+HeapDumpOnOutOfMemorryError
+ * 将对的最小值-Xms参数与最大值-Xmx参数设置为一样即可避免堆自动扩展，通过参数-XX:+HeapDumpOnOutOfMemorryError可以让虚拟机在出现内存溢出异常时Dump出当前的内存堆转储快照以便时候进行分析
+ */
+public class HeapOOM {
+	static class OOMObject {
+	}
+	
+	public static void main(String[] args){
+		List&lt;OOMObject&gt; list = new ArrayList&lt;&gt;();
+		while(true){
+			list.add(new OOMObject());
+		}
+	}
+}
+</code></pre>
+<p>运行结果：</p>
+<pre><code class="language-shell">java.lang.OutOfMemoryError: Java Heap space
+Dumping heap to java_pid3404.hprof...
+Heap dump file created[22045981 bytes in 0.663 secs]
+</code></pre>
+<p>Java堆内存的OOM异常是实际应用中常见的内存溢出异常情况。当出现Java堆内存溢出时，异常堆栈信息”java.lang.OutOfMemoryError“会跟着进一步提示”Java heap space“。</p>
+<p>要解决这个区域的异常，一般的手段是先通过内存映像分析工具（如Eclipse Memory Analyzer）对Dump出来的堆转储快照进行分析，重点是确认内存中的对象是否是必要的，也就是要先分清楚到底是出现了内存泄漏（<strong>Memory Leak</strong>）还是内存溢出（<strong>Memory Overflow</strong>）。</p>
+<p>如果是内存泄露，可以进一步提高工具查看泄露对象到GC Roots的引用链。于是就能找到泄露对象是通过怎样的路径与GC Roots相关联并导致垃圾收集器无法自动回收它们的。掌握了泄露对象的类型信息以及GC Roots引用链的信息，就可以比较准确地定位出现泄露代码的位置。</p>
+<p>如果不存在泄露，换句话说，就是内存中的对象确实都还必须存活着，那就应当检查虚拟机的堆参数（-Xmx与-Xms），与机器物理内存对比看是否还可以调大，从代码上检查是否存在某些对象生命周期过长、持有状态时间过长的情况，尝试减少程序运行期的内存消耗。</p>
+<h2 id="虚拟机栈和本地方法栈溢出">虚拟机栈和本地方法栈溢出</h2>
+<p>由于在Hotspot虚拟机中并不区分虚拟机栈和本地方法栈，因此对于Hotspot来说，虽然-Xoss参数（用于设置本地方法栈大小）存在，但实际上是无效的。栈容量只由-Xss参数设定。在Java虚拟机规范中描述了两种异常：</p>
+<ul>
+<li>如果线程请求的栈深度大于虚拟机所允许的最大深度，将抛出StackOverflowError异常。</li>
+<li>如果虚拟机在扩展栈时无法申请到足够的内存空间，则抛出OutOfMemoryError异常。</li>
+</ul>
+<p>这里把异常分成两种情况，看似更加严谨，但却存在一些互相重叠的地方：当栈空间无法继续分配时，到底是内存太小，还是已使用的栈空间太大，其本质上是对同一件事情的两种描述而已。</p>
+<p>在《深入理解Java虚拟机规范》作者的实验中，将实验范围限制于单线程中的操作，尝试了两种方法均无法让虚拟机产生OutOfMemoryError异常，尝试的结果都是StackOverflowError。</p>
+<ul>
+<li>使用-Xss参数减少栈内存容量。结果，抛出StackOverflowError异常，异常出现时输出的堆栈深度相应地缩小。</li>
+<li>定义了大量的本地变量，增大此方法帧中本地变量表的长度。结果：抛出StackOverflowError异常时输出的堆栈深度相应缩小。</li>
+</ul>
+<pre><code class="language-java">/**
+ * VM args: -Xss128k
+ */
+public class JavaVMStackOF {
+	private int stackLength = 1;
+	
+	public void stackLeak() {
+		stackLength++;
+		stackLeak();
+	}
+	
+	public static void main(String[] args) throws Throwable {
+		JavaVMStackSOF oom = new JavaVMStackSOF();
+		try {
+			oom.stackLeak();
+		} catch (Throwable e){
+			System.out.println(&quot;stack length:&quot; + oom.stackLength);
+			throw e;
+		}
+	}
+}
+</code></pre>
+<p>运行结果：</p>
+<pre><code class="language-shell">stack length: 2402
+Exception in thread &quot;main&quot; java.lang.StackOverflowError
+	at....
+.....后续异常堆栈信息省略
+</code></pre>
+<p>实验结果表明：在单个线程下，无论是由于栈帧太大还是虚拟机栈容量太小，当内存无法分配的时候，虚拟机抛出的都是StackOverflowError异常。<br>
+如果测试时不限于单线程，通过不断地建立线程的方式倒是可以产生内存溢出异常。但是这样产生的内存溢出异常与栈空间是否足够大并不存在任何联系。或者准确地说，在这种情况下，为每个线程的栈分配的内存越大，反而越容易产生内存溢出异常。<br>
+这一点需要在开发多线程应用时特别注意，出现StackOverflowError异常时有错误堆栈可以阅读，相对来说，比较容易找到问题的所在。而且，如果使用虚拟机默认参数，栈深度在大多数情况下（因为每个方法压入栈的帧大小并不是一样的，所以只能说大多数情况下）达到1000~2000完全没有问题。但是如果是建立过多线程导致的内存溢出，在不能减少线程数或者更换64位虚拟机的情况下，就只能通过减少最大堆和减少栈容量来换取更多的线程。如果没有这方面的处理经验，<strong>这种通过”减少内存“的手段来解决内存溢出的方式会比较难以想到</strong>。</p>
+<pre><code class="language-java">public class JavaVMStackOOM {
+	private void dontStop() {
+		while (true) {}
+	}
+	
+	public void stackLeakByThread() {
+		while(true) {
+			Thread thread = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					dontStop();
+				}
+			});
+			thread.start();
+		}
+	}
+	public static void main(String[] args) throws Throwable {
+		JavaVMStackOOM oom = new JavaVMStackOOM();
+		oom.stackLeakByThread();
+	}
+}
+</code></pre>
+<h2 id="方法区和运行时常量池溢出">方法区和运行时常量池溢出</h2>
+<p>JDK 1.7开始逐步”去永久代“，此处顺便看看这件事情的实际影响。<br>
+String.intern()是一个Native方法，作用是：如果字符串常量池中已经包含一个等于此String对象的字符串，则返回代表池中这个字符串的String对象；否则将此String对象包含的字符串添加到常量池中，并且返回此String对象的引用。在JDK 1.6及之前的版本中，由于常量池分配在永久代内，我们可以通过-XX:PermSize和-XX:MaxPermSize限制方法区大小，从而间接限制其中常量池的容量。</p>
+<pre><code class="language-java">/**
+ * VM Args: -XX:PermSize=10M -XX:MaxPermSize=10M
+ */
+public class RuntimeConstantPoolOOM {
+	public static void main(String[] args) {
+		// 使用List保持着常量池引用，避免Full GC回收常量池行为
+		List&lt;String&gt; list = new ArrayList&lt;&gt;();
+		// 10MB的PermSize在integer范围内足够产生OOM了
+		int i = 0;
+		while (true) {
+			list.add(String.valueOf(i++).intern());
+		}
+	}
+}
+</code></pre>
+<p>运行结果：</p>
+<pre><code class="language-shell">Exception in thread &quot;main&quot; java.lang.OutOfMemoryError: PermGen space
+	at java.lang.String.intern(Native Method)
+	at ... 
+</code></pre>
+<p>从运行结果可以看到，运行时常量池溢出，在OutOfMemoryError后面跟随的提示信息是”PermGen space“，说明运行时常量池属于方法区（Hotspot虚拟机中的永久代）的一部分。</p>
+<p>而使用JDK 1.7运行这段程序就不会得到相同的结果，while循环将一直进行下去。关于这个字符串常量池的实现问题，还可以引申出一个更有意思的影响：</p>
+<pre><code class="language-java">public class RuntimeConstantsPoolOOM {
+	public static void main(String[] args){
+		String str1 = new StringBuilder(&quot;计算机&quot;).append(&quot;软件&quot;).toString();
+		System.out.println(str1.intern() == str1);
+		
+		String str2 = new StringBuilder(&quot;ja&quot;).append(&quot;va&quot;).toString();
+		System.out.println(str2.intern() == str2);
+	}
+} 
+</code></pre>
+<p>这段代码在JDK 1.6中运行，会得到两个false；而在JDK 1.7中运行会得到一个true一个false。产生差异的原因是：JDK 1.6中，<code>intern()</code>方法会把所赐遇到的字符串实例复制到永久代中，返回的也是永久代总这个字符串实例的引用，而由StringBuilder创建的字符串实例在Java堆上，所以必然不是同一个引用，将返回false。<br>
+而在JDK 1.7中的<code>intern()</code>实现不会再复制实例，只是在常量池中记录首次出现的实例引用，因此<code>intern()</code>返回的引用和由StringBuilder创建的那个字符串实例是同一个。对str2比较返回false是因为&quot;java&quot;这个字符串在执行StringBuilder.toString()之前已经出现过，字符串常量中已经有它的引用额，不符合”首次出现“的原则，而”计算机软件“这个字符串则是首次出现的。</p>
+<p>方法区用于存放Class的相关信息，如类名、访问修饰符、常量池、字段描述、方法描述等。当前的很多主流框架如Spring、Hibernate对类进行增强时都会使用到CGLib这类字节码技术，增强的类越多，就需要越大的方法区来保证动态生成的Class可以加载入内存。像大量反射、大量JSP文件或动态产生JSP文件的应用、基于OSGi的应用（即使是同一个类文件，被不同的加载器加载也会视为不同的类）也会需要较大的方法区保证。</p>
+<h2 id="本机直接内存溢出">本机直接内存溢出</h2>
+<p>DirectMemory容量可以通过<code>-XX:MaxDirectMemory</code>指定，如果不指定则默认与Java堆最大值一样。如下代码越过了DirectByBuffer类，直接通过反射获取Unsafe实例进行内存分配（Unsafe类的getUnsafe()方法限制了只有引导类加载器才会返回实例，也就是设计者希望只有rt.jar中的类才能使用Unsafe的功能）。因为虽然使用DirectByteBuffer分配内存也会抛出内存溢出异常，但它抛出异常时并没有真正向操作系统申请分配内存，而是通过计算得知内存无法分配于是手动抛出异常，真正申请分配内存的方法是<code>unsafe.allocateMemory()</code>。</p>
+<pre><code class="language-java">/**
+ * VM Args: -Xmx20M -XX:MaxDirectMemorySize=10M
+ */
+public class DirectMemoryOOM {
+	private static final int _1MB = 1024 * 1024;
+	
+	public static void main(String[] args) throws Exception {
+		Field unsafeField = Unsafe.class.getDeclaredFields()[0];
+		unsafeField.setAccessible(true);
+		Unsafe unsafe = (Unsafe) unsafeField.get(null);
+		while(true) {
+			unsafe.allocateMemory(_1MB);
+		}
+	}
+}
+</code></pre>
+<p>运行结果：</p>
+<pre><code class="language-shell">Exception in thread &quot;main&quot; java.lang.OutOfMemoryError
+	at ...
+</code></pre>
+
             </div>
-            <hr>
-            <div class="friends-note">
-              <p><strong class="language" data-lan="format">友链格式：</strong></p>
-              <ul>
-                <li><span class="language" data-lan="site-name">网站名称：</span>Goroyal&#39;s blog</li>
-                <li><span class="language" data-lan="site-link">网站地址：</span><a href="http://goroyal.github.io" data-pjax-state="">http://goroyal.github.io</a></li>
-                <li><span class="language" data-lan="site-desc">网站描述：</span>学习分享</li>
-                <li><span class="language" data-lan="site-img">网站头像：</span>
-                  <a href="http://goroyal.github.io/images/avatar.png">http://goroyal.github.io/images/avatar.png</a>
-                </li>
-              </ul>
-            </div>
+            
+              <div class="post-footer">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong class="language" data-lan="author">本文作者：</strong>
+      Goroyal
+    </li>
+    <li class="post-copyright-link">
+      <strong class="language" data-lan="link">本文链接：</strong>
+      <a href="http://goroyal.github.io/post/jvm-nei-cun-yi-chu/" title="JVM内存溢出">http://goroyal.github.io/post/jvm-nei-cun-yi-chu/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong class="language" data-lan="copyright">版权声明： </strong>
+      本博客所有文章除特别声明外，均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i> BY-NC-SA</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+  <div class="tags">
+    
+  </div>
+  <div class="nav">
+    <div class="nav-prev">
+      
+    </div>
+    <div class="nav-next">
+      
+        <a class="nav-pc-next" title="JVM GC" href="http://goroyal.github.io/post/jvm-gc/">JVM GC</a>
+        <a class="nav-mobile-next" title="JVM GC" href="http://goroyal.github.io/post/jvm-gc/">下一篇</a>
+        <i class="fa fa-chevron-right"></i>
+      
+    </div>
+  </div>
+</div>
+            
             
   
 
-          </section>
+          </div>
         </div>
       </div>
     </div>
@@ -456,6 +923,36 @@
 
     // 代码高亮
     hljs.initHighlightingOnLoad();
+</script>
+    <div class="light-box" id="light_box"></div>
+<script>
+  let imgs = document.querySelectorAll('.post-body img');
+  let lightBox = document.querySelector('#light_box');
+  lightBox.addEventListener('mousedown', (e) => {
+    e.preventDefault()
+  })
+  lightBox.addEventListener('mousewheel', (e) => {
+    e.preventDefault()
+  })
+  let width = window.innerWidth * 0.8;
+  lightBox.onclick = () => {
+    let img = lightBox.querySelector('img');
+    lightBox.style = '';
+    img && img.remove();
+  }
+  imgs.forEach(item => {
+    item.onclick = function (e) {
+      let lightImg = document.createElement('img');
+      lightImg.src = this.src;
+      lightBox.style = `height: 100%; opacity: 1; background-color: rgba(0, 0, 0, 0.5);cursor: zoom-out;`;
+      lightImg.style = `width: ${width}px; border: 1px solid #fff; border-radius: 2px;`;
+      lightImg.onclick = function () {
+        lightBox.style = '';
+        this.remove();
+      }
+      lightBox.append(lightImg);
+    }
+  })
 </script>
   </div>
 </body>
@@ -2642,7 +3139,6 @@ final String string2 = &amp;quot;string2&amp;quot;;
     speed: 200
   });
 </script>
-
 
 
 

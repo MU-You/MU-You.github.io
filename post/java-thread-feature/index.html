@@ -9,7 +9,7 @@
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
 <title>Java 线程中的3个特性 | Goroyal&#39;s blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1596379754102">
+<link rel="shortcut icon" href="/favicon.ico?v=1596380601688">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -213,7 +213,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">30</span>
+        <span class="site-item-stat-count">32</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -874,6 +874,207 @@ x = x + 1;     //语句4
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/jvm-nei-cun-yi-chu/"" data-c="
+          &lt;p&gt;JVM内存溢出经常有2种报错：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;OutOfMemory（OOM）&lt;/li&gt;
+&lt;li&gt;StackOverFlow（SOF ）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;除了程序计数器外，虚拟机内存的其他几个运行时区域都有发生OutOfMemoryError异常的可能。为了进行试验，在运行时使用以下的JVM参数：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;--verbose:gc -Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails -XX:SurvivorRatio=8
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;java堆溢出&#34;&gt;Java堆溢出&lt;/h2&gt;
+&lt;p&gt;Java堆用于存储对象实例，只要不断地创建对象，并且保证GC Roots到对象之间有可达路径来避免垃圾回收机制清除这些对象，那么在对象数量到达最大堆的容量限制后就会产生内存溢出异常。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;/**
+ * VM Args: -Xms20m -Xmx20m -XX:+HeapDumpOnOutOfMemorryError
+ * 将对的最小值-Xms参数与最大值-Xmx参数设置为一样即可避免堆自动扩展，通过参数-XX:+HeapDumpOnOutOfMemorryError可以让虚拟机在出现内存溢出异常时Dump出当前的内存堆转储快照以便时候进行分析
+ */
+public class HeapOOM {
+	static class OOMObject {
+	}
+	
+	public static void main(String[] args){
+		List&amp;lt;OOMObject&amp;gt; list = new ArrayList&amp;lt;&amp;gt;();
+		while(true){
+			list.add(new OOMObject());
+		}
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;运行结果：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;java.lang.OutOfMemoryError: Java Heap space
+Dumping heap to java_pid3404.hprof...
+Heap dump file created[22045981 bytes in 0.663 secs]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Java堆内存的OOM异常是实际应用中常见的内存溢出异常情况。当出现Java堆内存溢出时，异常堆栈信息”java.lang.OutOfMemoryError“会跟着进一步提示”Java heap space“。&lt;/p&gt;
+&lt;p&gt;要解决这个区域的异常，一般的手段是先通过内存映像分析工具（如Eclipse Memory Analyzer）对Dump出来的堆转储快照进行分析，重点是确认内存中的对象是否是必要的，也就是要先分清楚到底是出现了内存泄漏（&lt;strong&gt;Memory Leak&lt;/strong&gt;）还是内存溢出（&lt;strong&gt;Memory Overflow&lt;/strong&gt;）。&lt;/p&gt;
+&lt;p&gt;如果是内存泄露，可以进一步提高工具查看泄露对象到GC Roots的引用链。于是就能找到泄露对象是通过怎样的路径与GC Roots相关联并导致垃圾收集器无法自动回收它们的。掌握了泄露对象的类型信息以及GC Roots引用链的信息，就可以比较准确地定位出现泄露代码的位置。&lt;/p&gt;
+&lt;p&gt;如果不存在泄露，换句话说，就是内存中的对象确实都还必须存活着，那就应当检查虚拟机的堆参数（-Xmx与-Xms），与机器物理内存对比看是否还可以调大，从代码上检查是否存在某些对象生命周期过长、持有状态时间过长的情况，尝试减少程序运行期的内存消耗。&lt;/p&gt;
+&lt;h2 id=&#34;虚拟机栈和本地方法栈溢出&#34;&gt;虚拟机栈和本地方法栈溢出&lt;/h2&gt;
+&lt;p&gt;由于在Hotspot虚拟机中并不区分虚拟机栈和本地方法栈，因此对于Hotspot来说，虽然-Xoss参数（用于设置本地方法栈大小）存在，但实际上是无效的。栈容量只由-Xss参数设定。在Java虚拟机规范中描述了两种异常：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果线程请求的栈深度大于虚拟机所允许的最大深度，将抛出StackOverflowError异常。&lt;/li&gt;
+&lt;li&gt;如果虚拟机在扩展栈时无法申请到足够的内存空间，则抛出OutOfMemoryError异常。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这里把异常分成两种情况，看似更加严谨，但却存在一些互相重叠的地方：当栈空间无法继续分配时，到底是内存太小，还是已使用的栈空间太大，其本质上是对同一件事情的两种描述而已。&lt;/p&gt;
+&lt;p&gt;在《深入理解Java虚拟机规范》作者的实验中，将实验范围限制于单线程中的操作，尝试了两种方法均无法让虚拟机产生OutOfMemoryError异常，尝试的结果都是StackOverflowError。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;使用-Xss参数减少栈内存容量。结果，抛出StackOverflowError异常，异常出现时输出的堆栈深度相应地缩小。&lt;/li&gt;
+&lt;li&gt;定义了大量的本地变量，增大此方法帧中本地变量表的长度。结果：抛出StackOverflowError异常时输出的堆栈深度相应缩小。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;/**
+ * VM args: -Xss128k
+ */
+public class JavaVMStackOF {
+	private int stackLength = 1;
+	
+	public void stackLeak() {
+		stackLength++;
+		stackLeak();
+	}
+	
+	public static void main(String[] args) throws Throwable {
+		JavaVMStackSOF oom = new JavaVMStackSOF();
+		try {
+			oom.stackLeak();
+		} catch (Throwable e){
+			System.out.println(&amp;quot;stack length:&amp;quot; + oom.stackLength);
+			throw e;
+		}
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;运行结果：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;stack length: 2402
+Exception in thread &amp;quot;main&amp;quot; java.lang.StackOverflowError
+	at....
+.....后续异常堆栈信息省略
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;实验结果表明：在单个线程下，无论是由于栈帧太大还是虚拟机栈容量太小，当内存无法分配的时候，虚拟机抛出的都是StackOverflowError异常。&lt;br&gt;
+如果测试时不限于单线程，通过不断地建立线程的方式倒是可以产生内存溢出异常。但是这样产生的内存溢出异常与栈空间是否足够大并不存在任何联系。或者准确地说，在这种情况下，为每个线程的栈分配的内存越大，反而越容易产生内存溢出异常。&lt;br&gt;
+这一点需要在开发多线程应用时特别注意，出现StackOverflowError异常时有错误堆栈可以阅读，相对来说，比较容易找到问题的所在。而且，如果使用虚拟机默认参数，栈深度在大多数情况下（因为每个方法压入栈的帧大小并不是一样的，所以只能说大多数情况下）达到1000~2000完全没有问题。但是如果是建立过多线程导致的内存溢出，在不能减少线程数或者更换64位虚拟机的情况下，就只能通过减少最大堆和减少栈容量来换取更多的线程。如果没有这方面的处理经验，&lt;strong&gt;这种通过”减少内存“的手段来解决内存溢出的方式会比较难以想到&lt;/strong&gt;。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public class JavaVMStackOOM {
+	private void dontStop() {
+		while (true) {}
+	}
+	
+	public void stackLeakByThread() {
+		while(true) {
+			Thread thread = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					dontStop();
+				}
+			});
+			thread.start();
+		}
+	}
+	public static void main(String[] args) throws Throwable {
+		JavaVMStackOOM oom = new JavaVMStackOOM();
+		oom.stackLeakByThread();
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;方法区和运行时常量池溢出&#34;&gt;方法区和运行时常量池溢出&lt;/h2&gt;
+&lt;p&gt;JDK 1.7开始逐步”去永久代“，此处顺便看看这件事情的实际影响。&lt;br&gt;
+String.intern()是一个Native方法，作用是：如果字符串常量池中已经包含一个等于此String对象的字符串，则返回代表池中这个字符串的String对象；否则将此String对象包含的字符串添加到常量池中，并且返回此String对象的引用。在JDK 1.6及之前的版本中，由于常量池分配在永久代内，我们可以通过-XX:PermSize和-XX:MaxPermSize限制方法区大小，从而间接限制其中常量池的容量。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;/**
+ * VM Args: -XX:PermSize=10M -XX:MaxPermSize=10M
+ */
+public class RuntimeConstantPoolOOM {
+	public static void main(String[] args) {
+		// 使用List保持着常量池引用，避免Full GC回收常量池行为
+		List&amp;lt;String&amp;gt; list = new ArrayList&amp;lt;&amp;gt;();
+		// 10MB的PermSize在integer范围内足够产生OOM了
+		int i = 0;
+		while (true) {
+			list.add(String.valueOf(i++).intern());
+		}
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;运行结果：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;Exception in thread &amp;quot;main&amp;quot; java.lang.OutOfMemoryError: PermGen space
+	at java.lang.String.intern(Native Method)
+	at ... 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;从运行结果可以看到，运行时常量池溢出，在OutOfMemoryError后面跟随的提示信息是”PermGen space“，说明运行时常量池属于方法区（Hotspot虚拟机中的永久代）的一部分。&lt;/p&gt;
+&lt;p&gt;而使用JDK 1.7运行这段程序就不会得到相同的结果，while循环将一直进行下去。关于这个字符串常量池的实现问题，还可以引申出一个更有意思的影响：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public class RuntimeConstantsPoolOOM {
+	public static void main(String[] args){
+		String str1 = new StringBuilder(&amp;quot;计算机&amp;quot;).append(&amp;quot;软件&amp;quot;).toString();
+		System.out.println(str1.intern() == str1);
+		
+		String str2 = new StringBuilder(&amp;quot;ja&amp;quot;).append(&amp;quot;va&amp;quot;).toString();
+		System.out.println(str2.intern() == str2);
+	}
+} 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这段代码在JDK 1.6中运行，会得到两个false；而在JDK 1.7中运行会得到一个true一个false。产生差异的原因是：JDK 1.6中，&lt;code&gt;intern()&lt;/code&gt;方法会把所赐遇到的字符串实例复制到永久代中，返回的也是永久代总这个字符串实例的引用，而由StringBuilder创建的字符串实例在Java堆上，所以必然不是同一个引用，将返回false。&lt;br&gt;
+而在JDK 1.7中的&lt;code&gt;intern()&lt;/code&gt;实现不会再复制实例，只是在常量池中记录首次出现的实例引用，因此&lt;code&gt;intern()&lt;/code&gt;返回的引用和由StringBuilder创建的那个字符串实例是同一个。对str2比较返回false是因为&amp;quot;java&amp;quot;这个字符串在执行StringBuilder.toString()之前已经出现过，字符串常量中已经有它的引用额，不符合”首次出现“的原则，而”计算机软件“这个字符串则是首次出现的。&lt;/p&gt;
+&lt;p&gt;方法区用于存放Class的相关信息，如类名、访问修饰符、常量池、字段描述、方法描述等。当前的很多主流框架如Spring、Hibernate对类进行增强时都会使用到CGLib这类字节码技术，增强的类越多，就需要越大的方法区来保证动态生成的Class可以加载入内存。像大量反射、大量JSP文件或动态产生JSP文件的应用、基于OSGi的应用（即使是同一个类文件，被不同的加载器加载也会视为不同的类）也会需要较大的方法区保证。&lt;/p&gt;
+&lt;h2 id=&#34;本机直接内存溢出&#34;&gt;本机直接内存溢出&lt;/h2&gt;
+&lt;p&gt;DirectMemory容量可以通过&lt;code&gt;-XX:MaxDirectMemory&lt;/code&gt;指定，如果不指定则默认与Java堆最大值一样。如下代码越过了DirectByBuffer类，直接通过反射获取Unsafe实例进行内存分配（Unsafe类的getUnsafe()方法限制了只有引导类加载器才会返回实例，也就是设计者希望只有rt.jar中的类才能使用Unsafe的功能）。因为虽然使用DirectByteBuffer分配内存也会抛出内存溢出异常，但它抛出异常时并没有真正向操作系统申请分配内存，而是通过计算得知内存无法分配于是手动抛出异常，真正申请分配内存的方法是&lt;code&gt;unsafe.allocateMemory()&lt;/code&gt;。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;/**
+ * VM Args: -Xmx20M -XX:MaxDirectMemorySize=10M
+ */
+public class DirectMemoryOOM {
+	private static final int _1MB = 1024 * 1024;
+	
+	public static void main(String[] args) throws Exception {
+		Field unsafeField = Unsafe.class.getDeclaredFields()[0];
+		unsafeField.setAccessible(true);
+		Unsafe unsafe = (Unsafe) unsafeField.get(null);
+		while(true) {
+			unsafe.allocateMemory(_1MB);
+		}
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;运行结果：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;Exception in thread &amp;quot;main&amp;quot; java.lang.OutOfMemoryError
+	at ...
+&lt;/code&gt;&lt;/pre&gt;
+">JVM内存溢出</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/jvm-gc/"" data-c="
+          &lt;h2 id=&#34;引用计数法&#34;&gt;引用计数法&lt;/h2&gt;
+&lt;p&gt;给对象中添加一个引用计数器，每当有一个地方引用它时，计数器就加1；当引用失效时，计数器值就减1；任何时刻计数器为0的对象就是不可能再被使用的。&lt;br&gt;
+客观地说，引用计数算法（Reference Counting）的实现简单，判定效率也很高，在大部分情况下他都是一个不错的算法）。&lt;br&gt;
+但是至少主流的Java虚拟机里没有选用该方法来管理内存，其中最主要的原因是它很难解决对象之间相互循环引用的问题。&lt;/p&gt;
+&lt;h2 id=&#34;可达性分析算法&#34;&gt;可达性分析算法&lt;/h2&gt;
+&lt;p&gt;这个算法的基本思路就是通过一系列的称为“GC Roots”的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径称为引用链（Reference Chain），当一个对象到GC Roots没有任何引用链相连（用图论的话来说，就是从GC Roots到这个对象不可达）时，则证明此对象是不可用的。&lt;/p&gt;
+&lt;p&gt;在Java语言中，可作为GC Roots的对象包括下面几种：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;虚拟机栈（栈帧中的本地变量表）中引用的对象&lt;/li&gt;
+&lt;li&gt;方法区中类静态属性引用的对象&lt;/li&gt;
+&lt;li&gt;方法区中常量引用的对象&lt;/li&gt;
+&lt;li&gt;本地方法栈中JNI（即一般说的Native方法）引用的对象&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;标记-清除算法&#34;&gt;标记-清除算法&lt;/h2&gt;
+&lt;p&gt;首先标记出所有需要回收的对象，在标记完成后统一回收所有被标记的对象。&lt;/p&gt;
+&lt;p&gt;它是最基础的收集算法，后续的收集算法都是基于这种思路并对其不足进行改进而得到的。&lt;/p&gt;
+&lt;p&gt;它的主要不足有两个：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;效率问题，标记和清除两个过程的效率都不高&lt;/li&gt;
+&lt;li&gt;空间问题，会产生大量不连续的内存碎片，空间碎片太多可能会导致以后在程序运行过程中需要分配较大对象时，无法找到足够的连续内存而不得不提前触发另一次垃圾收集动作。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;复制算法&#34;&gt;复制算法&lt;/h2&gt;
+&lt;p&gt;为了解决效率问题，一种称为”复制“的收集算法，它将可用内存按容量划分为大小相等的两块，每次只使用其中的一块。当这一块的内存用完了，就将还存活的对象复制到另一块上面，然后再把已使用过的内存空间一次清理掉。&lt;/p&gt;
+&lt;p&gt;这种算法的代价是将内存缩小为原来的一半，未免太高了一点。&lt;/p&gt;
+&lt;p&gt;现在的商业虚拟机都采用这种收集算法来回收新生代。IBM公司的专门研究表明，新生代中的对象98%是”朝生夕死“的，所以不需要按照1：1的比例来划分内存空间，而是将一块内存分为一块较大的Eden空间和两块较小的Survivor空间，每次使用Eden和其中一块Survivor。当回收时，将Eden和Survivor中还存活着的对象一次性地复制到另外一块Survivor空间上，最后清理掉Eden和刚才用过的Survivor空间。Hotspot虚拟机默认Eden和Survivor大小比例是8：1。&lt;/p&gt;
+&lt;p&gt;当然，我们也没有办法保证每次回收都只有不多于10%对象存活，当Survivor空间不够用时，需要依赖其他内存（这里指老年代）进行分配担保（Handle Promotion）。&lt;/p&gt;
+&lt;h2 id=&#34;标记-整理算法&#34;&gt;标记-整理算法&lt;/h2&gt;
+&lt;p&gt;复制收集算法在对象存活率较高时就要进行较多的复制操作，效率将会变低。更关键的是，如果不想浪费50%的空间，就需要有额外的空间进行分配担保，以应对被使用的内存中所有对象都100%存活的极端情况，所以在老年代一般不能直接选用这种算法。&lt;/p&gt;
+&lt;p&gt;根据老年代的特点，有人提出标记-整理算法，标记过程仍然与”标记-清除“算法一样，但后续步骤不是直接对可回收对象进行清理，而是让所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存。&lt;/p&gt;
+&lt;h2 id=&#34;分代收集算法&#34;&gt;分代收集算法&lt;/h2&gt;
+&lt;p&gt;当前商业虚拟机的垃圾收集都采用”分代收集“算法，这种算法根据对象存活周期的不同将内存分为几块。一般是把Java堆分为新生代和老生代。&lt;/p&gt;
+">JVM GC</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/java-memory-model/"" data-c="
@@ -2122,10 +2323,10 @@ exec dbms_xdb.sethttpport(8088)
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/references-in-java/"" data-c="
           &lt;p&gt;Java中的引用主要有以下几种类型：&lt;br&gt;
-• 强引用（StrongReference）：强引用是使用最普遍的引用。如果一个对象具有强引用，那垃圾回收器绝不会回收它。当内存空间不足，Java虚拟机宁愿抛出OutOfMemoryError错误，使程序异常终止，也不会靠随意回收具有强引用的对象来解决内存不足的问题。&lt;/p&gt;
-&lt;p&gt;• 软引用（SoftReference）：如果一个对象只具有软引用，则内存空间足够，垃圾回收器就不会回收它；如果内存空间不足了，就会回收这些对象的内存。只要垃圾回收器没有回收它，该对象就可以被程序使用。软引用可用来实现内存敏感的高速缓存。软引用可以和一个引用队列（ReferenceQueue）联合使用，如果软引用所引用的对象被垃圾回收器回收，Java虚拟机就会把这个软引用加入到与之关联的引用队列中。&lt;/p&gt;
-&lt;p&gt;• 弱引用（WeakReference）：弱引用与软引用的区别在于：只具有弱引用的对象拥有更短暂的生命周期。在垃圾回收器线程扫描它所管辖的内存区域的过程中，一旦发现了只具有弱引用的对象，不管当前内存空间足够与否，都会回收它的内存。不过，由于垃圾回收器是一个优先级很低的线程，因此不一定会很快发现那些只具有弱引用的对象。弱引用可以和一个引用队列（ReferenceQueue）联合使用，如果弱引用所引用的对象被垃圾回收，Java虚拟机就会把这个弱引用加入到与之关联的引用队列中。&lt;/p&gt;
-&lt;p&gt;• 虚引用（PhantomReference）：“虚引用”顾名思义，就是形同虚设，与其他几种引用都不同，虚引用并不会决定对象的生命周期。如果一个对象仅持有虚引用，那么它就和没有任何引用一样，在任何时候都可能被垃圾回收器回收。&lt;/p&gt;
+• 强引用（StrongReference）：强引用是使用最普遍的引用。只要强引用还存在，垃圾收集器永远不会回收掉被引用的对象。当内存空间不足，Java虚拟机宁愿抛出OutOfMemoryError错误，使程序异常终止，也不会靠随意回收具有强引用的对象来解决内存不足的问题。&lt;/p&gt;
+&lt;p&gt;• 软引用（SoftReference）：软引用是用来描述一些还有用但并非必需的对象。对于软引用关联着的对象，内存空间足够，垃圾回收器就不会回收它，在系统将要发生内存溢出异常之前，将会把这些对象列进回收范围之中进行第二次回收。如果这次回收还没有足够的内存，才会抛出内存溢出异常。只要垃圾回收器没有回收它，该对象就可以被程序使用。软引用可用来实现内存敏感的高速缓存。软引用可以和一个引用队列（ReferenceQueue）联合使用，如果软引用所引用的对象被垃圾回收器回收，Java虚拟机就会把这个软引用加入到与之关联的引用队列中。&lt;/p&gt;
+&lt;p&gt;• 弱引用（WeakReference）：弱引用也是用来描述非必需对象的，被弱引用关联的对象只能生存到下一次垃圾收集发生之前。弱引用与软引用的区别在于：只具有弱引用的对象拥有更短暂的生命周期。在垃圾回收器线程扫描它所管辖的内存区域的过程中，一旦发现了只具有弱引用的对象，不管当前内存空间足够与否，都会回收它的内存。不过，由于垃圾回收器是一个优先级很低的线程，因此不一定会很快发现那些只具有弱引用的对象。弱引用可以和一个引用队列（ReferenceQueue）联合使用，如果弱引用所引用的对象被垃圾回收，Java虚拟机就会把这个弱引用加入到与之关联的引用队列中。&lt;/p&gt;
+&lt;p&gt;• 虚引用（PhantomReference）：“虚引用”顾名思义，就是形同虚设，也称为幽灵引用或者幻影引用，它是最弱的一种引用关系。一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用来取得一个对象实例。虚引用并不会决定对象的生命周期。如果一个对象仅持有虚引用，那么它就和没有任何引用一样，在任何时候都可能被垃圾回收器回收。为一个对象设置虚引用关联的唯一目的就是能在这个对象被收集器回收时收到一个系统通知。&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;下面主要来谈谈软引用。&lt;br&gt;
 对于软引用对象本身，至少有两个强引用指向它：由应用创建的原始的强引用，还有就是JVM创建的在所引对象队列上的一个新的强引用。软引用本质上是一个比较大的、最近最久未用的对象池。获得较好性能的关键是确保它们会被及时清理。&lt;/p&gt;
