@@ -8,7 +8,7 @@
 <meta name="keywords" content="Goroyal technical blog">
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
-<title>以单元测试的角度聊聊写代码 | Goroyal&#39;s blog</title>
+<title>Java volatile | Goroyal&#39;s blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1596369367640">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -38,8 +38,8 @@
 
 
 
-  <meta name="description" content="以单元测试的角度聊聊写代码" />
-  <meta name="keywords" content="Programming" />
+  <meta name="description" content="Java volatile" />
+  <meta name="keywords" content="" />
 </head>
 
 <body>
@@ -245,10 +245,11 @@
     <ul class="markdownIt-TOC">
 <li>
 <ul>
-<li><a href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%8F%90%E9%AB%98%E8%A6%86%E7%9B%96%E7%8E%87">1. 为什么要提高覆盖率？</a></li>
-<li><a href="#2-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E4%B8%BA%E4%BD%95%E9%9A%BE%E5%86%99">2. 单元测试为何难写？</a></li>
-<li><a href="#3-%E5%A6%82%E4%BD%95%E5%86%99%E5%A5%BD%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95">3. 如何写好单元测试</a></li>
-<li><a href="#4-%E7%BB%93%E8%AF%AD">4. 结语</a></li>
+<li><a href="#volatile%E8%AF%AD%E4%B9%89">volatile语义</a></li>
+<li><a href="#volatile%E9%9D%9E%E5%8E%9F%E5%AD%90%E7%9A%84%E7%89%B9%E6%80%A7">volatile非原子的特性</a></li>
+<li><a href="#volatile%E8%83%BD%E4%BF%9D%E8%AF%81%E6%9C%89%E5%BA%8F%E6%80%A7">volatile能保证有序性</a></li>
+<li><a href="#volatile%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E7%8E%B0%E6%9C%BA%E5%88%B6">volatile的原理和实现机制</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
 </ul>
 </li>
 </ul>
@@ -516,8 +517,8 @@
           <div class="section bg-color post post-page">
             <header class="post-header">
     <h1 class="post-title">
-        <a class="post-title-link" href="http://goroyal.github.io/post/wring-code-from-unit-test-side/">
-            以单元测试的角度聊聊写代码
+        <a class="post-title-link" href="http://goroyal.github.io/post/java-volatile/">
+            Java volatile
         </a>
     </h1>
     <div class="post-meta">
@@ -525,36 +526,23 @@
                 <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-                <span>2019-05-24</span>
+                <span>2020-08-02</span>
                 <span class="post-meta-divider pc-show">|</span>
                 </span>
                 
-                    <span class="meta-item">
-      <i class="fa fa-folder-o"></i>
-      <span class="pc-show language" data-lan="category-in">分类于</span>
-                    
-                        
-                            <a href="http://goroyal.github.io/tag/en071zNCj/">
-                                <span>Programming</span>
-                            </a>
-                            
-                                    
-                                        </span>
-                                        <span class="post-meta-divider">|</span>
-                                        
                                             <span class="meta-item">
       <i class="fa fa-clock-o"></i>
-      <span>8<span class="language" data-lan="minute">分钟</span></span>
+      <span>11<span class="language" data-lan="minute">分钟</span></span>
                                             </span>
                                             <span class="meta-item">
       <span class="post-meta-divider">|</span>
                                             <i class="fa fa-file-word-o"></i>
-                                            <span>2117<span class="pc-show language" data-lan="words">字数</span></span>
+                                            <span>2778<span class="pc-show language" data-lan="words">字数</span></span>
                                             </span>
                                             
                                                 
                                                     
-                                                                <!-- <span id="/post/wring-code-from-unit-test-side/" data-flag-title="以单元测试的角度聊聊写代码" class="meta-item pc-show leancloud_visitors">
+                                                                <!-- <span id="/post/java-volatile/" data-flag-title="Java volatile" class="meta-item pc-show leancloud_visitors">
       <span class="post-meta-divider">|</span>
       <i class="fa fa-eye"></i>
       <span><span class="language" data-lan="view">浏览量</span>：<span class="leancloud-visitors-count"></span></span>
@@ -563,36 +551,204 @@
     </div>
 </header>
             <div class="post-body next-md-body" id="post_body">
-              <p>单元测试，也就是对代码较细粒度单元的测试，一般就是测某个方法或函数。说到单元测试，基本上每个开发者都不陌生，时不时会听到“测试覆盖率太低了！”，然后“We need to increase our code coverage!”。经常出bug？好好准备测试吧。</p>
-<!-- more -->
-<h2 id="1-为什么要提高覆盖率">1. 为什么要提高覆盖率？</h2>
-<p>覆盖率为什么这么重要？我们每次修改代码之后都不希望把原有可用的功能搞出问题，如果没有足够的测试覆盖，开发者就没有足够的信心去交付新代码。测试覆盖率高的话，就可以用机器自动去跑高效率地去验证，在覆盖不到的地方需要人工去验证。所以当覆盖率很低的时候，人工需要一遍又一遍的去验证已有的功能，还要去验证新加的功能是否符合预期，这个真的会崩溃。开发者自己去做的话，八成会偷懒抑或是觉得自己改的范围影响不到那么多测得乐观。如果让测试工程师去做，那么需要领导们考虑开发跟测试的比例了。</p>
-<p>测试覆盖率不完全是看单元测试，还包括更高层次的集成测试、系统测试。当然了，如果单元测试没写多少，指望粒度更粗层次更高的其他测试，你会非常痛苦的。单元测试的2个优势：跑得快、容易定位问题。</p>
-<p>上面说了这么多，就是在强调单元测试覆盖率一定要尽可能高，每个单元测试职责一定要尽可能单一简单。单元测试覆盖无非就是代码行覆盖、分支覆盖，单元测试职责单一简单是说单元测试不要试图测某个方法的所有可能性，多写几个，这样出了问题能根据测试名字迅速找到为什么什么用例失败了以及被测方法的哪行可能有问题。</p>
-<h2 id="2-单元测试为何难写">2. 单元测试为何难写？</h2>
-<p>你可能听说过“测试驱动开发”，就是先写测试、后写代码，这个要求在写代码之前先好好分析需求、细化用例，把各个用例的测试写出来，每次改动代码都要求让尽可能多的测试结果为绿（成功），直到最后所有测试都绿了，那么代码的功能上也基本没问题了。这个可以了解下，有兴趣多看看这方面拓展一下。<br>
-<img src="http://goroyal.github.io/post-images/1560780095750.png" alt="" loading="lazy"></p>
-<p>为什么单元测试覆盖率往往上不去？因为有时候真的不好写。什么样的代码不好写单元测试：</p>
+              <h2 id="volatile语义">volatile语义</h2>
+<p>一旦一个共享变量（类的成员变量、类的静态成员变量）被volatile修饰之后，那么就具备了两层语义：</p>
+<ul>
+<li>保证了不同线程对这个变量进行操作时的可见性，即一个线程修改了某个变量的值，这新值对其他线程来说是立即可见的。</li>
+<li>禁止进行指令重排序。</li>
+</ul>
+<p>看一段代码：</p>
+<pre><code class="language-java">public class VolatileExample extends Thread{
+    //设置类静态变量,各线程访问这同一共享变量
+    private  static boolean flag = false;
+    //无限循环,等待flag变为true时才跳出循环
+   public void run() {
+       while (!flag){
+       };
+       System.out.println(&quot;停止了&quot;);
+   }
+
+    public static void main(String[] args) throws Exception {
+        new VolatileExample().start();
+        //sleep的目的是等待线程启动完毕,也就是说进入run的无限循环体了
+        Thread.sleep(100);
+        flag = true;
+    }
+}
+</code></pre>
+<p>当把上面代码中变量flag改成下面这样：</p>
+<pre><code class="language-java">private  static valotile boolean flag = false;
+</code></pre>
+<p>在执行的话，你就会发现打印了“停止了”信息，因为用volatile修饰之后就变得不一样了：</p>
+<ul>
+<li>第一：使用volatile关键字会强制将修改的值立即写入主存；</li>
+<li>第二：使用volatile关键字的话，当线程main进行修改时，会导致线程那么线程VolatileExample的工作内存中缓存变量flag的缓存行无效（反映到硬件层的话，就是CPU的L1或者L2缓存中对应的缓存行无效）；</li>
+<li>第三：由于线程那么线程VolatileExample的工作内存中缓存变量flag的缓存行无效，所以线程那么线程VolatileExample再次读取变量flag的值时会去主存读取。</li>
+</ul>
+<p>那么在线程main修改flag值时（当然这里包括2个操作，修改线程main工作内存中的值，然后将修改后的值写入内存），会使得线程VolatileExample的工作内存中缓存变量flag的缓存行无效，然后线程读取时，发现自己的缓存行无效，它会等待缓存行对应的主存地址被更新之后，然后去对应的主存读取最新的值。</p>
+<p>那么线程VolatileExample读取到的就是最新的正确的值。<br>
+使用volatile关键字增加了实例变量在多个线程之间的可见性。但是volatile关键字最致命的缺点是不支持原子性。</p>
+<p>下面将关键字synchronized和volatile进行一下比较：</p>
 <ol>
-<li>被测方法传入了比较复杂的类的对象参数（不是依赖接口），当我要测这个方法，我就要去new依赖的那个对象，但是那个对象又依赖其他的，我又要接着new……，可能这个方法还没开始测，光创建它依赖的东西就写了一大堆测试代码。</li>
-<li>被测方法传入了某个对象作为参数，调用的复杂方法（不是依赖接口），这个方法有多复杂？可能它也跟上面一样也要new很多个对象才能跑起来，或者它调用了外部服务（网络、数据库等等）。简直没法测。</li>
-<li>被测方法自己内部创建了一些复杂对象、或者这个方法所属对象的实例创建了一些复杂对象，往往可能是外部有依赖的，比如对文件系统、数据库、网络等有调用。</li>
-<li>被测方法自己内部引用了static变量。</li>
-<li>被测方法自己内部引用了单例对象。</li>
-<li>被测方法调用了复杂的static方法，无法mock、无法用桩。</li>
-<li>被测方法是一个static方法，它可能依赖一个或多个static变量，这个变量还会被其他static方法修改，很难保证当前测试的独立性，包括它本身作为生产代码都是有坑的。</li>
-<li>被测方法传入了对象参数，考虑用桩了，但是发现那个类或者方法是final的，无法继承重写（如果是C#语言，sealed类无法被继承，无override关键字的方法不能被重写）。</li>
-<li>被测方法本身太长了，很难面面俱到，或者是单元测试出了错之后不好定位是哪行代码引起的问题</li>
+<li>关键字volatile是线程同步的轻量级实现，所以volatile性能肯定比synchronized要好，并且volatile只能修饰于变量，而synchronized可以修饰方法，以及代码块。随着JDK新版本的发布，synchronized关键字在执行效率上得到很大提升，在开发中使用synchronized关键字的比率还是比较大的。</li>
+<li>多线程访问volatile不会发生阻塞，而synchronized会出现阻塞。</li>
+<li>volatile能保证数据的可见性，但不能保证原子性；而synchronized可以保证原子性，也可以间接保证可见性，因为它将私有内存和公共内存中的数据做同步。</li>
+<li>再次重申一下，关键字volatile解决的是变量在多个线程之间的可见性；而synchronized关键字解决的是多个线程之间访问资源的同步性。</li>
 </ol>
-<h2 id="3-如何写好单元测试">3. 如何写好单元测试</h2>
-<p><strong>单元测试应该聚焦于被测方法本身的行为</strong>，而不是被测方法所依赖的其他对象的行为。外部环境有依赖的代码应该尽可能少，并且尽量去调用接口，而不是具体的类。我们经常会听到“面向接口编程”，这个用了之后，写单元测试真的是非常爽。单元测试里面会用mock库或者自己去创建简单的类去模拟某个方法的行为，接口约定根据输入会产生什么样的输出，对于调用接口的方法而言不必去关心具体的实现是什么。Java里有著名的Mockito，C#里有Moq，用起来如行云流水一般。</p>
-<p><strong>方法或者类构造器里面自己创建的对象不能太复杂</strong>，复杂了你就没法测了。可以考虑调用该对象的接口，将它作为输入参数，那么就可以用上面说的方式去测了。</p>
-<p>个人理解，<strong>static方法要尽可能做到纯函数化</strong>，也就是说一样的输入参数，随便什么情况下调用都应该给一样的输出。这其实就要求static这样的静态方法不要依赖不可控的static变量。如果做不到，尽量缩小它的使用范围吧……普通的实例方法调用static方法尽可能只调用简单的，没事别调用public的static变量，调用不受控制的static变量简直是给自己找麻烦，不可测是一方面，运行时被别的代码改掉的话就是灾难了。</p>
-<p><strong>当被测方法太长的时候，实际上就意味着方法要拆了</strong>，便于理解和维护。可以正常的拆，比如新建方法、新建类，也可以花哨地拆。有些人写了一堆if、else语句，如果是创建对象相关的，是否可以考虑工厂模式了？如果if、else里面是比较长的逻辑，可以考虑用策略模式。而如果是普通的前后累积的代码很长，要不试试责任链模式？当拆完之后，原本的非常长的不好测的方法变成若干个易测的小方法。覆盖率自然就上去了。</p>
-<h2 id="4-结语">4. 结语</h2>
-<p>当每层代码都经过单元测试确保自己这层没问题之后，整个逻辑的链条其实问题不大了。覆盖率不是简简单单为了覆盖而覆盖，单元测试都要有断言，就是如果跟测试目的产生不一致的结果这个测试必须显示失败，否则光数据好看是没用的。<strong>单元测试也不可能做到100%覆盖，但是可以尽可能做得高</strong>，覆盖不到的地方再通过集成测试或者系统层面的测试去做。至于做不到100%覆盖的原因，比如代码里有对外部依赖的地方，再怎么抽离，总有地方需要去初始化。那么对于这个情况，尽可能把这个对外依赖范围缩小，其他地方用的时候传递接口。</p>
-<p>关于面向接口编程和减少耦合，还可以了解下依赖注入，能帮助解耦调用模块和具体实现类模块。</p>
-<p>为了代码可扩展性高、良好设计、易测试，可能会出现一个复杂业务逻辑的代码一层套一层的情况，一个逻辑看完可能经历了若干个类，这也是人们常常吐槽的Java这种语言的一个“啰嗦”之处。这个我也没有什么更好的想法，如果你有，可以分享一下。</p>
+<h2 id="volatile非原子的特性">volatile非原子的特性</h2>
+<p>从上面知道volatile关键字保证了操作的可见性，但是volatile能保证对变量的操作是原子性吗？<br>
+下面看一个例子：</p>
+<pre><code class="language-Java">public class Test {
+    public volatile int inc = 0;
+     
+    public void increase() {
+        inc++;
+    }
+     
+    public static void main(String[] args) {
+        final Test test = new Test();
+        for(int i=0;i&lt;10;i++){
+            new Thread(){
+                public void run() {
+                    for(int j=0;j&lt;1000;j++)
+                        test.increase();
+                };
+            }.start();
+        }
+         
+         //保证前面的线程都执行完
+        while(Thread.activeCount()&gt;1)
+   			Thread.yield();
+        System.out.println(test.inc);
+    }
+}
+</code></pre>
+<p>也许有些朋友认为输出结果是10000。但是事实上运行它会发现每次运行结果都不一致，都是一个小于10000的数字。可能有人会有疑问，不对啊，上面是对变量inc进行自增操作，由于volatile保证了可见性，那么在每个线程中对inc自增完之后，在其他线程中都能看到修改后的值啊，所以有10个线程分别进行了1000次操作，那么最终inc的值应该是1000*10=10000。</p>
+<p>这里面就有一个误区了，volatile关键字能保证可见性没有错，但是上面的程序错在没能保证原子性。可见性只能保证每次读取的是最新的值，但是volatile没办法保证对变量的操作的原子性。</p>
+<p>在前面已经提到过，自增操作是不具备原子性的，它包括读取变量的原始值、进行加1操作、写入工作内存。那么就是说自增操作的三个子操作可能会分割开执行，就有可能导致下面这种情况出现：</p>
+<p>假如某个时刻变量inc的值为10，线程1对变量进行自增操作，线程1先读取了变量inc的原始值，然后线程1被阻塞了；</p>
+<p>然后线程2对变量进行自增操作，线程2也去读取变量inc的原始值，由于线程1只是对变量inc进行读取操作，而没有对变量进行修改操作，所以不会导致线程2的工作内存中缓存变量inc的缓存行无效，所以线程2会直接去主存读取inc的值，发现inc的值是10，然后进行加1操作，并把11写入工作内存，最后写入主存。</p>
+<p>然后线程1接着进行加1操作，由于已经读取了inc的值，注意此时在线程1的工作内存中inc的值仍然为10，所以线程1对inc进行加1操作后inc的值为11，然后将11写入工作内存，最后写入主存。</p>
+<p>那么两个线程分别进行了一次自增操作后，inc只增加了1。</p>
+<p>虽然happens-before规则中的volatile变量规则是保证一个变量在修改volatile变量时，会让缓存行无效吗，但是要注意，线程1对变量进行读取操作之后，被阻塞了的话，并没有对inc值进行修改。然后虽然volatile能保证线程2对变量inc的值读取是从内存中读取的，但是线程1没有进行修改，所以线程2根本就不会看到修改的值。</p>
+<p><strong>根源就在这里，自增操作不是原子性操作，而且volatile也无法保证对变量的任何操作都是原子性的。</strong></p>
+<p>把上面的代码改成以下任何一种都可以达到效果：<br>
+采用synchronized：</p>
+<pre><code class="language-java">public class Test {
+    public  int inc = 0;
+    
+    public synchronized void increase() {
+        inc++;
+    }
+    
+    public static void main(String[] args) {
+        final Test test = new Test();
+        for(int i=0;i&lt;10;i++){
+            new Thread(){
+                public void run() {
+                    for(int j=0;j&lt;1000;j++)
+                        test.increase();
+                };
+            }.start();
+        }
+        
+        while(Thread.activeCount()&gt;1)  //保证前面的线程都执行完
+            Thread.yield();
+        System.out.println(test.inc);
+    }
+}
+</code></pre>
+<p>采用Lock：</p>
+<pre><code class="language-java">public class Test {
+    public  int inc = 0;
+    Lock lock = new ReentrantLock();
+    
+    public  void increase() {
+        lock.lock();
+        try {
+            inc++;
+        } finally{
+            lock.unlock();
+        }
+    }
+    
+    public static void main(String[] args) {
+        final Test test = new Test();
+        for(int i=0;i&lt;10;i++){
+            new Thread(){
+                public void run() {
+                    for(int j=0;j&lt;1000;j++)
+                        test.increase();
+                };
+            }.start();
+        }
+        
+        while(Thread.activeCount()&gt;1)  //保证前面的线程都执行完
+            Thread.yield();
+        System.out.println(test.inc);
+    }
+}
+</code></pre>
+<p>采用AtomicInteger：</p>
+<pre><code class="language-Java">public class Test {
+    public  AtomicInteger inc = new AtomicInteger();
+     
+    public  void increase() {
+        inc.getAndIncrement();
+    }
+    
+    public static void main(String[] args) {
+        final Test test = new Test();
+        for(int i=0;i&lt;10;i++){
+            new Thread(){
+                public void run() {
+                    for(int j=0;j&lt;1000;j++)
+                        test.increase();
+                };
+            }.start();
+        }
+        
+        while(Thread.activeCount()&gt;1)  //保证前面的线程都执行完
+            Thread.yield();
+        System.out.println(test.inc);
+    }
+}
+</code></pre>
+<p>在java 1.5的java.util.concurrent.atomic包下提供了一些原子操作类，即对基本数据类型的 自增（加1操作），自减（减1操作）、以及加法操作（加一个数），减法操作（减一个数）进行了封装，保证这些操作是原子性操作。atomic是利用CAS来实现原子性操作的（Compare And Swap），CAS实际上是利用处理器提供的CMPXCHG指令实现的，而处理器执行CMPXCHG指令是一个原子性操作。</p>
+<h2 id="volatile能保证有序性">volatile能保证有序性</h2>
+<p>在前面提到volatile关键字能禁止指令重排序，所以volatile能在一定程度上保证有序性。</p>
+<p>volatile关键字禁止指令重排序有两层意思：<br>
+1）当程序执行到volatile变量的读操作或者写操作时，在其前面的操作的更改肯定全部已经进行，且结果已经对后面的操作可见；在其后面的操作肯定还没有进行；</p>
+<p>2）在进行指令优化时，不能将在对volatile变量访问的语句放在其后面执行，也不能把volatile变量后面的语句放到其前面执行。<br>
+可能上面说的比较绕，举个简单的例子：</p>
+<pre><code class="language-Java">//x、y为非volatile变量
+//flag为volatile变量
+ 
+x = 2;        //语句1
+y = 0;        //语句2
+flag = true;  //语句3
+x = 4;         //语句4
+y = -1;       //语句5
+</code></pre>
+<p>由于flag变量为volatile变量，那么在进行指令重排序的过程的时候，不会将语句3放到语句1、语句2前面，也不会讲语句3放到语句4、语句5后面。但是要注意语句1和语句2的顺序、语句4和语句5的顺序是不作任何保证的。并且volatile关键字能保证，执行到语句3时，语句1和语句2必定是执行完毕了的，且语句1和语句2的执行结果对语句3、语句4、语句5是可见的。</p>
+<h2 id="volatile的原理和实现机制">volatile的原理和实现机制</h2>
+<p>前面讲述了源于volatile关键字的一些使用，下面我们来探讨一下volatile到底如何保证可见性和禁止指令重排序的。</p>
+<p>下面这段话摘自《深入理解Java虚拟机》：</p>
+<blockquote>
+<p>观察加入volatile关键字和没有加入volatile关键字时所生成的汇编代码发现，加入volatile关键字时，会多出一个lock前缀指令。<br>
+lock前缀指令实际上相当于一个内存屏障（也成内存栅栏），内存屏障会提供3个功能：</p>
+<ul>
+<li>它确保指令重排序时不会把其后面的指令排到内存屏障之前的位置，也不会把前面的指令排到内存屏障的后面；即在执行到内存屏障这句指令时，在它前面的操作已经全部完成；</li>
+<li>它会强制将对缓存的修改操作立即写入主存；</li>
+<li>如果是写操作，它会导致其他CPU中对应的缓存行无效。</li>
+</ul>
+</blockquote>
+<h2 id="总结">总结</h2>
+<p>synchronized关键字是防止多个线程同时执行一段代码，那么就会很影响程序执行效率，而volatile关键字在某些情况下性能要优于synchronized，但是要注意volatile关键字是无法替代synchronized关键字的，因为volatile关键字无法保证操作的原子性。通常来说，使用volatile必须具备以下2个条件：</p>
+<ul>
+<li>对变量的写操作不依赖于当前值</li>
+<li>该变量没有包含在具有其他变量的不变式中</li>
+</ul>
 
             </div>
             
@@ -604,7 +760,7 @@
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="http://goroyal.github.io/post/wring-code-from-unit-test-side/" title="以单元测试的角度聊聊写代码">http://goroyal.github.io/post/wring-code-from-unit-test-side/</a>
+      <a href="http://goroyal.github.io/post/java-volatile/" title="Java volatile">http://goroyal.github.io/post/java-volatile/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -613,21 +769,15 @@
   </ul>
   <div class="tags">
     
-      <a href="http://goroyal.github.io/tag/en071zNCj/"># Programming</a>
-    
   </div>
   <div class="nav">
     <div class="nav-prev">
       
-        <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="Try with closable resources" href="http://goroyal.github.io/post/Try with closable resources/">Try with closable resources</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="Try with closable resources" href="http://goroyal.github.io/post/Try with closable resources/">上一篇</a>
-      
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="HTTP 响应状态码" href="http://goroyal.github.io/post/http-response-code/">HTTP 响应状态码</a>
-        <a class="nav-mobile-next" title="HTTP 响应状态码" href="http://goroyal.github.io/post/http-response-code/">下一篇</a>
+        <a class="nav-pc-next" title="线程中的3个特性" href="http://goroyal.github.io/post/xian-cheng-zhong-de-3-ge-te-xing/">线程中的3个特性</a>
+        <a class="nav-mobile-next" title="线程中的3个特性" href="http://goroyal.github.io/post/xian-cheng-zhong-de-3-ge-te-xing/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>

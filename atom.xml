@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>http://goroyal.github.io</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2020-08-02T10:00:53.128Z</updated>
+    <updated>2020-08-02T11:56:11.808Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="http://goroyal.github.io"/>
     <link rel="self" href="http://goroyal.github.io/atom.xml"/>
@@ -10,6 +10,261 @@
     <logo>http://goroyal.github.io/images/avatar.png</logo>
     <icon>http://goroyal.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Goroyal&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Java volatile]]></title>
+        <id>http://goroyal.github.io/post/java-volatile/</id>
+        <link href="http://goroyal.github.io/post/java-volatile/">
+        </link>
+        <updated>2020-08-02T11:28:35.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="volatile语义">volatile语义</h2>
+<p>一旦一个共享变量（类的成员变量、类的静态成员变量）被volatile修饰之后，那么就具备了两层语义：</p>
+<ul>
+<li>保证了不同线程对这个变量进行操作时的可见性，即一个线程修改了某个变量的值，这新值对其他线程来说是立即可见的。</li>
+<li>禁止进行指令重排序。</li>
+</ul>
+<p>看一段代码：</p>
+<pre><code class="language-java">public class VolatileExample extends Thread{
+    //设置类静态变量,各线程访问这同一共享变量
+    private  static boolean flag = false;
+    //无限循环,等待flag变为true时才跳出循环
+   public void run() {
+       while (!flag){
+       };
+       System.out.println(&quot;停止了&quot;);
+   }
+
+    public static void main(String[] args) throws Exception {
+        new VolatileExample().start();
+        //sleep的目的是等待线程启动完毕,也就是说进入run的无限循环体了
+        Thread.sleep(100);
+        flag = true;
+    }
+}
+</code></pre>
+<p>当把上面代码中变量flag改成下面这样：</p>
+<pre><code class="language-java">private  static valotile boolean flag = false;
+</code></pre>
+<p>在执行的话，你就会发现打印了“停止了”信息，因为用volatile修饰之后就变得不一样了：</p>
+<ul>
+<li>第一：使用volatile关键字会强制将修改的值立即写入主存；</li>
+<li>第二：使用volatile关键字的话，当线程main进行修改时，会导致线程那么线程VolatileExample的工作内存中缓存变量flag的缓存行无效（反映到硬件层的话，就是CPU的L1或者L2缓存中对应的缓存行无效）；</li>
+<li>第三：由于线程那么线程VolatileExample的工作内存中缓存变量flag的缓存行无效，所以线程那么线程VolatileExample再次读取变量flag的值时会去主存读取。</li>
+</ul>
+<p>那么在线程main修改flag值时（当然这里包括2个操作，修改线程main工作内存中的值，然后将修改后的值写入内存），会使得线程VolatileExample的工作内存中缓存变量flag的缓存行无效，然后线程读取时，发现自己的缓存行无效，它会等待缓存行对应的主存地址被更新之后，然后去对应的主存读取最新的值。</p>
+<p>那么线程VolatileExample读取到的就是最新的正确的值。<br>
+使用volatile关键字增加了实例变量在多个线程之间的可见性。但是volatile关键字最致命的缺点是不支持原子性。</p>
+<p>下面将关键字synchronized和volatile进行一下比较：</p>
+<ol>
+<li>关键字volatile是线程同步的轻量级实现，所以volatile性能肯定比synchronized要好，并且volatile只能修饰于变量，而synchronized可以修饰方法，以及代码块。随着JDK新版本的发布，synchronized关键字在执行效率上得到很大提升，在开发中使用synchronized关键字的比率还是比较大的。</li>
+<li>多线程访问volatile不会发生阻塞，而synchronized会出现阻塞。</li>
+<li>volatile能保证数据的可见性，但不能保证原子性；而synchronized可以保证原子性，也可以间接保证可见性，因为它将私有内存和公共内存中的数据做同步。</li>
+<li>再次重申一下，关键字volatile解决的是变量在多个线程之间的可见性；而synchronized关键字解决的是多个线程之间访问资源的同步性。</li>
+</ol>
+<h2 id="volatile非原子的特性">volatile非原子的特性</h2>
+<p>从上面知道volatile关键字保证了操作的可见性，但是volatile能保证对变量的操作是原子性吗？<br>
+下面看一个例子：</p>
+<pre><code class="language-Java">public class Test {
+    public volatile int inc = 0;
+     
+    public void increase() {
+        inc++;
+    }
+     
+    public static void main(String[] args) {
+        final Test test = new Test();
+        for(int i=0;i&lt;10;i++){
+            new Thread(){
+                public void run() {
+                    for(int j=0;j&lt;1000;j++)
+                        test.increase();
+                };
+            }.start();
+        }
+         
+         //保证前面的线程都执行完
+        while(Thread.activeCount()&gt;1)
+   			Thread.yield();
+        System.out.println(test.inc);
+    }
+}
+</code></pre>
+<p>也许有些朋友认为输出结果是10000。但是事实上运行它会发现每次运行结果都不一致，都是一个小于10000的数字。可能有人会有疑问，不对啊，上面是对变量inc进行自增操作，由于volatile保证了可见性，那么在每个线程中对inc自增完之后，在其他线程中都能看到修改后的值啊，所以有10个线程分别进行了1000次操作，那么最终inc的值应该是1000*10=10000。</p>
+<p>这里面就有一个误区了，volatile关键字能保证可见性没有错，但是上面的程序错在没能保证原子性。可见性只能保证每次读取的是最新的值，但是volatile没办法保证对变量的操作的原子性。</p>
+<p>在前面已经提到过，自增操作是不具备原子性的，它包括读取变量的原始值、进行加1操作、写入工作内存。那么就是说自增操作的三个子操作可能会分割开执行，就有可能导致下面这种情况出现：</p>
+<p>假如某个时刻变量inc的值为10，线程1对变量进行自增操作，线程1先读取了变量inc的原始值，然后线程1被阻塞了；</p>
+<p>然后线程2对变量进行自增操作，线程2也去读取变量inc的原始值，由于线程1只是对变量inc进行读取操作，而没有对变量进行修改操作，所以不会导致线程2的工作内存中缓存变量inc的缓存行无效，所以线程2会直接去主存读取inc的值，发现inc的值是10，然后进行加1操作，并把11写入工作内存，最后写入主存。</p>
+<p>然后线程1接着进行加1操作，由于已经读取了inc的值，注意此时在线程1的工作内存中inc的值仍然为10，所以线程1对inc进行加1操作后inc的值为11，然后将11写入工作内存，最后写入主存。</p>
+<p>那么两个线程分别进行了一次自增操作后，inc只增加了1。</p>
+<p>虽然happens-before规则中的volatile变量规则是保证一个变量在修改volatile变量时，会让缓存行无效吗，但是要注意，线程1对变量进行读取操作之后，被阻塞了的话，并没有对inc值进行修改。然后虽然volatile能保证线程2对变量inc的值读取是从内存中读取的，但是线程1没有进行修改，所以线程2根本就不会看到修改的值。</p>
+<p><strong>根源就在这里，自增操作不是原子性操作，而且volatile也无法保证对变量的任何操作都是原子性的。</strong></p>
+<p>把上面的代码改成以下任何一种都可以达到效果：<br>
+采用synchronized：</p>
+<pre><code class="language-java">public class Test {
+    public  int inc = 0;
+    
+    public synchronized void increase() {
+        inc++;
+    }
+    
+    public static void main(String[] args) {
+        final Test test = new Test();
+        for(int i=0;i&lt;10;i++){
+            new Thread(){
+                public void run() {
+                    for(int j=0;j&lt;1000;j++)
+                        test.increase();
+                };
+            }.start();
+        }
+        
+        while(Thread.activeCount()&gt;1)  //保证前面的线程都执行完
+            Thread.yield();
+        System.out.println(test.inc);
+    }
+}
+</code></pre>
+<p>采用Lock：</p>
+<pre><code class="language-java">public class Test {
+    public  int inc = 0;
+    Lock lock = new ReentrantLock();
+    
+    public  void increase() {
+        lock.lock();
+        try {
+            inc++;
+        } finally{
+            lock.unlock();
+        }
+    }
+    
+    public static void main(String[] args) {
+        final Test test = new Test();
+        for(int i=0;i&lt;10;i++){
+            new Thread(){
+                public void run() {
+                    for(int j=0;j&lt;1000;j++)
+                        test.increase();
+                };
+            }.start();
+        }
+        
+        while(Thread.activeCount()&gt;1)  //保证前面的线程都执行完
+            Thread.yield();
+        System.out.println(test.inc);
+    }
+}
+</code></pre>
+<p>采用AtomicInteger：</p>
+<pre><code class="language-Java">public class Test {
+    public  AtomicInteger inc = new AtomicInteger();
+     
+    public  void increase() {
+        inc.getAndIncrement();
+    }
+    
+    public static void main(String[] args) {
+        final Test test = new Test();
+        for(int i=0;i&lt;10;i++){
+            new Thread(){
+                public void run() {
+                    for(int j=0;j&lt;1000;j++)
+                        test.increase();
+                };
+            }.start();
+        }
+        
+        while(Thread.activeCount()&gt;1)  //保证前面的线程都执行完
+            Thread.yield();
+        System.out.println(test.inc);
+    }
+}
+</code></pre>
+<p>在java 1.5的java.util.concurrent.atomic包下提供了一些原子操作类，即对基本数据类型的 自增（加1操作），自减（减1操作）、以及加法操作（加一个数），减法操作（减一个数）进行了封装，保证这些操作是原子性操作。atomic是利用CAS来实现原子性操作的（Compare And Swap），CAS实际上是利用处理器提供的CMPXCHG指令实现的，而处理器执行CMPXCHG指令是一个原子性操作。</p>
+<h2 id="volatile能保证有序性">volatile能保证有序性</h2>
+<p>在前面提到volatile关键字能禁止指令重排序，所以volatile能在一定程度上保证有序性。</p>
+<p>volatile关键字禁止指令重排序有两层意思：<br>
+1）当程序执行到volatile变量的读操作或者写操作时，在其前面的操作的更改肯定全部已经进行，且结果已经对后面的操作可见；在其后面的操作肯定还没有进行；</p>
+<p>2）在进行指令优化时，不能将在对volatile变量访问的语句放在其后面执行，也不能把volatile变量后面的语句放到其前面执行。<br>
+可能上面说的比较绕，举个简单的例子：</p>
+<pre><code class="language-Java">//x、y为非volatile变量
+//flag为volatile变量
+ 
+x = 2;        //语句1
+y = 0;        //语句2
+flag = true;  //语句3
+x = 4;         //语句4
+y = -1;       //语句5
+</code></pre>
+<p>由于flag变量为volatile变量，那么在进行指令重排序的过程的时候，不会将语句3放到语句1、语句2前面，也不会讲语句3放到语句4、语句5后面。但是要注意语句1和语句2的顺序、语句4和语句5的顺序是不作任何保证的。并且volatile关键字能保证，执行到语句3时，语句1和语句2必定是执行完毕了的，且语句1和语句2的执行结果对语句3、语句4、语句5是可见的。</p>
+<h2 id="volatile的原理和实现机制">volatile的原理和实现机制</h2>
+<p>前面讲述了源于volatile关键字的一些使用，下面我们来探讨一下volatile到底如何保证可见性和禁止指令重排序的。</p>
+<p>下面这段话摘自《深入理解Java虚拟机》：</p>
+<blockquote>
+<p>观察加入volatile关键字和没有加入volatile关键字时所生成的汇编代码发现，加入volatile关键字时，会多出一个lock前缀指令。<br>
+lock前缀指令实际上相当于一个内存屏障（也成内存栅栏），内存屏障会提供3个功能：</p>
+<ul>
+<li>它确保指令重排序时不会把其后面的指令排到内存屏障之前的位置，也不会把前面的指令排到内存屏障的后面；即在执行到内存屏障这句指令时，在它前面的操作已经全部完成；</li>
+<li>它会强制将对缓存的修改操作立即写入主存；</li>
+<li>如果是写操作，它会导致其他CPU中对应的缓存行无效。</li>
+</ul>
+</blockquote>
+<h2 id="总结">总结</h2>
+<p>synchronized关键字是防止多个线程同时执行一段代码，那么就会很影响程序执行效率，而volatile关键字在某些情况下性能要优于synchronized，但是要注意volatile关键字是无法替代synchronized关键字的，因为volatile关键字无法保证操作的原子性。通常来说，使用volatile必须具备以下2个条件：</p>
+<ul>
+<li>对变量的写操作不依赖于当前值</li>
+<li>该变量没有包含在具有其他变量的不变式中</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[线程中的3个特性]]></title>
+        <id>http://goroyal.github.io/post/xian-cheng-zhong-de-3-ge-te-xing/</id>
+        <link href="http://goroyal.github.io/post/xian-cheng-zhong-de-3-ge-te-xing/">
+        </link>
+        <updated>2020-08-02T11:22:08.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="原子性">原子性</h2>
+<p>在Java中，对基本数据类型的变量的读取和赋值操作是原子性操作，即这些操作是不可被中断的，要么执行，要么不执行。<br>
+上面一句话虽然看起来简单，但是理解起来并不是那么容易。看下面一个例子i：<br>
+请分析以下哪些操作是原子性操作：</p>
+<pre><code class="language-java">x = 10;         //语句1
+y = x;         //语句2
+x++;           //语句3
+x = x + 1;     //语句4
+</code></pre>
+<p>咋一看，有些朋友可能会说上面的4个语句中的操作都是原子性操作。其实只有语句1是原子性操作，其他三个语句都不是原子性操作。</p>
+<p>语句1是直接将数值10赋值给x，也就是说线程执行这个语句的会直接将数值10写入到工作内存中。语句2实际上包含2个操作，它先要去读取x的值，再将x的值写入工作内存，虽然读取x的值以及 将x的值写入工作内存 这2个操作都是原子性操作，但是合起来就不是原子性操作了。同样的，x++和 x = x+1包括3个操作：读取x的值，进行加1操作，写入新的值。所以上面4个语句只有语句1的操作具备原子性。</p>
+<p>也就是说，只有简单的读取、赋值（而且必须是将数字赋值给某个变量，变量之间的相互赋值不是原子操作）才是原子操作。</p>
+<p>不过这里有一点需要注意：在32位平台下，对64位数据的读取和赋值是需要通过两个操作来完成的，不能保证其原子性。但是好像在最新的JDK中，JVM已经保证对64位数据的读取和赋值也是原子性操作了。</p>
+<p>从上面可以看出，Java内存模型只保证了基本读取和赋值是原子性操作，如果要实现更大范围操作的原子性，可以通过synchronized和Lock来实现。由于synchronized和Lock能够保证任一时刻只有一个线程执行该代码块，那么自然就不存在原子性问题了，从而保证了原子性。</p>
+<h2 id="可见性">可见性</h2>
+<p>对于可见性，Java提供了<code>volatile</code>关键字来保证可见性。</p>
+<p>当一个共享变量被<code>volatile</code>修饰时，它会保证修改的值会立即被更新到主存，当有其他线程需要读取时，它会去内存中读取新值。</p>
+<p>而普通的共享变量不能保证可见性，因为普通共享变量被修改之后，什么时候被写入主存是不确定的，当其他线程去读取时，此时内存中可能还是原来的旧值，因此无法保证可见性。</p>
+<p>另外，通过<code>synchronized</code>和<code>Lock</code>也能够保证可见性，<code>synchronized</code>和<code>Lock</code>能保证同一时刻只有一个线程获取锁然后执行同步代码，并且在释放锁之前会将对变量的修改刷新到主存当中。因此可以保证可见性。</p>
+<h2 id="有序性">有序性</h2>
+<p>在Java内存模型中，允许编译器和处理器对指令进行重排序，但是重排序过程不会影响到单线程程序的执行，却会影响到多线程并发执行的正确性。<br>
+在Java里面，可以通过<code>volatile</code>关键字来保证一定的“有序性”（具体原理在下一节讲述）。另外可以通过<code>synchronized</code>和<code>Lock</code>来保证有序性，很显然，<code>synchronized</code>和<code>Lock</code>保证每个时刻是有一个线程执行同步代码，相当于是让线程顺序执行同步代码，自然就保证了有序性。</p>
+<p>另外，Java内存模型具备一些先天的“有序性”，即不需要通过任何手段就能够得到保证的有序性，这个通常也称为 happens-before 原则。如果两个操作的执行次序无法从happens-before原则推导出来，那么它们就不能保证它们的有序性，虚拟机可以随意地对它们进行重排序。</p>
+<h3 id="happens-before原则先行发生原则">happens-before原则（先行发生原则）</h3>
+<ul>
+<li>程序次序规则：一个线程内，按照代码顺序，书写在前面的操作先行发生于书写在后面的操作</li>
+<li>锁定规则：一个unLock操作先行发生于后面对同一个锁的lock操作</li>
+<li>volatile变量规则：对一个变量的写操作先行发生于后面对这个变量的读操作</li>
+<li>传递规则：如果操作A先行发生于操作B，而操作B又先行发生于操作C，则可以得出操作A先行发生于操作C</li>
+<li>线程启动规则：Thread对象的start()方法先行发生于此线程的每个一个动作</li>
+<li>线程中断规则：对线程interrupt()方法的调用先行发生于被中断线程的代码检测到中断事件的发生</li>
+<li>线程终结规则：线程中所有的操作都先行发生于线程的终止检测，我们可以通过Thread.join()方法结束、Thread.isAlive()的返回值手段检测到线程已经终止执行</li>
+<li>对象终结规则：一个对象的初始化完成先行发生于它的<code>finalize()</code>方法的开始</li>
+</ul>
+<p>这8条原则摘自《深入理解Java虚拟机》。<br>
+这8条规则中，前4条规则是比较重要的，后4条规则都是显而易见的。</p>
+<p>下面我们来解释一下前4条规则：<br>
+对于程序次序规则来说，我的理解就是一段程序代码的执行在单个线程中看起来是有序的。注意，虽然这条规则中提到“书写在前面的操作先行发生于书写在后面的操作”，这个应该是程序看起来执行的顺序是按照代码顺序执行的，因为虚拟机可能会对程序代码进行指令重排序。虽然进行重排序，但是最终执行的结果是与程序顺序执行的结果一致的，它只会对不存在数据依赖性的指令进行重排序。因此，在单个线程中，程序执行看起来是有序执行的，这一点要注意理解。事实上，这个规则是用来保证程序在单线程中执行结果的正确性，但无法保证程序在多线程中执行的正确性。</p>
+<p>第二条规则也比较容易理解，也就是说无论在单线程中还是多线程中，同一个锁如果出于被锁定的状态，那么必须先对锁进行了释放操作，后面才能继续进行lock操作。</p>
+<p>第三条规则是一条比较重要的规则，如果一个线程先去写一个变量，然后一个线程去进行读取，那么写入操作肯定会先行发生于读操作。</p>
+<p>第四条规则实际上就是体现happens-before原则具备传递性。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Java锁]]></title>
         <id>http://goroyal.github.io/post/java-lock/</id>
@@ -367,172 +622,6 @@ TreeSet集合排序有两种方式，Comparable和Comparator区别：</p>
 Map的key和Set都有一个共同的特性：集合的唯一性。</p>
 <h2 id="参考资料">参考资料</h2>
 <p><a href="http://blog.csdn.net/fg2006/article/details/6411200">HashMap,LinkedHashMap,TreeMap的区别</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[JavaScript里的对象]]></title>
-        <id>http://goroyal.github.io/post/js-object/</id>
-        <link href="http://goroyal.github.io/post/js-object/">
-        </link>
-        <updated>2020-07-10T08:28:54.000Z</updated>
-        <summary type="html"><![CDATA[<p>JavaScript简单数据结构包括数字、字符串、布尔值、null值、undefined值，其他都是对象。<br>
-对象时属性的容器，其中每个属性都是名字和值。<br>
-JavaScript里面的对象时无类型的，对新属性的名字和值没有限制，适合用于聚集和管理数据，对象里也可以包含其他对象。</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>JavaScript简单数据结构包括数字、字符串、布尔值、null值、undefined值，其他都是对象。<br>
-对象时属性的容器，其中每个属性都是名字和值。<br>
-JavaScript里面的对象时无类型的，对新属性的名字和值没有限制，适合用于聚集和管理数据，对象里也可以包含其他对象。</p>
-<!-- more -->
-<p><strong>对象字面量</strong></p>
-<pre><code class="language-javascript">var empty_object={};
-
-var stoge={
-  &quot;firstName&quot;:&quot;Joerome&quot;,
-  &quot;lastName&quot;:&quot;Howare&quot;
-};
-</code></pre>
-<p>上面的对象stoge中两个属性，如果他们不是JavaScript的保留字，可以去掉引号。<br>
-检索对象里面属性的值可以用中括号去获取，如<code>stoge[&quot;firstName&quot;]</code>，如果该字符串表达式是一个字符串字面量，且是合法的JavaScript标识符不是保留字，那么也可以用点号“.”获取。如果试图获取一个不存在的属性，将得到undefined。</p>
-<p>使用typeof操作符对确定属性的类型很有帮助：</p>
-<pre><code class="language-javascript">typeof flight.number  // 'number'
-</code></pre>
-<p>注意，原型链中的任何属性都会产生值：</p>
-<pre><code class="language-javascript">typeof flight.toString  // 'function'
-typeof flight.constructor // 'function'
-</code></pre>
-<p>有两种方法处理这些不需要的属性：<br>
-第一个是让程序做检查并丢弃值为函数的属性，一般来说，想让对象在运行时动态获取自身信息时，关注更多的是数据。<br>
-另一个方法是使用hasOwnProperty方法，如果对象拥有独有的属性，将返回true，该方法不会检查原型链。</p>
-<pre><code class="language-javascript">flight.hasOwnProperty('number') // true
-</code></pre>
-<p>for in 循环中遍历属性的顺序是不确定的，如果想要确保属性以特定的顺序出现，最好的办法是完全避免使用for in语句，而是创建一个数组，在其中以正确的顺序包含属性名，然后使用普通的for循环遍历。</p>
-<p>delete可以删除对象中的属性，不会触及原型链中的任何对象，删除对象的属性可能会让原型链中的属性透现出来：</p>
-<pre><code class="language-javascript">another.nickname  // 'Moe'
-
-// 删除another的nickname属性，暴露出原型的nickname属性
-delete another.nickname;
-
-another.nickname  // 'Curly'
-</code></pre>
-<p>用Java里面的话理解，就是删除子类中的覆盖父类的属性以及get方法，那么下次再想获取该属性，将是从父类得到的。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[MySQL不同的存储引擎]]></title>
-        <id>http://goroyal.github.io/post/mysql-storage-engine/</id>
-        <link href="http://goroyal.github.io/post/mysql-storage-engine/">
-        </link>
-        <updated>2020-07-10T08:25:32.000Z</updated>
-        <summary type="html"><![CDATA[<p>MySQL由以下几部分组成：</p>
-<ul>
-<li>连接池组件</li>
-<li>管理服务和工具组件</li>
-<li>SQL接口组件</li>
-<li>查询分析器组件</li>
-<li>优化器组件</li>
-<li>缓冲（Cache）组件</li>
-<li>插件式存储引擎</li>
-<li>物理文件</li>
-</ul>
-<p>MySQL区别于其他数据库的最重要的特点就是其插件式的表存储引擎。MySQL插件式的存储引擎架构提供了一系列标准的管理和服务支持，这些标准与存储引擎本身无关，可能是每个数据库系统本身都必需的，如SQL分析器和优化器等，而存储引擎是底层物理结构的实现，每个存储引擎开发者都可以按照自己的意愿来进行开发。</p>
-<p><strong>注意：存储引擎是基于表的，而不是数据库。</strong></p>
-]]></summary>
-        <content type="html"><![CDATA[<p>MySQL由以下几部分组成：</p>
-<ul>
-<li>连接池组件</li>
-<li>管理服务和工具组件</li>
-<li>SQL接口组件</li>
-<li>查询分析器组件</li>
-<li>优化器组件</li>
-<li>缓冲（Cache）组件</li>
-<li>插件式存储引擎</li>
-<li>物理文件</li>
-</ul>
-<p>MySQL区别于其他数据库的最重要的特点就是其插件式的表存储引擎。MySQL插件式的存储引擎架构提供了一系列标准的管理和服务支持，这些标准与存储引擎本身无关，可能是每个数据库系统本身都必需的，如SQL分析器和优化器等，而存储引擎是底层物理结构的实现，每个存储引擎开发者都可以按照自己的意愿来进行开发。</p>
-<p><strong>注意：存储引擎是基于表的，而不是数据库。</strong></p>
-<!-- more -->
-<p>MySQL常用的插件式存储引擎主要包括MyISAM，InnoDB，NDB Cluster，Maria，Falcon，Memory，Archive，Merge，Federated等，其中最著名且使用最广泛的是MyISAM和InnoDB。MyISAM是MySQL的默认存储引擎，是MySQL最早的ISAM存储引擎的升级版本。</p>
-<h2 id="myisam存储引擎">MyISAM存储引擎</h2>
-<p>MyISAM是MySQL的默认存储引擎，它支持B-tree/FullText/R-tree索引类型。<br>
-MyISAM的锁级别是表锁，表锁的开销小，加锁快；锁粒度大，发生锁冲突的概率较高，并发度低；表锁适合查询。MyISAM引擎不支持事务性，也不支持外键。</p>
-<p>MyISAM对于一些OLAP（Online Analytical Processing，在线分析处理）操作速度快。除Windows版本外，是所有MySQL版本默认的存储引擎。</p>
-<p>MyISAM存储引擎表由MYD和MYI组成，MYD用来存放数据文件，MYI用来存放索引文件。可以通过使用myisampack工具来进一步压缩数据文件，因为myisampack工具使用赫夫曼（Huffman）编码静态算法来压缩数据，因此使用myisampack工具压缩后的表是只读的，当然你也可以通过myisampack来解压数据文件<br>
-。<br>
-在MySQL 5.0版本之前，MyISAM默认支持的表大小为4G，如果需要支持大于4G的MyISAM表时，则需要制定MAXROWS和 AVGROW_LENGTH属性。从MySQL 5.0版本开始，MyISAM默认支持256T的单表数据，这足够满足一般应用的需求。</p>
-<p><strong>注意</strong>：对于MyISAM存储引擎表，MySQL数据库只缓存其索引文件，数据文件的缓存交由操作系统本身来完成，这与其他使用LRU算法缓存数据 的大部分数据库大不相同。此外，在MySQL 5.1.23版本之前，无论是在32位还是64位操作系统环境下，缓存索引的缓冲区最大只能设置为4G。在之后的版本中，64位系统可以支持大于4G的索引缓冲区。</p>
-<h2 id="innodb存储引擎">InnoDB存储引擎</h2>
-<p>InnoDB存储引擎最大的亮点就是支持事务性，支持回滚。它支持Hash/B-tree索引类型。<br>
-InnoDB的锁级别是行锁，行锁在锁定上带来的消耗大于表锁，但是在系统并发访问量较高时，InnoDB整体性能远高于MyISAM。InnoDB的索引不仅缓存索引本身，也缓存数据，所以InnoDB需要更大的内存。</p>
-<p>InnoDB存储引擎支持事务，主要面向在线事务处理（OLTP）方面的应用。其特点是行锁设计、支持外键，并支持类似于Oracle的非锁定读，即默认情况下读取操作不会产生锁。MySQL在Windows版本下的InnoDB是默认的存储引擎，同时InnoDB默认地被包含在所有的MySQL二进制发布版本中。</p>
-<p>InnoDB存储引擎将数据放在一个逻辑的表空间中，这个表空间就像黑盒一样由InnoDB自身进行管理。从MySQL 4.1（包括4.1）版本开始，它可以将每个InnoDB存储引擎的表单独存放到一个独立的ibd文件中。与Oracle类似，InnoDB存储引擎同样可以使用裸设备（row disk）来建立其表空间。</p>
-<p>InnoDB通过使用多版本并发控制（MVCC）来获得高并发性，并且实现了SQL标准的4种隔离级别，默认为REPEATABLE级别。同时使用一种被称为next-key locking 的策略来避免幻读（phantom）现象的产生。除此之外，InnoDB储存引擎还提供了插入缓冲（insert buffer）、二次写（double write）、自适应哈希索引（adaptive hash index）、预读（read ahead）等高性能和高可用的功能。</p>
-<p>对于表中数据的存储，InnoDB存储引擎采用了聚簇（clustered）的方式，这种方式类似于Oracle的索引聚集表（index organized table，IOT）。</p>
-<p>每张表的存储都按主键的顺序存放，如果没有显式地在表定义时指定主键，InnoDB存储引擎会为每一行生成一个6字节的 ROWID，并以此作为主键。</p>
-<h2 id="memory存储引擎">Memory存储引擎</h2>
-<p>Memory存储引擎是一个内存级的存储引擎，它将所有数据都存储在内存中，所以它能够存储的数据量是比较小的。而因为内存的特性，Memory存储引擎对于数据的一致性支持教差。Memory的锁级别和MyISAM一样，是表锁；并且不支持事务性。</p>
-<p>Memory存储引擎（之前称为HEAP存储引擎）将表中的数据存放在内存中，如果数据库重启或发生崩溃，表中的数据都将消失。它非常适合用于存储临时数据的临时表，以及数据仓库中的纬度表。它默认使用哈希索引，而不是我们熟悉的B+树索引。</p>
-<p>虽然Memory存储引擎速度非常快，但在使用上还是有一定的限制。比如，其只支持表锁，并发性能较差，并且不支持TEXT和BLOB列类型。最重要的是，存储变长字段（varchar）时是按照定常字段（char）的方式进行的，因此会浪费内存（这个问题之前已经提到，eBay的Igor Chernyshev工程师已经给出了Patch方案）。<br>
-此外有一点常被忽视的是，MySQL数据库使用Memory存储引擎作为临时表来存放查询的中间结果集（intermediate result）。如果中间结果集大于Memory存储引擎表的容量设置，又或者中间结果含有TEXT或BLOB列类型字段，则MySQL数据库会把其转换到MyISAM存储引擎表而存放到磁盘。之前提到MyISAM不缓存数据文件，因此这时产生的临时表的性能对于查询会有损失。</p>
-<h2 id="ndb存储引擎">NDB存储引擎</h2>
-<p>2003年，MySQL AB公司从Sony Ericsson公司收购了NDB 集群引擎。NDB存储引擎是一个集群存储引擎，类似于Oracle的RAC集群；不过，与Oracle RAC share everything结构不同的是，其结构是share nothing的集群架构，因此能提供更高级别的高可用性。NDB的特点是数据全部放在内存中（从5.1版本开始，可以将非索引数据放在磁盘上），因此主键查找（primary key lookup）的速度极快，并且通过添加NDB数据存储节点（Data Node）可以线性地提高数据库性能，是高可用、高性能的集群系统。</p>
-<p>关于NDB存储引擎，有一个问题值得注意，那就是NDB存储引擎的连接操作（JOIN）是在MySQL数据库层完成的，而不是在存储引擎层完成的。这意味着，复杂的连接操作需要巨大的网络开销，因此查询速度很慢。如果解决了这个问题，NDB存储引擎的市场应该是非常巨大的。</p>
-<p><strong>注意</strong>：MySQL NDB Cluster存储引擎有社区版本和企业版本，并且NDB Cluster已作为Carrier Grade Edition单独下载版本而存在，可以通过[http://dev.mysql.com/ downloads/cluster/index.html](http://dev.mysql.com/ downloads/cluster/index.html)获得最新版本的NDB Cluster存储引擎。</p>
-<h2 id="archive存储引擎">Archive存储引擎</h2>
-<p>Archive存储引擎只支持INSERT和SELECT操作，MySQL 5.1开始支持索引。其使用zlib算法将数据行（row）进行压缩后存储，压缩比率一般可达1∶10。正如其名称所示，Archive存储引擎非常适合存储归档数据，如日志信息。Archive存储引擎使用行锁来实现高并发的插入操作，但是本身并不是事物安全的存储引擎，其设计目标主要是提供高速的插入 和压缩功能。</p>
-<h2 id="federated存储引擎">Federated存储引擎</h2>
-<p>Federated存储引擎表并不存放数据，它只是指向一台远程MySQL数据库服务器上的表。这非常类似于SQL Server的链接服务器和Oracle的透明网关，不同的是，当前Federated存储引擎只支持MySQL数据库表，不支持异构数据库表。</p>
-<h2 id="maria存储引擎">Maria存储引擎</h2>
-<p>Maria存储引擎是新开发的引擎，设计目标主要是用来取代原有的MyISAM存储引擎，从而成为MySQL的默认存储引擎，开发者是MySQL 的创始人之一的Michael Widenius。因此，它可以看作是MyISAM的后续版本。其特点是：缓存数据和索引文件，行锁设计，提供MVCC功能，支持事务和非事务安全的选项 支持，以及更好的BLOB字符类型的处理性能。</p>
-<h2 id="其他存储引擎">其他存储引擎</h2>
-<p>除了上面提到的7种存储引擎外，还有很多其他的存储引擎，包括Merge、CSV、Sphinx和Infobright，它们都有各自适用的场合，这里不再一一做介绍了。了解了MySQL拥有这么多存储引擎后，现在我可以回答1.2节中提到的问题了。</p>
-<p>为什么MySQL不支持全文索引？不！MySQL支持，MyISAM、Sphinx存储引擎支持全文索引。<br>
-MySQL快是因为不支持事务吗？错！MySQL MyISAM存储引擎不支持事务，但是InnoDB支持。快是相对于不同应用来说的，对于ETL这种操作，MyISAM当然有其优势。<br>
-当表的数据量大于1000W时，MySQL的性能会急剧下降吗？不！MySQL是数据库，不是文件，随着数据行数的增加，性能当然会有所下降，但是这些下降不是线性的，如果 你选择了正确的存储引擎以及正确的配置，再大的数据量MySQL也是能承受的。如官方手册上提及的，Mytrix和Inc.在InnoDB上存储了超过 1TB的数据，还有一些其他网站使用InnoDB存储引擎处理平均每秒800次插入/更新的操作。</p>
-<h2 id="myisam和innodb差别">MyISAM和InnoDB差别</h2>
-<h3 id="构成差别">构成差别</h3>
-<p>每个MyISAM在磁盘上存储成三个文件，文件的名字以表的名字开始，.frm文件存储表定义，.MYI(MYIndex)为索引文件，.MYD(MYData)为数据文件。</p>
-<p>基于磁盘的资源是InnoDB表空间数据文件和它的日志文件，InnoDB表的大小只受限于操作系统文件的大小，一般为2GB。</p>
-<h3 id="事务处理差别">事务处理差别</h3>
-<p>MyISAM类型的表强调性能，执行速度比InnoDB快，但是不支持事务处理等高级功能。</p>
-<p>InnoDB提供事务支持、外部键等高级数据库功能。</p>
-<h3 id="crud操作">CRUD操作</h3>
-<p>如果执行大量SELECT查询操作，MyISAM是最好的选择。</p>
-<p>如果执行大量的UPDATE或者INSERT操作，出于性能方面考虑，应该使用InnoDB。<code>DELETE from table</code>时，InnoDB不会重新建立表，而是一行一行的删除。<br>
-<code>LOAD TABLE FROM MASTER</code>操作对InnoDB不起作用，解决方法是首先把InnoDB表改成MyISAM表，导入数据后再改成InnoDB表，但是对于使用的额外的InnoDB特性（例如外键）的表不适用。</p>
-<h3 id="auto_increment操作">AUTO_INCREMENT操作</h3>
-<p>MyISAM为INSERT和UPDATE操作自动更新这一列，这使得AUTO_INCREMENT列更快（10%+），在序列项的值删除后就不能再利用。(当AUTO_INCREMENT列被定义为多列索引的最后一列，可以出现重使用从序列顶部删除的值的情况）。<br>
-AUTO_INCREMENT值可用ALTER TABLE或myisamch来重置。</p>
-<p>对于AUTO_INCREMENT类型的字段，InnoDB中必须包含只有该字段的索引，但 是在MyISAM表中，可以和其他字段一起建立联合索引。<br>
-如果你为一个表指定AUTO_INCREMENT列，在数据词典里的InnoDB表句柄包含一个名为自动增长计数器的计数器，它被用在为该列赋新值。InnoDB自动增长计数器仅被存储在主内存中，而不是存在磁盘上。</p>
-<h3 id="表的具体行数">表的具体行数</h3>
-<p><code>select count(*) from table</code>，MyISAM只要简单的读出保存好的行数。注意的是，当count(*)语句包含 where 条件时，两种类型表的操作是一样的。</p>
-<p>InnoDB 中不保存表的具体行数。也就是说，执行<code>select count(*) from table</code>时，InnoDB要扫描一遍整个表来计算有多少行。</p>
-<h3 id="锁">锁</h3>
-<p>MyISAM的锁是在表级别。其并发写的性能一直是一个让人比较头疼的问题。</p>
-<p>InnoDB提供了行级别的锁(locking on row level)，提供与 Oracle类型一致的不加锁读取(non-locking read in SELECTs)。另外，InnoDB表的行锁也不是绝对的，如果在执行一个SQL语句时MySQL不能确定要扫描的范围，InnoDB表同样会锁全表，例如<code>update table set num=1 where name like '%aaa%'</code>。</p>
-<h3 id="索引">索引</h3>
-<p>MyISAM的索引和数据是分开的，并且索引是有压缩的，内存使用率就对应提高了不少。能加载更多索引。</p>
-<p>Innodb是索引和数据是存放在相同的文件，没有使用压缩从而会造成Innodb比MyISAM体积庞大不小。Innodb 的数据存放格式也比较独特,每个Innodb表 都会将主键以聚簇索引的形式创建。所有的数据都是以主键来作为升序排列在物理磁盘上面,所以主键 查询并且以主键排序的查询效率也会非常高。</p>
-<h2 id="如何选择合适的引擎">如何选择合适的引擎</h2>
-<h3 id="采用myisam引擎">采用MyISAM引擎</h3>
-<p>R/W &gt; 100 ，并且Update较少 (R/W:读写比)<br>
-并发不高，不需要支持事务<br>
-表数据量小<br>
-需要进行全文搜索</p>
-<h3 id="采用innodb引擎">采用InnoDB引擎</h3>
-<p>R/W比较小，频繁更新大字段<br>
-表数据量超过千万，高并发<br>
-安全性和可用性要求高</p>
-<h3 id="采用memory引擎">采用Memory引擎</h3>
-<p>有足够的内存<br>
-对数据一致性要求不高，如session/在线人数等<br>
-需要定期归档的数据</p>
-<h2 id="参考资料">参考资料</h2>
-<ul>
-<li><a href="http://www.ha97.com/4197.html">MySQL存储引擎MyISAM与InnoDB的主要区别对比</a></li>
-<li><a href="http://imysql.com/2015/07/23/something-important-about-mysql-design-reference.shtml">老叶观点：MySQL开发规范之我见</a></li>
-<li><a href="http://simpleframework.net/news/view?newsId=63cd772590e8495bbff4d713e092f772">《MySQL技术内幕:InnoDB存储引擎》-- 第1章 MySQL体系结构和存储引擎</a></li>
-</ul>
 ]]></content>
     </entry>
 </feed>
