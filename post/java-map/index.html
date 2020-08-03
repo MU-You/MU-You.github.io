@@ -9,7 +9,7 @@
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
 <title>【数据结构】Java里的各种Map | Goroyal&#39;s blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1596380716844">
+<link rel="shortcut icon" href="/favicon.ico?v=1596440138361">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -213,7 +213,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">34</span>
+        <span class="site-item-stat-count">35</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -892,6 +892,150 @@ Map的key和Set都有一个共同的特性：集合的唯一性。</p>
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/inverted-index/"" data-c="
+          &lt;p&gt;Inverted Index, 也就是反向索引（倒排索引）。反向索引结构是典型的搜索引擎算法重要的部分。&lt;/p&gt;
+&lt;p&gt;常规的索引是文档到关键词的映射，但是这样的话检索关键词会比较慢，需要遍历一个又一个的文档。反向索引是从关键词到文档，这样可以根据关键词找到它在哪个文档里出现。&lt;/p&gt;
+&lt;p&gt;一个未经处理的数据库中，一般是以文档ID作为索引，以文档内容作为记录。而Inverted index 指的是将单词或记录作为索引，将文档ID作为记录，这样便可以方便地通过单词或记录查找到其所在的文档吗。&lt;/p&gt;
+&lt;p&gt;以英文为例，下面是要被索引的文本：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;T0 = &amp;quot;it is what it is&amp;quot;
+T1 = &amp;quot;what is it&amp;quot;
+T2 = &amp;quot;it is a banana&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;可以得到下列的反向文件索引：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;quot;a&amp;quot;: {2}
+&amp;quot;banana&amp;quot;: {2}
+&amp;quot;it&amp;quot;: {0, 1, 2}
+&amp;quot;is&amp;quot;: {0, 1, 2}
+&amp;quot;what&amp;quot;: {0, 1}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;还可以在反向索引里面加上单词出现的位置，比如&lt;code&gt;&amp;quot;banana&amp;quot;: {(2, 3)}&lt;/code&gt;表示banana出现在第三个文本的第四个位置。&lt;/p&gt;
+&lt;p&gt;反向索引在ElasticSearch里面也被使用到（Lucene)。假设有2个文档，文档的&lt;code&gt;content&lt;/code&gt;域包含下列内容：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;The quick brown fox jumped over the lazy dog&lt;/li&gt;
+&lt;li&gt;Quick brown foxes leap over lazy dogs in summer&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;为了创建反向索引，首先将每个文档的&lt;code&gt;content&lt;/code&gt;拆分成词（称为&lt;code&gt;词条&lt;/code&gt;或&lt;code&gt;token&lt;/code&gt;），创建一个包含所有不重复词条的排序列表，然后列出每个词条出现在哪个文档。如下所示：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Term&lt;/th&gt;
+&lt;th&gt;Doc_1&lt;/th&gt;
+&lt;th&gt;Doc_2&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Quick&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;The&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;brown&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;dog&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;dogs&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;fox&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;foxes&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;in&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;jumped&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;lazy&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;leap&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;over&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;quick&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;summer&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;the&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;如果我们想搜索&lt;code&gt;quick brown&lt;/code&gt;，我们只需要查找包含每个词条的文档：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Term&lt;/th&gt;
+&lt;th&gt;Doc_1&lt;/th&gt;
+&lt;th&gt;Doc_2&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;brown&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;quick&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Total&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;2&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;1&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;两个文档都匹配，但是第一个文档比第二个匹配度更高。当然了，上面的反向索引存在点问题，比如&lt;code&gt;Quick&lt;/code&gt;和&lt;code&gt;quick&lt;/code&gt;，&lt;code&gt;dogs&lt;/code&gt;和&lt;code&gt;dog&lt;/code&gt;，可以作为相同词根进行索引，但还是不够的，需要进一步&lt;a href=&#34;https://www.elastic.co/guide/cn/elasticsearch/guide/current/analysis-intro.html&#34;&gt;分析&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;参考&#34;&gt;参考&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://zh.wikipedia.org/zh-hans/%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95&#34;&gt;维基百科&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://www.elastic.co/guide/cn/elasticsearch/guide/current/inverted-index.html&#34;&gt;ElasticSearch文档&lt;/a&gt;&lt;/p&gt;
+">Inverted Index</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/jvm-lei-jia-zai-ji-zhi/"" data-c="

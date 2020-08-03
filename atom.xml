@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>http://goroyal.github.io</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2020-08-02T15:08:59.642Z</updated>
+    <updated>2020-08-03T07:35:41.704Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="http://goroyal.github.io"/>
     <link rel="self" href="http://goroyal.github.io/atom.xml"/>
@@ -10,6 +10,153 @@
     <logo>http://goroyal.github.io/images/avatar.png</logo>
     <icon>http://goroyal.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Goroyal&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Inverted Index]]></title>
+        <id>http://goroyal.github.io/post/inverted-index/</id>
+        <link href="http://goroyal.github.io/post/inverted-index/">
+        </link>
+        <updated>2020-08-03T07:33:37.000Z</updated>
+        <content type="html"><![CDATA[<p>Inverted Index, 也就是反向索引（倒排索引）。反向索引结构是典型的搜索引擎算法重要的部分。</p>
+<p>常规的索引是文档到关键词的映射，但是这样的话检索关键词会比较慢，需要遍历一个又一个的文档。反向索引是从关键词到文档，这样可以根据关键词找到它在哪个文档里出现。</p>
+<p>一个未经处理的数据库中，一般是以文档ID作为索引，以文档内容作为记录。而Inverted index 指的是将单词或记录作为索引，将文档ID作为记录，这样便可以方便地通过单词或记录查找到其所在的文档吗。</p>
+<p>以英文为例，下面是要被索引的文本：</p>
+<pre><code>T0 = &quot;it is what it is&quot;
+T1 = &quot;what is it&quot;
+T2 = &quot;it is a banana&quot;
+</code></pre>
+<p>可以得到下列的反向文件索引：</p>
+<pre><code>&quot;a&quot;: {2}
+&quot;banana&quot;: {2}
+&quot;it&quot;: {0, 1, 2}
+&quot;is&quot;: {0, 1, 2}
+&quot;what&quot;: {0, 1}
+</code></pre>
+<p>还可以在反向索引里面加上单词出现的位置，比如<code>&quot;banana&quot;: {(2, 3)}</code>表示banana出现在第三个文本的第四个位置。</p>
+<p>反向索引在ElasticSearch里面也被使用到（Lucene)。假设有2个文档，文档的<code>content</code>域包含下列内容：</p>
+<ol>
+<li>The quick brown fox jumped over the lazy dog</li>
+<li>Quick brown foxes leap over lazy dogs in summer</li>
+</ol>
+<p>为了创建反向索引，首先将每个文档的<code>content</code>拆分成词（称为<code>词条</code>或<code>token</code>），创建一个包含所有不重复词条的排序列表，然后列出每个词条出现在哪个文档。如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Doc_1</th>
+<th>Doc_2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Quick</td>
+<td></td>
+<td>X</td>
+</tr>
+<tr>
+<td>The</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr>
+<td>brown</td>
+<td>X</td>
+<td>X</td>
+</tr>
+<tr>
+<td>dog</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr>
+<td>dogs</td>
+<td></td>
+<td>X</td>
+</tr>
+<tr>
+<td>fox</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr>
+<td>foxes</td>
+<td></td>
+<td>X</td>
+</tr>
+<tr>
+<td>in</td>
+<td></td>
+<td>X</td>
+</tr>
+<tr>
+<td>jumped</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr>
+<td>lazy</td>
+<td>X</td>
+<td>X</td>
+</tr>
+<tr>
+<td>leap</td>
+<td></td>
+<td>X</td>
+</tr>
+<tr>
+<td>over</td>
+<td>X</td>
+<td>X</td>
+</tr>
+<tr>
+<td>quick</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr>
+<td>summer</td>
+<td></td>
+<td>X</td>
+</tr>
+<tr>
+<td>the</td>
+<td>X</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>如果我们想搜索<code>quick brown</code>，我们只需要查找包含每个词条的文档：</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Doc_1</th>
+<th>Doc_2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>brown</td>
+<td>X</td>
+<td>X</td>
+</tr>
+<tr>
+<td>quick</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>2</strong></td>
+<td><strong>1</strong></td>
+</tr>
+</tbody>
+</table>
+<p>两个文档都匹配，但是第一个文档比第二个匹配度更高。当然了，上面的反向索引存在点问题，比如<code>Quick</code>和<code>quick</code>，<code>dogs</code>和<code>dog</code>，可以作为相同词根进行索引，但还是不够的，需要进一步<a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/analysis-intro.html">分析</a>。</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://zh.wikipedia.org/zh-hans/%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95">维基百科</a><br>
+<a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/inverted-index.html">ElasticSearch文档</a></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[JVM类加载机制]]></title>
         <id>http://goroyal.github.io/post/jvm-lei-jia-zai-ji-zhi/</id>
@@ -772,91 +919,6 @@ public class Child extends Father{
 <li>对于同步方法块，锁是Synchonized括号里配置的对象。</li>
 <li>对于静态同步方法，锁是当前对象的Class对象。</li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[常用的Git命令]]></title>
-        <id>http://goroyal.github.io/post/git-commands/</id>
-        <link href="http://goroyal.github.io/post/git-commands/">
-        </link>
-        <updated>2020-08-02T09:21:54.000Z</updated>
-        <content type="html"><![CDATA[<p>配置账号信息</p>
-<pre><code class="language-shell">git config --global user.name &quot;your username&quot;
-git config --global user.email &quot;your email&quot;
-</code></pre>
-<p>查看配置相关的信息</p>
-<pre><code class="language-shell">git config --list # 查看配置的信息
-git help config # 获取帮助信息
-</code></pre>
-<p>配置自动换行</p>
-<pre><code class="language-shell">git config --global core.autocrlf input # 提交到git时是否自动将换行符转换为lf
-</code></pre>
-<p>配置密钥</p>
-<pre><code class="language-shell">ssh-keygen -t rsa -C &quot;your email&quot; # 生成密钥
-ssh -T git@github.com # 测试是否成功
-</code></pre>
-<p>新建仓库</p>
-<pre><code class="language-shell">git init # 初始化本地仓库
-git clone &lt;url&gt; # 克隆远程版本库
-git add –all # 添加所有文件到暂存区（stage，index）
-git status # 查看当前git状态
-git remote add origin https://github.com/freshdgq/test.git # 关联到远程仓库地址
-git push -u origin master # 第一次推送master分支的所有内容
-</code></pre>
-<p>修改和提交</p>
-<pre><code class="language-shell">git status # 查看git当前状态
-git diff # 查看改动后和改动前的不同之处
-git add . # 跟踪所有改动过的文件
-git add &lt;file&gt; # 跟踪指定的文件
-git mv &lt;old&gt; &lt;new&gt; # 文件改名
-git rm &lt;file&gt; # 删除指定文件
-git rm --cached &lt;file&gt; # 停止跟踪文件但不删除
-git commit -m &quot;message&quot; # 提交修改的文件到当前分支
-git commit --amend # 修改最后一次提交
-</code></pre>
-<p>状态与版本处理</p>
-<pre><code class="language-shell">git log # 查看提交的历史记录
-git log -p &lt;file&gt; # 查看指定文件的提交记录
-git blame &lt;file&gt; # 以列表方式查看指定文件的提交历史
-git reset --hard HEAD  # 撤销工作目录中所有未提交文件的修改内容
-git checkout HEAD &lt;file&gt; # 撤销指定的未提交文件的修改内容
-git revert &lt;commit&gt; 撤销指定的提交
-git reset --hard HEAD^ # 回退本地分支到上一个版本
-git reset --hard HEAD~n # 回退本地分支到上n个版本
-git checkout – readme.txt # 把readme.txt文件在工作区的修改全部撤销
-</code></pre>
-<p>分支与标签处理</p>
-<pre><code class="language-shell">git branch # 查看本地所有分支
-git checkout &lt;branch/tag&gt; # 切换到指定分支或标签
-
-git branch &lt;new-branch&gt; # 创建新分支
-git checkout -b &lt;new-branch&gt; # 创建并切换到新分支
-git branch -d &lt;branch&gt; # 删除本地分支
-
-git merge &lt;branch&gt; # 合并指定分支到当前分支
-git rebase &lt;branch&gt; # 衍合指定分支到当前分支
-
-git tag # 列出所有本地标签
-git tag &lt;tagname&gt; # 基于最新提交创建标签
-git tag -d &lt;tagname&gt; # 删除标签
-</code></pre>
-<p>本地远程</p>
-<pre><code class="language-shell">git remote # 获得远程库列表
-git remote v # 查看远程版本库信息
-git remote show &lt;remote&gt; # 查看指定远程版本库信息
-git remote add &lt;remote&gt;&lt;url&gt; # 添加远程版本库
-git remote rm &lt;name&gt; # 删除对应的远程库
-git branch -u origin/master master # 本地跟踪远程
-
-git fetch &lt;remote&gt; # 从远程库获取代码
-git pull &lt;remote&gt;&lt;branch&gt; # 拉取远程指定分支代码并快速合并
-git push &lt;remote&gt;&lt;branch&gt; # 推送代码到远程指定分支并快速合并
-git push &lt;remote&gt;:&lt;branch/tag-name&gt; # 删除远程分支或标签
-git push --tags # 上传所有标签
-
-git pull origin master # 从远程的master分支拉取代码到本地
-git push origin master # 推送最新修改到远程的主分支
-</code></pre>
 ]]></content>
     </entry>
 </feed>
