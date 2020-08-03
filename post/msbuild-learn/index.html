@@ -8,7 +8,7 @@
 <meta name="keywords" content="Goroyal technical blog">
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
-<title>Goroyal&#39;s blog</title>
+<title>MSBuild学习 | Goroyal&#39;s blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1596441978817">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -38,6 +38,8 @@
 
 
 
+  <meta name="description" content="MSBuild学习" />
+  <meta name="keywords" content=".NET" />
 </head>
 
 <body>
@@ -170,10 +172,26 @@
   <div class="main-continer">
     
     <div
-      class="section-layout  gemini">
+      class="section-layout gemini ">
       <div class="section-layout-wrapper">
-        <div id="sidebarMeta" class="sidebar">
-    
+        
+
+<div class="sidebar">
+  
+    <div class="sidebar-box box-shadow-wrapper bg-color right-motion" id="sidebar">
+      
+        <div class="post-list-sidebar">
+          <div class="sidebar-title">
+            <span id="tocSideBar" class="sidebar-title-item sidebar-title-active language" data-lan="index">文章目录</span>
+            <span id="metaSideBar" class="sidebar-title-item language" data-lan="preview">站点概览</span>
+          </div>
+        </div>
+      
+      <div class="sidebar-body gemini" id="sidebar_body">
+        
+          
+            <div class="post-side-meta" id="post_side_meta">
+              
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -219,180 +237,438 @@
 
 
 </div>
+            </div>
+            <div class="post-toc sidebar-body-active" id="post_toc" style="opacity: 1;">
+              <div class="toc-box right-motion">
+  <div class="toc-wrapper auto-number auto"
+    id="toc_wrapper">
+    <ul class="markdownIt-TOC">
+<li><a href="#%E6%A6%82%E8%A7%88">概览</a>
+<ul>
+<li><a href="#msbuild%E7%9A%84%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5">MSBuild的相关概念</a>
+<ul>
+<li><a href="#properties">Properties</a></li>
+<li><a href="#items">Items</a></li>
+<li><a href="#targets">Targets</a></li>
+<li><a href="#tasks">Tasks</a></li>
+<li><a href="#special-characters">Special Characters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+</ul>
+
+  </div>
 </div>
+
 <script>
-  let sidebarMeta = document.querySelector('#sidebarMeta');
-  let scheme = 'gemini';
-  let sidebarWrapper = document.querySelector('.sidebar-wrapper');
-  if (sidebarMeta && (scheme === 'pisces' || scheme === 'gemini')) {
-    document.addEventListener('scroll', function(e) {
-      if (document.scrollingElement.scrollTop > parseInt(sidebarMeta.style.marginTop) + 10) {
-        sidebarWrapper.classList.add('home-sidebar-fixed')
-      } else {
-        sidebarWrapper.classList.remove('home-sidebar-fixed')
+
+  let lastTop = 0, lList = [], hList = [], postBody, lastIndex = -1;
+  let active = 'active-show', activeClass = 'active-current';
+  let tocWrapper = document.querySelector('#toc_wrapper');
+  let tocContent = tocWrapper.children[0];
+  let autoNumber = tocWrapper && tocWrapper.classList.contains('auto-number');
+
+  function addTocNumber(elem, deep) {
+    if (!elem) {
+      return;
+    }
+    let prop = elem.__proto__;
+
+    if (prop === HTMLUListElement.prototype) {
+      for (let i = 0; i < elem.children.length; i++) {
+        addTocNumber(elem.children[i], deep + (i + 1) + '.');
       }
+    } else if (prop === HTMLLIElement.prototype) {
+      // 保存li元素
+      if (elem.children[0].__proto__ === HTMLAnchorElement.prototype) {
+        lList.push(elem);
+      }
+      for (let i = 0; i < elem.children.length; i++) {
+        let cur = elem.children[i];
+        if (cur.__proto__ === HTMLAnchorElement.prototype) {
+          if (autoNumber) {
+            cur.text = deep + ' ' + cur.text;
+          }
+        } else if (cur.__proto__ === HTMLUListElement.prototype) {
+          addTocNumber(cur, deep);
+        }
+      }
+    }
+  }
+
+  function removeParentActiveClass() {
+    let parents = tocContent.querySelectorAll('.' + active)
+    parents.forEach(function (elem) {
+      elem.classList.remove(active);
     });
   }
-  </script>
-        <div class="section-box tag-line box-shadow-wrapper">
-          <section class="section tags-section posts-expand bg-color">
-            <div class="padding-wrapper">
-  <div class="tag-timeline-box">
-    <div class="tag-timeline-wrapper">
-      <div class="tag-timeline-title">
-        <h2>
-          HTTP
-          <small class="language" data-lan="tag">标签</small>
-        </h2>
+
+  function addActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.add(activeClass);
+    }
+  }
+
+  function removeActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.remove(activeClass);
+    }
+  }
+
+  function addActiveLiElemment(elem, parent) {
+    if (!elem || elem === parent) {
+      return;
+    } else {
+      if (elem.__proto__ === HTMLLIElement.prototype) {
+        elem.classList.add(active);
+      }
+      addActiveLiElemment(elem.parentElement, parent);
+    }
+  }
+
+  function showToc() {
+    if (tocWrapper) {
+      postBody = document.querySelector('#post_body');
+      for (let i = 0; i < postBody.children.length; i++) {
+        if (postBody.children[i].__proto__ === HTMLHeadingElement.prototype) {
+          hList.push(postBody.children[i]);
+        }
+      }
+      if (tocWrapper.classList.contains('compress')) {
+        tocContent.classList.add('closed');
+      } else if (tocWrapper.classList.contains('no_compress')) {
+        tocContent.classList.add('expanded');
+      } else {
+        if (hList.length > 10) {
+          active = 'active-hidden'
+          tocContent.classList.add('closed');
+        } else {
+          tocContent.classList.add('expanded');
+        }
+      }
+    }
+  }
+
+  (function () {
+    // 处理不是从#一级标题开始目录
+    if (tocContent.children.length === 1 && tocContent.children[0].__proto__ === HTMLLIElement.prototype) {
+      let con = tocContent.children[0].children[0];
+      tocContent.innerHTML = con.innerHTML;
+    }
+    let markdownItTOC = document.querySelector('.markdownIt-TOC');
+    let innerHeight = window.innerHeight;
+    markdownItTOC.style = `max-height: ${innerHeight - 80 > 0 ? innerHeight - 80 : innerHeight}px`
+    addTocNumber(tocContent, '');
+  })();
+
+  document.addEventListener('scroll', function (e) {
+    if (lList.length <= 0) {
+      return;
+    }
+    let scrollTop = document.scrollingElement.scrollTop + 10;
+    let dir;
+
+    if (lastTop - scrollTop > 0) {
+      dir = 'up';
+    } else {
+      dir = 'down';
+    }
+
+    lastTop = scrollTop;
+    if (scrollTop <= 0) {
+      if (lastIndex >= 0 && lastIndex < hList.length) {
+        lList[lastIndex].classList.remove(activeClass);
+      }
+      return;
+    }
+
+    let current = 0, hasFind = false;
+    for (let i = 0; i < hList.length; i++) {
+      if (hList[i].offsetTop > scrollTop) {
+        current = i;
+        hasFind = true;
+        break;
+      }
+    }
+    if (!hasFind && scrollTop > lList[lList.length - 1].offsetTop) {
+      current = hList.length - 1;
+    } else {
+      current--;
+    }
+    if (dir === 'down') {
+      if (current > lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex)
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    } else {
+      if (current < lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex);
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    }
+  });
+
+
+  window.addEventListener('load', function () {
+    showToc();
+    document.querySelector('#sidebar').style = 'display: block;';
+    tocWrapper.classList.add('toc-active');
+    setTimeout(function () {
+      if ("createEvent" in document) {
+        let evt = document.createEvent("HTMLEvents");
+        evt.initEvent("scroll", false, true);
+        document.dispatchEvent(evt);
+      }
+      else {
+        document.fireEvent("scroll");
+      }
+    }, 500)
+  })
+
+</script>
+            </div>
+          
+        
       </div>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <a href="http://goroyal.github.io/post/http-response-code/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              04-06
-              <small>HTTP 响应状态码</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+    </div>
+  
+</div>
+<script>
+  const SIDEBAR_TITLE_ACTIVE = 'sidebar-title-active';
+  const SIDEBAR_BODY_ACTIVE = 'sidebar-body-active';
+  const SLIDE_UP_IN = 'slide-up-in';
+
+  let sidebar = document.querySelector('#sidebar'),
+  tocSideBar = document.querySelector('#tocSideBar'),
+  metaSideBar = document.querySelector('#metaSideBar'),
+  postToc = document.querySelector('#post_toc'),
+  postSiteMeta = document.querySelector('#post_side_meta'),
+  sidebarTitle = document.querySelector('.sidebar-title'),
+  sidebarBody = document.querySelector('#sidebar_body');
+
+  tocSideBar && tocSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  metaSideBar && metaSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  function toggleSidebar(e) {
+    let currentTitle = document.querySelector("."+SIDEBAR_TITLE_ACTIVE);
+    if (currentTitle == e.srcElement) {
+      return ;
+    }
+    let current, showElement, hideElement;
+    if (e.srcElement == metaSideBar) {
+      showElement = postSiteMeta;
+      hideElement = postToc;
+    } else if (e.srcElement == tocSideBar){
+      showElement = postToc;
+      hideElement = postSiteMeta;
+    }
+    currentTitle.classList.remove(SIDEBAR_TITLE_ACTIVE);
+    e.srcElement.classList.add(SIDEBAR_TITLE_ACTIVE);
+
+    window.Velocity(hideElement, 'stop');
+    window.Velocity(hideElement, 'transition.slideUpOut', {
+      display: 'none',
+      duration: 200,
+      complete: function () {
+        window.Velocity(showElement, 'transition.slideDownIn', {
+          duration: 200
+        });
+      }
+    })
+    hideElement.classList.remove(SIDEBAR_BODY_ACTIVE);
+    showElement.classList.add(SIDEBAR_BODY_ACTIVE);
+  }
+
+  postToc && postToc.addEventListener('transitionend', function() {
+    this.classList.remove(SLIDE_UP_IN);
+  });
+
+  if (sidebarBody) {
+    if (sidebarBody.classList.contains('pisces') || sidebarBody.classList.contains('gemini')) {
+      let hasFix = false;
+      let scrollEl = document.querySelector('.main-continer');
+      let limitTop = document.querySelector('#nav_ul').children.length * 42 + 162;
+      window.addEventListener('scroll', function(e) {
+        if (document.scrollingElement.scrollTop >= limitTop) {
+          if (!hasFix) {
+            sidebar.classList.add('sidebar-fixed');
+            hasFix = true;
+          }
+        } else {
+          if (hasFix) {
+            sidebar.classList.remove('sidebar-fixed');
+            hasFix = false;
+          }
+        }
+      });
+    }
+  }
+  
+</script>
+        <div class="section-box box-shadow-wrapper">
+          <div class="section bg-color post post-page">
+            <header class="post-header">
+    <h1 class="post-title">
+        <a class="post-title-link" href="http://goroyal.github.io/post/msbuild-learn/">
+            MSBuild学习
+        </a>
+    </h1>
+    <div class="post-meta">
+        
+                <span class="meta-item pc-show">
+      <i class="fa fa-calendar-o"></i>
+      <span class="language" data-lan="publish">发布于</span>
+                <span>2020-08-03</span>
+                <span class="post-meta-divider pc-show">|</span>
+                </span>
+                
+                    <span class="meta-item">
+      <i class="fa fa-folder-o"></i>
+      <span class="pc-show language" data-lan="category-in">分类于</span>
+                    
+                        
+                            <a href="http://goroyal.github.io/tag/ZbecWX-__/">
+                                <span>.NET</span>
+                            </a>
+                            
+                                    
+                                        </span>
+                                        <span class="post-meta-divider">|</span>
+                                        
+                                            <span class="meta-item">
+      <i class="fa fa-clock-o"></i>
+      <span>3<span class="language" data-lan="minute">分钟</span></span>
+                                            </span>
+                                            <span class="meta-item">
+      <span class="post-meta-divider">|</span>
+                                            <i class="fa fa-file-word-o"></i>
+                                            <span>604<span class="pc-show language" data-lan="words">字数</span></span>
+                                            </span>
+                                            
+                                                
+                                                    
+                                                                <!-- <span id="/post/msbuild-learn/" data-flag-title="MSBuild学习" class="meta-item pc-show leancloud_visitors">
+      <span class="post-meta-divider">|</span>
+      <i class="fa fa-eye"></i>
+      <span><span class="language" data-lan="view">浏览量</span>：<span class="leancloud-visitors-count"></span></span>
+    </span> -->
+                                                                
+    </div>
+</header>
+            <div class="post-body next-md-body" id="post_body">
+              <p>MSBuild是.NET平台下的构建工具。</p>
+<h1 id="概览">概览</h1>
+<p>MSBuild也就是用于构建应用的Microsoft Build Engine，它提供一个XML Schema用于project文件来控制构建平台process、build软件。<br>
+可以使用Visual Studio或者调用MSBuild.exe来完成这个操作。VS里边的project文件（<code>.csproj</code>、<code>vbproj</code>、<code>vcxproj</code>等）包含MSBuild XML代码，这些代码将在使用IDE build project的时候被运行。</p>
+<p>在VS 2017里面使用的MSBuild版本是15，现在MSBuild装在VS的每个版本的文件夹中，比如<code>C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild</code>。也可以使用这个powershell命令来定位MSBuild：<a href="https://github.com/Microsoft/vssetup.powershell"><code>vssetup.powershell</code></a>。</p>
+<p><code>MSBuildToolsPath</code>不再是一个固定的位置。默认情况下将是相对于VS安装位置的<code>MSBuild\15.0\Bin</code>文件夹中。</p>
+<h2 id="msbuild的相关概念">MSBuild的相关概念</h2>
+<h3 id="properties">Properties</h3>
+<p>Properties是键值对，可以用来配置builds。</p>
+<pre><code class="language-XML">&lt;PropertyGroup&gt;
+    &lt;BuildDir&gt;Build&lt;/BuildDir&gt;
+&lt;/PropertyGroup&gt;
+</code></pre>
+<p>在整个project文件中，properties通过<code>$(&lt;PropertyName&gt;)</code>的方式被引用，比如使用上面的BuildDir属性，则用<code>$(BuildDir)</code>即可。<br>
+Properties的值可以被redefine。</p>
+<p>MSBuild中保留的或众所周知的properties：</p>
+<ul>
+<li><code>MSBuildBinPath</code>: 当前使用的MSBuild binaries位置的绝对路径，例如<code>C:\Windows\Microsoft.Net\Framework\&lt;versionNumber&gt;</code></li>
+<li><code>MSBuildExtensionsPath</code></li>
+<li><code>MSBuildProjectFile</code>: project文件的完整文件名，例如<code>MyApp.proj</code></li>
+</ul>
+<p>完整的见<a href="https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild-reserved-and-well-known-properties?view=vs-2017">MSBuild reserved and well-known properties</a></p>
+<p>可以使用<code>Condition</code> attribute来为一个property提供默认值，如果这个property没有value则给它设置一个。比如</p>
+<pre><code class="language-XML">&lt;ToolsPath Condition=&quot;''$(TOOLSPATH)' == ''&quot;&gt;c:\tools&lt;/ToolsPath&gt;
+</code></pre>
+<p>除了在project文件中做配置，也可以在命令行执行的时候设置property。如：</p>
+<pre><code class="language-shell">msbuild file.proj -property:Flavor=Debug
+msbuild file.proj -p:Flavor=Debug
+msbuild file.proj -p:Flavor=Debug;Platform=x86
+msbuild file.proj -p:Flavor=Debug -p:Platform=x86
+</code></pre>
+<p>环境变量也会被认为是properties，并且自动被MSBuild装载进来。</p>
+<h3 id="items">Items</h3>
+<p>Items是build system的输入，通常代表文件。</p>
+<pre><code class="language-XML">&lt;ItemGroup&gt;
+    &lt;Compile Include = &quot;file1.cs&quot;/&gt;
+    &lt;Compile Include = &quot;file2.cs&quot;/&gt;
+&lt;/ItemGroup&gt;
+</code></pre>
+<p>file2.cs是append在file1.cs之后的，也可以结合<code>**</code>、<code>*</code>、<code>？</code>用wildcard模式，例如：</p>
+<pre><code class="language-XML">&lt;CSFile Include=&quot;*.cs&quot;/&gt;
+或者
+&lt;ItemGroup&gt; 
+    &lt;CSFile Include=&quot;*.cs&quot; Exclude=&quot;DoNotBuild.cs&quot;/&gt;
+&lt;/ItemGroup&gt;
+</code></pre>
+<h3 id="targets">Targets</h3>
+<p>解释如何将tasks以特定的顺序组合到一起，并在命令行调用构建过程的各个部分。<br>
+感觉类似Ant的targets。详细的见<a href="https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild-targets?view=vs-2017">MSBuild targets</a></p>
+<h3 id="tasks">Tasks</h3>
+<p>显示如何创建可以被MSBuild使用的可执行代码单元去执行原子的build操作。</p>
+<h3 id="special-characters">Special Characters</h3>
+<p>% $ @ ' ; ? *</p>
+<h1 id="参考">参考</h1>
+<p><a href="https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild?view=vs-2017">微软官方文档：MSBuild</a></p>
+
+            </div>
+            
+              <div class="post-footer">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong class="language" data-lan="author">本文作者：</strong>
+      Goroyal
+    </li>
+    <li class="post-copyright-link">
+      <strong class="language" data-lan="link">本文链接：</strong>
+      <a href="http://goroyal.github.io/post/msbuild-learn/" title="MSBuild学习">http://goroyal.github.io/post/msbuild-learn/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong class="language" data-lan="copyright">版权声明： </strong>
+      本博客所有文章除特别声明外，均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i> BY-NC-SA</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+  <div class="tags">
+    
+      <a href="http://goroyal.github.io/tag/ZbecWX-__/"># .NET</a>
+    
+  </div>
+  <div class="nav">
+    <div class="nav-prev">
+      
+        <i class="fa fa-chevron-left"></i>
+        <a class="nav-pc-next" title="C#中引入的class命名空间相同但是source不同的问题解决" href="http://goroyal.github.io/post/csharp-same-class-name-namespace-diff-source/">C#中引入的class命名空间相同但是source不同的问题解决</a class="nav-pc-next">
+        <a class="nav-mobile-prev" title="C#中引入的class命名空间相同但是source不同的问题解决" href="http://goroyal.github.io/post/csharp-same-class-name-namespace-diff-source/">上一篇</a>
+      
+    </div>
+    <div class="nav-next">
+      
+        <a class="nav-pc-next" title="Inverted Index" href="http://goroyal.github.io/post/inverted-index/">Inverted Index</a>
+        <a class="nav-mobile-next" title="Inverted Index" href="http://goroyal.github.io/post/inverted-index/">下一篇</a>
+        <i class="fa fa-chevron-right"></i>
       
     </div>
   </div>
 </div>
-          </section>
+            
+            
+  
+
+          </div>
         </div>
       </div>
     </div>
@@ -567,6 +843,36 @@
 
     // 代码高亮
     hljs.initHighlightingOnLoad();
+</script>
+    <div class="light-box" id="light_box"></div>
+<script>
+  let imgs = document.querySelectorAll('.post-body img');
+  let lightBox = document.querySelector('#light_box');
+  lightBox.addEventListener('mousedown', (e) => {
+    e.preventDefault()
+  })
+  lightBox.addEventListener('mousewheel', (e) => {
+    e.preventDefault()
+  })
+  let width = window.innerWidth * 0.8;
+  lightBox.onclick = () => {
+    let img = lightBox.querySelector('img');
+    lightBox.style = '';
+    img && img.remove();
+  }
+  imgs.forEach(item => {
+    item.onclick = function (e) {
+      let lightImg = document.createElement('img');
+      lightImg.src = this.src;
+      lightBox.style = `height: 100%; opacity: 1; background-color: rgba(0, 0, 0, 0.5);cursor: zoom-out;`;
+      lightImg.style = `width: ${width}px; border: 1px solid #fff; border-radius: 2px;`;
+      lightImg.onclick = function () {
+        lightBox.style = '';
+        this.remove();
+      }
+      lightBox.append(lightImg);
+    }
+  })
 </script>
   </div>
 </body>
@@ -3168,7 +3474,6 @@ final String string2 = &amp;quot;string2&amp;quot;;
     speed: 200
   });
 </script>
-
 
 
 

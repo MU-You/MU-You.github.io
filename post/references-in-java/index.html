@@ -9,7 +9,7 @@
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
 <title>Java中的几种引用 | Goroyal&#39;s blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1596440276563">
+<link rel="shortcut icon" href="/favicon.ico?v=1596441978817">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -212,19 +212,19 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">36</span>
+        <span class="site-item-stat-count">38</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
     <div class="sidebar-item-box">
       <a href="">
-        <span class="site-item-stat-count">8</span>
+        <span class="site-item-stat-count">9</span>
         <span class="site-item-stat-name language" data-lan="category">分类</span>
       </a>
     </div>
     <div class="sidebar-item-box">
       <a href="/tags/">
-        <span class="site-item-stat-count">8</span>
+        <span class="site-item-stat-count">9</span>
         <span class="site-item-stat-name language" data-lan="tag">标签</span>
       </a>
     </div>
@@ -638,7 +638,56 @@
     <div class="result" id="result">
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/msbuild-xue-xi/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/jpa/"" data-c="
+          &lt;p&gt;Java持久化API(Java Persistence API, JPA)是基于POJO的持久化机制，从Hibernate和Java数据对象上借鉴了很多理念，引入了Java 5注解的特性。&lt;/p&gt;
+&lt;p&gt;在Spring中使用JPA的第一步是要在Spring应用上下文中将实体管理器工厂按照Bean的形式来进行配置。&lt;/p&gt;
+&lt;h2 id=&#34;配置实体管理器工厂&#34;&gt;配置实体管理器工厂&lt;/h2&gt;
+&lt;p&gt;基于JPA的应用程序使用EntityManagerFactory的实现类来获取EntityManager实例。&lt;br&gt;
+JPA定义的两种类型的实体管理器：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;应用程序管理类型（Application-managed），由LocalEntityManagerFactoryBean生成&lt;/li&gt;
+&lt;li&gt;容器管理类型（Container-managed），由LocalContainerEntityManagerFactoryBean生成&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;二者区别在于EntityManager的创建和管理方式：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;应用程序管理类型的EntityManager由EntityManagerFactory创建&lt;/li&gt;
+&lt;li&gt;容器管理类型的EntityManager由PersistenceProvider的createEntityManagerFactory()方法得到的&lt;br&gt;
+二者唯一值得关注的区别是在Spring应用上下文中如何进行配置。&lt;/li&gt;
+&lt;/ul&gt;
+">Java持久化API</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/csharp-same-class-name-namespace-diff-source/"" data-c="
+          &lt;h2 id=&#34;场景&#34;&gt;场景&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;在z项目里引用x和y项目，分别为x.dll和y.dll。&lt;/li&gt;
+&lt;li&gt;引入的class A在x.dll和y.dll都定义了，而且命名空间一样，然后x和y同时在z项目中被用到，z中想使用class A就会遇到这问题&lt;/li&gt;
+&lt;li&gt;x项目中定义了class A，同时y项目中在csproj文件里用&lt;code&gt;&amp;lt;Compile Include=&amp;quot;..\x\A.cs&amp;quot;&amp;gt;&lt;/code&gt;将其引入进来并重新编译。然后x和y同时在z项目中被用到，z中想使用class A时候就会同样遇到这问题。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;
+&lt;p&gt;第一步，在z项目引入x和y的时候指定它的alias，如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-XML&#34;&gt;&amp;lt;ProjectReference Include=&amp;quot;..\ProjextX\ProjextX.csproj&amp;quot;&amp;gt;
+    &amp;lt;Project&amp;gt;{EE0F5BBF-54D4-40EB-BEB2-5D07A49BC5B8}&amp;lt;/Project&amp;gt;
+    &amp;lt;Name&amp;gt;ProjextX.ClassA&amp;lt;/Name&amp;gt;
+    &amp;lt;Aliases&amp;gt;ClassA&amp;lt;/Aliases&amp;gt;
+&amp;lt;/ProjectReference&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;第二步，在z项目中用到class A的地方，先在引用其他namespace之前加上&lt;code&gt;extern alias&lt;/code&gt;，比如：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;// 引入命名空间前
+extern alias ProjextX;
+
+// 调用的时候
+private readonly ProjectZ::ProjextX.ClassA variable = new ProjectZ::ProjextX.ClassA();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;注意的是，&lt;code&gt;extern alias&lt;/code&gt;放在自己这个类的namespace定义外边还是里边效果是不一样的。&lt;/p&gt;
+&lt;h1 id=&#34;参考链接&#34;&gt;参考链接&lt;/h1&gt;
+&lt;p&gt;https://blogs.msdn.microsoft.com/ansonh/2006/09/27/extern-alias-walkthrough/&lt;/p&gt;
+">C#中引入的class命名空间相同但是source不同的问题解决</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/msbuild-learn/"" data-c="
           &lt;p&gt;MSBuild是.NET平台下的构建工具。&lt;/p&gt;
 &lt;h1 id=&#34;概览&#34;&gt;概览&lt;/h1&gt;
 &lt;p&gt;MSBuild也就是用于构建应用的Microsoft Build Engine，它提供一个XML Schema用于project文件来控制构建平台process、build软件。&lt;br&gt;
