@@ -8,7 +8,7 @@
 <meta name="keywords" content="Goroyal technical blog">
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
-<title>【数据结构】数组和链表 | Goroyal&#39;s blog</title>
+<title>MSBuild学习 | Goroyal&#39;s blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1596440276563">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -38,8 +38,8 @@
 
 
 
-  <meta name="description" content="【数据结构】数组和链表" />
-  <meta name="keywords" content="Data Structure" />
+  <meta name="description" content="MSBuild学习" />
+  <meta name="keywords" content="" />
 </head>
 
 <body>
@@ -243,17 +243,20 @@
   <div class="toc-wrapper auto-number auto"
     id="toc_wrapper">
     <ul class="markdownIt-TOC">
-<li>
+<li><a href="#%E6%A6%82%E8%A7%88">概览</a>
 <ul>
-<li><a href="#%E6%95%B0%E7%BB%84">数组</a></li>
-<li><a href="#%E9%93%BE%E8%A1%A8">链表</a>
+<li><a href="#msbuild%E7%9A%84%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5">MSBuild的相关概念</a>
 <ul>
-<li><a href="#dummy-node">Dummy Node</a></li>
-<li><a href="#%E5%BF%AB%E6%85%A2%E6%8C%87%E9%92%88">快慢指针</a></li>
+<li><a href="#properties">Properties</a></li>
+<li><a href="#items">Items</a></li>
+<li><a href="#targets">Targets</a></li>
+<li><a href="#tasks">Tasks</a></li>
+<li><a href="#special-characters">Special Characters</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
 </ul>
 
   </div>
@@ -519,8 +522,8 @@
           <div class="section bg-color post post-page">
             <header class="post-header">
     <h1 class="post-title">
-        <a class="post-title-link" href="http://goroyal.github.io/post/array-and-linkedlist/">
-            【数据结构】数组和链表
+        <a class="post-title-link" href="http://goroyal.github.io/post/msbuild-xue-xi/">
+            MSBuild学习
         </a>
     </h1>
     <div class="post-meta">
@@ -528,36 +531,23 @@
                 <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-                <span>2020-07-10</span>
+                <span>2020-08-03</span>
                 <span class="post-meta-divider pc-show">|</span>
                 </span>
                 
-                    <span class="meta-item">
-      <i class="fa fa-folder-o"></i>
-      <span class="pc-show language" data-lan="category-in">分类于</span>
-                    
-                        
-                            <a href="http://goroyal.github.io/tag/dOIw4zPHC/">
-                                <span>Data Structure</span>
-                            </a>
-                            
-                                    
-                                        </span>
-                                        <span class="post-meta-divider">|</span>
-                                        
                                             <span class="meta-item">
       <i class="fa fa-clock-o"></i>
-      <span>4<span class="language" data-lan="minute">分钟</span></span>
+      <span>3<span class="language" data-lan="minute">分钟</span></span>
                                             </span>
                                             <span class="meta-item">
       <span class="post-meta-divider">|</span>
                                             <i class="fa fa-file-word-o"></i>
-                                            <span>889<span class="pc-show language" data-lan="words">字数</span></span>
+                                            <span>604<span class="pc-show language" data-lan="words">字数</span></span>
                                             </span>
                                             
                                                 
                                                     
-                                                                <!-- <span id="/post/array-and-linkedlist/" data-flag-title="【数据结构】数组和链表" class="meta-item pc-show leancloud_visitors">
+                                                                <!-- <span id="/post/msbuild-xue-xi/" data-flag-title="MSBuild学习" class="meta-item pc-show leancloud_visitors">
       <span class="post-meta-divider">|</span>
       <i class="fa fa-eye"></i>
       <span><span class="language" data-lan="view">浏览量</span>：<span class="leancloud-visitors-count"></span></span>
@@ -566,22 +556,61 @@
     </div>
 </header>
             <div class="post-body next-md-body" id="post_body">
-              <p>在计算机程序里，数据存储的方式无外乎两种：顺序存储和链式存储。顺序存储的结构可以称为顺序表，也可以用数组描述，链式存储的结构可以称为链表。<br>
-我们每一个学过数据结构的都知道，它们两者各自有一些鲜明的特性，比如：</p>
+              <p>MSBuild是.NET平台下的构建工具。</p>
+<h1 id="概览">概览</h1>
+<p>MSBuild也就是用于构建应用的Microsoft Build Engine，它提供一个XML Schema用于project文件来控制构建平台process、build软件。<br>
+可以使用Visual Studio或者调用MSBuild.exe来完成这个操作。VS里边的project文件（<code>.csproj</code>、<code>vbproj</code>、<code>vcxproj</code>等）包含MSBuild XML代码，这些代码将在使用IDE build project的时候被运行。</p>
+<p>在VS 2017里面使用的MSBuild版本是15，现在MSBuild装在VS的每个版本的文件夹中，比如<code>C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild</code>。也可以使用这个powershell命令来定位MSBuild：<a href="https://github.com/Microsoft/vssetup.powershell"><code>vssetup.powershell</code></a>。</p>
+<p><code>MSBuildToolsPath</code>不再是一个固定的位置。默认情况下将是相对于VS安装位置的<code>MSBuild\15.0\Bin</code>文件夹中。</p>
+<h2 id="msbuild的相关概念">MSBuild的相关概念</h2>
+<h3 id="properties">Properties</h3>
+<p>Properties是键值对，可以用来配置builds。</p>
+<pre><code class="language-XML">&lt;PropertyGroup&gt;
+    &lt;BuildDir&gt;Build&lt;/BuildDir&gt;
+&lt;/PropertyGroup&gt;
+</code></pre>
+<p>在整个project文件中，properties通过<code>$(&lt;PropertyName&gt;)</code>的方式被引用，比如使用上面的BuildDir属性，则用<code>$(BuildDir)</code>即可。<br>
+Properties的值可以被redefine。</p>
+<p>MSBuild中保留的或众所周知的properties：</p>
 <ul>
-<li>我们可以通过数组下标去访问数组里的元素，查询、更新的效率高，时间复杂度是O(1)，但是在中间某个位置插入或删除一个元素就要挪动后面所有的元素，时间复杂度是O(n)。</li>
-<li>链表里元素之间存在指针指向关联的另一个元素，我们只能通过指针挨个去遍历访问链表里的元素，查询、更新的效率低，时间复杂度是O(n)，在中间某个位置插入或删除一个元素比较方便，只需要修改相邻指针的引用就可以了，时间复杂度是O(1)。</li>
+<li><code>MSBuildBinPath</code>: 当前使用的MSBuild binaries位置的绝对路径，例如<code>C:\Windows\Microsoft.Net\Framework\&lt;versionNumber&gt;</code></li>
+<li><code>MSBuildExtensionsPath</code></li>
+<li><code>MSBuildProjectFile</code>: project文件的完整文件名，例如<code>MyApp.proj</code></li>
 </ul>
-<!-- more -->
-<h2 id="数组">数组</h2>
-<p>数组的好处显而易见，它的存储结构比较紧凑，相对节省空间。每个元素都有唯一的索引，支持随机访问。但是数组所需要的空间需要一次分配够，当数组容量满时，新加入元素就要对数组进行扩容。扩容时，往往不能在原地直接扩，因为后面的内存可能已经分配给其他数据结构了，所以要重新申请一块新的更大的内存空间，将原有的数组里的元素全部复制到新的数组里，再释放原有数组的空间，这个过程时间复杂度是O(n)，可以参考Java的<code>ArrayList</code>。如果不加以合理的维护，内存中将产生大量碎片。</p>
-<h2 id="链表">链表</h2>
-<p>链表有效地解决里数组需要扩容的问题，因为链表里的每个元素节点都不需要连续，链表的节点通过指针进行索引，每个节点只能找到它指针指向的下一个节点。正常的单向链表是从头节点开始，每个节点依次有一个指针指向它后面的节点，尾部节点指向NULL。有时候为了方便拿到前驱节点，我们会采用双向链表，也就是每个节点既包含一个指针指向后面的，也包含一个指针指向前面的。还有一种链表是循环链表，也就是说尾节点指向了头节点。</p>
-<h3 id="dummy-node">Dummy Node</h3>
-<p>翻译为哑节点或者假人头节点。</p>
-<p>Dummy node 是一个虚拟节点，也可以认为是标杆节点。Dummy node 就是在链表表头 head 前加一个节点指向 head，即dummy -&gt; head。Dummy node 的使用多针对单链表没有前向指针的问题，保证链表的 head 不会在删除操作中丢失。还有一种用法比较少见，就是使用 dummy node 来进行head的删除操作。所以，当链表的 head 有可能变化（被修改或者被删除）时，使用 dummy node 可以很好的简化代码，最终返回<code>dummy.next</code>即新的链表。</p>
-<h3 id="快慢指针">快慢指针</h3>
-<p>快慢指针指的是2个指针沿着链表向前移动的步数不一样，比如一个每次移2步，另一个每次移1步。可以通过它找到链表中间的节点以及判断链表是否循环。</p>
+<p>完整的见<a href="https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild-reserved-and-well-known-properties?view=vs-2017">MSBuild reserved and well-known properties</a></p>
+<p>可以使用<code>Condition</code> attribute来为一个property提供默认值，如果这个property没有value则给它设置一个。比如</p>
+<pre><code class="language-XML">&lt;ToolsPath Condition=&quot;''$(TOOLSPATH)' == ''&quot;&gt;c:\tools&lt;/ToolsPath&gt;
+</code></pre>
+<p>除了在project文件中做配置，也可以在命令行执行的时候设置property。如：</p>
+<pre><code class="language-shell">msbuild file.proj -property:Flavor=Debug
+msbuild file.proj -p:Flavor=Debug
+msbuild file.proj -p:Flavor=Debug;Platform=x86
+msbuild file.proj -p:Flavor=Debug -p:Platform=x86
+</code></pre>
+<p>环境变量也会被认为是properties，并且自动被MSBuild装载进来。</p>
+<h3 id="items">Items</h3>
+<p>Items是build system的输入，通常代表文件。</p>
+<pre><code class="language-XML">&lt;ItemGroup&gt;
+    &lt;Compile Include = &quot;file1.cs&quot;/&gt;
+    &lt;Compile Include = &quot;file2.cs&quot;/&gt;
+&lt;/ItemGroup&gt;
+</code></pre>
+<p>file2.cs是append在file1.cs之后的，也可以结合<code>**</code>、<code>*</code>、<code>？</code>用wildcard模式，例如：</p>
+<pre><code class="language-XML">&lt;CSFile Include=&quot;*.cs&quot;/&gt;
+或者
+&lt;ItemGroup&gt; 
+    &lt;CSFile Include=&quot;*.cs&quot; Exclude=&quot;DoNotBuild.cs&quot;/&gt;
+&lt;/ItemGroup&gt;
+</code></pre>
+<h3 id="targets">Targets</h3>
+<p>解释如何将tasks以特定的顺序组合到一起，并在命令行调用构建过程的各个部分。<br>
+感觉类似Ant的targets。详细的见<a href="https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild-targets?view=vs-2017">MSBuild targets</a></p>
+<h3 id="tasks">Tasks</h3>
+<p>显示如何创建可以被MSBuild使用的可执行代码单元去执行原子的build操作。</p>
+<h3 id="special-characters">Special Characters</h3>
+<p>% $ @ ' ; ? *</p>
+<h1 id="参考">参考</h1>
+<p><a href="https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild?view=vs-2017">微软官方文档：MSBuild</a></p>
 
             </div>
             
@@ -593,7 +622,7 @@
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="http://goroyal.github.io/post/array-and-linkedlist/" title="【数据结构】数组和链表">http://goroyal.github.io/post/array-and-linkedlist/</a>
+      <a href="http://goroyal.github.io/post/msbuild-xue-xi/" title="MSBuild学习">http://goroyal.github.io/post/msbuild-xue-xi/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -602,21 +631,15 @@
   </ul>
   <div class="tags">
     
-      <a href="http://goroyal.github.io/tag/dOIw4zPHC/"># Data Structure</a>
-    
   </div>
   <div class="nav">
     <div class="nav-prev">
       
-        <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="MySQL不同的存储引擎" href="http://goroyal.github.io/post/mysql-storage-engine/">MySQL不同的存储引擎</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="MySQL不同的存储引擎" href="http://goroyal.github.io/post/mysql-storage-engine/">上一篇</a>
-      
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="Linux 中的 2&gt; /dev/null" href="http://goroyal.github.io/post/linux-redirect-dev-null/">Linux 中的 2&gt; /dev/null</a>
-        <a class="nav-mobile-next" title="Linux 中的 2&gt; /dev/null" href="http://goroyal.github.io/post/linux-redirect-dev-null/">下一篇</a>
+        <a class="nav-pc-next" title="Inverted Index" href="http://goroyal.github.io/post/inverted-index/">Inverted Index</a>
+        <a class="nav-mobile-next" title="Inverted Index" href="http://goroyal.github.io/post/inverted-index/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>
