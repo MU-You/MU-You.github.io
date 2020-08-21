@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>http://goroyal.github.io</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2020-08-03T08:06:22.334Z</updated>
+    <updated>2020-08-21T03:03:40.076Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="http://goroyal.github.io"/>
     <link rel="self" href="http://goroyal.github.io/atom.xml"/>
@@ -10,6 +10,198 @@
     <logo>http://goroyal.github.io/images/avatar.png</logo>
     <icon>http://goroyal.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Goroyal&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[JVM调优之参数配置]]></title>
+        <id>http://goroyal.github.io/post/jvm-args/</id>
+        <link href="http://goroyal.github.io/post/jvm-args/">
+        </link>
+        <updated>2020-08-21T02:23:11.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="堆内存大小设置">堆内存大小设置</h2>
+<p>JVM的堆内存大小有三方面限制：</p>
+<ul>
+<li>相关操作系统的数据模型（32位还是64位）限制</li>
+<li>系统的可用虚拟内存限制</li>
+<li>系统的可用物理内存限制</li>
+</ul>
+<p>32位系统下，一般限制在1.5G~2G，64位操作系统对内存无限制。</p>
+<p>JVM的堆内存分为2块：</p>
+<ul>
+<li>Meta space：从Java 8开始，Java淘汰了原来的持久代（Permanent Generation），代之以元空间Meta space。主要存放的是Java类定义信息和常量。</li>
+<li>Heap = 分为年轻代和年老代。年轻代又常分为2个Survivor区和1个Eden区。年轻代和年老代的划分对垃圾收集影响比较大。</li>
+</ul>
+<p>大部分对象在Eden区中生成。当Eden区满时，还存活的对象将被复制到Survivor区（两个中的一个），当一个Survivor区满时，此区的存活对象将被复制到另外一个Survivor区，当另一个Survivor区也满了的时候，从前一个Survivor区复制过来的并且此时还存活的对象，将可能被复制到年老代。</p>
+<p>2个Survivor区是对称的，没有先后关系，所以同一个Survivor区中可能同时存在从Eden区复制过来对象，和从另一个Survivor区复制过来的对象；而复制到年老区的只有从另一个Survivor区过来的对象。因为需要交换的原因，Survivor区至少有一个是空的。特殊的情况下，根据程序需要，Survivor区是可以配置为多个的（多于2个），这样可以增加对象在年轻代中的存在时间，减少被放到年老代的可能。</p>
+<p>针对年轻代的垃圾回收即Young GC。在年轻代中经历了若干次（可配置）垃圾回收后仍然存活的对象，就会被复制到年老代中。因此，可以认为年老代中存放的都是一些生命周期较长的对象。针对年老代的垃圾回收即Full GC。</p>
+<p>JVM的一个典型设置：</p>
+<pre><code class="language-shell">java -Xmx3550m -Xms3550m -Xmn2g -Xss128k
+</code></pre>
+<ul>
+<li><code>-Xmx3550m</code>：设置JVM最大可用内存为3550M。</li>
+<li><code>-Xms3550m</code>：设置JVM初始内存为3550m。此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存。</li>
+<li><code>-Xmn2g</code>：设置年轻代大小为2G。整个JVM内存大小=年轻代大小 + 年老代大小 + 元空间大小。持久代一般固定大小为64m，所以增大年轻代后，将会减小年老代大小。此值对系统性能影响较大，<strong>Oracle官方推荐配置为整个堆的3/8</strong>。</li>
+<li><code>-Xss128k</code>：设置每个线程的堆栈大小。Java 5以后每个线程堆栈大小为1M，以前每个线程堆栈大小为256K。更具应用的线程所需内存大小进行调整。在相同物理内存下，减小这个值能生成更多的线程。但是操作系统对一个进程内的线程数还是有限制的，不能无限生成，经验值在3000~5000左右。</li>
+</ul>
+<pre><code class="language-shell">java -Xmx3550m -Xms3550m -Xss128k -XX:NewRatio=4 -XX:SurvivorRatio=4 
+</code></pre>
+<ul>
+<li><code>-XX:NewRatio=4</code>：设置年轻代（包括Eden和两个Survivor区）与年老代的比值（除去持久代）。设置为4，则年轻代与年老代所占比值为1：4，年轻代占整个堆栈的1/5</li>
+<li><code>-XX:SurvivorRatio=4</code>：设置年轻代中Eden区与Survivor区的大小比值。设置为4，则两个Survivor区与一个Eden区的比值为2:4，一个Survivor区占整个年轻代的1/6</li>
+<li><code>-XX:MaxTenuringThreshold=0</code>：设置垃圾最大年龄。如果设置为0的话，则年轻代对象不经过Survivor区，直接进入年老代。对于年老代比较多的应用，可以提高效率。如果将此值设置为一个较大值，则年轻代对象会在Survivor区进行多次复制，这样可以增加对象再年轻代的存活时间，增加在年轻代即被回收的概论。</li>
+</ul>
+<h2 id="回收器选择">回收器选择</h2>
+<p>JVM给了三种选择：串行收集器、并行收集器、并发收集器，但是串行收集器只适用于小数据量的情况，所以这里的选择主要针对并行收集器和并发收集器。默认情况下，Java 5以前都是使用串行收集器，如果想使用其他收集器需要在启动时加入相应参数。JDK5.0以后，JVM会根据当前系统配置进行判断。</p>
+<h3 id="吞吐量优先的并行收集器">吞吐量优先的并行收集器</h3>
+<p>如上文所述，并行收集器主要以到达一定的吞吐量为目标，适用于科学技术和后台处理等。<br>
+典型配置：</p>
+<pre><code class="language-shell">java -Xmx3800m -Xms3800m -Xmn2g -Xss128k -XX:+UseParallelGC -XX:ParallelGCThreads=20
+</code></pre>
+<ul>
+<li><code>-XX:+UseParallelGC</code>：选择并行收集器。此配置仅对年轻代有效。即上述配置下，年轻代使用并发收集，而年老代仍旧使用串行收集。</li>
+<li><code>-XX:ParallelGCThreads=20</code>：配置并行收集器的线程数，即：同时多少个线程一起进行垃圾回收。此值最好配置与处理器数目相等。</li>
+</ul>
+<pre><code> java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseParallelGC -XX:ParallelGCThreads=20 -XX:+UseParallelOldGC
+</code></pre>
+<ul>
+<li><code>-XX:+UseParallelOldGC</code>：配置年老代垃圾收集方式为并行收集。JDK6.0支持对年老代并行收集。</li>
+</ul>
+<pre><code class="language-shell">java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseParallelGC -XX:MaxGCPauseMillis=100
+</code></pre>
+<ul>
+<li><code>-XX:MaxGCPauseMillis=100</code>：设置每次年轻代垃圾回收的最长时间，如果无法满足此时间，JVM会自动调整年轻代大小，以满足此值。</li>
+</ul>
+<pre><code class="language-shell">java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseParallelGC -XX:MaxGCPauseMillis=100 -XX:+UseAdaptiveSizePolicy
+</code></pre>
+<p><code>-XX:+UseAdaptiveSizePolicy</code>：设置此选项后，并行收集器会自动选择年轻代区大小和相应的Survivor区比例，以达到目标系统规定的最低相应时间或者收集频率等，此值建议使用并行收集器时，一直打开。</p>
+<h3 id="响应时间优先的并发收集器">响应时间优先的并发收集器</h3>
+<p>如上文所述，并发收集器主要是保证系统的响应时间，减少垃圾收集时的停顿时间。适用于应用服务器、电信领域等。<br>
+典型配置：</p>
+<pre><code class="language-shell">java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:ParallelGCThreads=20 -XX:+UseConcMarkSweepGC -XX:+UseParNewGC
+</code></pre>
+<ul>
+<li><code>-XX:+UseConcMarkSweepGC</code>：设置年老代为并发收集。测试中配置这个以后，<code>-XX:NewRatio=4</code>的配置失效了，原因不明。所以，此时年轻代大小最好用-Xmn设置。</li>
+<li><code>-XX:+UseParNewGC</code>：设置年轻代为并行收集。可与CMS收集同时使用。JDK5.0以上，JVM会根据系统配置自行设置，所以无需再设置此值。</li>
+</ul>
+<pre><code class="language-shell">java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseConcMarkSweepGC -XX:CMSFullGCsBeforeCompaction=5 -XX:+UseCMSCompactAtFullCollection
+</code></pre>
+<ul>
+<li><code>-XX:CMSFullGCsBeforeCompaction</code>：由于并发收集器不对内存空间进行压缩、整理，所以运行一段时间以后会产生“碎片”，使得运行效率降低。此值设置运行多少次GC以后对内存空间进行压缩、整理。</li>
+<li><code>-XX:+UseCMSCompactAtFullCollection</code>：打开对年老代的压缩。可能会影响性能，但是可以消除碎片</li>
+</ul>
+<h2 id="辅助信息">辅助信息</h2>
+<p>JVM提供了大量命令行参数，打印信息，供调试使用。主要有以下一些：</p>
+<h3 id="-xxprintgc"><code>-XX:+PrintGC</code></h3>
+<p>输出形式：[GC 118250K-&gt;113543K(130112K), 0.0094143 secs]<br>
+[Full GC 121376K-&gt;10414K(130112K), 0.0650971 secs]</p>
+<h3 id="-xxprintgcdetails"><code>-XX:+PrintGCDetails</code></h3>
+<p>输出形式：[GC [DefNew: 8614K-&gt;781K(9088K), 0.0123035 secs] 118250K-&gt;113543K(130112K), 0.0124633 secs]<br>
+[GC [DefNew: 8614K-&gt;8614K(9088K), 0.0000665 secs][Tenured: 112761K-&gt;10414K(121024K), 0.0433488 secs] 121376K-&gt;10414K(130112K), 0.0436268 secs]</p>
+<h3 id="-xxprintgctimestamps"><code>-XX:+PrintGCTimeStamps</code></h3>
+<p>PrintGCTimeStamps可与上面两个混合使用<br>
+输出形式：11.851: [GC 98328K-&gt;93620K(130112K), 0.0082960 secs]</p>
+<h3 id="-xxprintgcapplicationconcurrenttime"><code>-XX:+PrintGCApplicationConcurrentTime</code></h3>
+<p>打印每次垃圾回收前，程序未中断的执行时间。可与上面混合使用<br>
+输出形式：Application time: 0.5291524 seconds</p>
+<h3 id="-xxprintgcapplicationstoppedtime"><code>-XX:+PrintGCApplicationStoppedTime</code></h3>
+<p>打印垃圾回收期间程序暂停的时间。可与上面混合使用<br>
+输出形式：Total time for which application threads were stopped: 0.0468229 seconds</p>
+<h3 id="-xxprintheapatgc"><code>-XX:PrintHeapAtGC</code></h3>
+<p>打印GC前后的详细堆栈信息，输出形式：<br>
+34.702: [GC {Heap before gc invocations=7:<br>
+def new generation total 55296K, used 52568K [0x1ebd0000, 0x227d0000, 0x227d0000)<br>
+eden space 49152K, 99% used [0x1ebd0000, 0x21bce430, 0x21bd0000)<br>
+from space 6144K, 55% used [0x221d0000, 0x22527e10, 0x227d0000)<br>
+to space 6144K, 0% used [0x21bd0000, 0x21bd0000, 0x221d0000)<br>
+tenured generation total 69632K, used 2696K [0x227d0000, 0x26bd0000, 0x26bd0000)<br>
+the space 69632K, 3% used [0x227d0000, 0x22a720f8, 0x22a72200, 0x26bd0000)<br>
+compacting perm gen total 8192K, used 2898K [0x26bd0000, 0x273d0000, 0x2abd0000)<br>
+the space 8192K, 35% used [0x26bd0000, 0x26ea4ba8, 0x26ea4c00, 0x273d0000)<br>
+ro space 8192K, 66% used [0x2abd0000, 0x2b12bcc0, 0x2b12be00, 0x2b3d0000)<br>
+rw space 12288K, 46% used [0x2b3d0000, 0x2b972060, 0x2b972200, 0x2bfd0000)<br>
+34.735: [DefNew: 52568K-&gt;3433K(55296K), 0.0072126 secs] 55264K-&gt;6615K(124928K)Heap after gc invocations=8:<br>
+def new generation total 55296K, used 3433K [0x1ebd0000, 0x227d0000, 0x227d0000)<br>
+eden space 49152K, 0% used [0x1ebd0000, 0x1ebd0000, 0x21bd0000)<br>
+from space 6144K, 55% used [0x21bd0000, 0x21f2a5e8, 0x221d0000)<br>
+to space 6144K, 0% used [0x221d0000, 0x221d0000, 0x227d0000)<br>
+tenured generation total 69632K, used 3182K [0x227d0000, 0x26bd0000, 0x26bd0000)<br>
+the space 69632K, 4% used [0x227d0000, 0x22aeb958, 0x22aeba00, 0x26bd0000)<br>
+compacting perm gen total 8192K, used 2898K [0x26bd0000, 0x273d0000, 0x2abd0000)<br>
+the space 8192K, 35% used [0x26bd0000, 0x26ea4ba8, 0x26ea4c00, 0x273d0000)<br>
+ro space 8192K, 66% used [0x2abd0000, 0x2b12bcc0, 0x2b12be00, 0x2b3d0000)<br>
+rw space 12288K, 46% used [0x2b3d0000, 0x2b972060, 0x2b972200, 0x2bfd0000)<br>
+}<br>
+, 0.0757599 secs]</p>
+<h3 id="-xloggcfilename">-Xloggc:filename</h3>
+<p>与上面几个配合使用，把相关日志信息记录到文件以便分析。</p>
+<h2 id="常见配置汇总">常见配置汇总</h2>
+<h3 id="堆设置">堆设置</h3>
+<ul>
+<li>-Xms:初始堆大小</li>
+<li>-Xmx:最大堆大小</li>
+<li>-XX:NewSize=n:设置年轻代大小</li>
+<li>-XX:NewRatio=n:设置年轻代和年老代的比值。如:为3，表示年轻代与年老代比值为1：3，年轻代占整个年轻代年老代和的1/4</li>
+<li>-XX:SurvivorRatio=n:年轻代中Eden区与两个Survivor区的比值。注意Survivor区有两个。如：3，表示Eden：Survivor=3：2，一个Survivor区占整个年轻代的1/5</li>
+<li>-XX:MaxPermSize=n:设置持久代大小</li>
+</ul>
+<h4 id="优先级">优先级</h4>
+<p>-Xmn，-XX:NewSize/-XX:MaxNewSize，-XX:NewRatio 3组参数都可以影响年轻代的大小，混合使用的情况下，优先级如下：</p>
+<ul>
+<li>高优先级：-XX:NewSize/-XX:MaxNewSize</li>
+<li>中优先级：-Xmn（默认等效 -Xmn=-XX:NewSize=-XX:MaxNewSize=?）</li>
+<li>低优先级：-XX:NewRatio</li>
+</ul>
+<h3 id="收集器设置">收集器设置</h3>
+<ul>
+<li>-XX:+UseSerialGC:设置串行收集器</li>
+<li>-XX:+UseParallelGC:设置并行收集器</li>
+<li>-XX:+UseParalledlOldGC:设置并行年老代收集器</li>
+<li>-XX:+UseConcMarkSweepGC:设置并发收集器</li>
+</ul>
+<h4 id="并行收集器设置">并行收集器设置</h4>
+<ul>
+<li>-XX:ParallelGCThreads=n:设置并行收集器收集时使用的CPU数。并行收集线程数。</li>
+<li>-XX:MaxGCPauseMillis=n:设置并行收集最大暂停时间</li>
+<li>-XX:GCTimeRatio=n:设置垃圾回收时间占程序运行时间的百分比。公式为1/(1+n)</li>
+</ul>
+<h4 id="并发收集器设置">并发收集器设置</h4>
+<ul>
+<li>-XX:+CMSIncrementalMode:设置为增量模式。适用于单CPU情况。</li>
+<li>-XX:ParallelGCThreads=n:设置并发收集器年轻代收集方式为并行收集时，使用的CPU数。</li>
+</ul>
+<h4 id="垃圾回收统计信息">垃圾回收统计信息</h4>
+<ul>
+<li>-XX:+PrintGC</li>
+<li>-XX:+PrintGCDetails</li>
+<li>-XX:+PrintGCTimeStamps</li>
+<li>-Xloggc:filename</li>
+</ul>
+<h2 id="调优总结">调优总结</h2>
+<h3 id="年轻代大小选择">年轻代大小选择</h3>
+<ul>
+<li>响应时间优先的应用：尽可能设大，直到接近系统的最低响应时间限制（根据实际情况选择）。在此种情况下，年轻代收集发生的频率也是最小的。同时，减少到达年老代的对象。</li>
+<li>吞吐量优先的应用：尽可能的设置大，可能到达Gbit的程度。因为对响应时间没有要求，垃圾收集可以并行进行，一般适合8CPU以上的应用。</li>
+</ul>
+<h3 id="年老代大小选择">年老代大小选择</h3>
+<ul>
+<li>响应时间优先的应用：年老代使用并发收集器，所以其大小需要小心设置，一般要考虑并发会话率和会话持续时间等一些参数。如果堆设置小了，可以会造成内存碎片、高回收频率以及应用暂停而使用传统的标记清除方式；如果堆大了，则需要较长的收集时间。最优化的方案，一般需要参考以下数据获得：</li>
+<li>并发垃圾收集信息</li>
+<li>持久代并发收集次数</li>
+<li>传统GC信息</li>
+<li>花在年轻代和年老代回收上的时间比例，减少年轻代和年老代花费的时间，一般会提高应用的效率</li>
+<li>吞吐量优先的应用：一般吞吐量优先的应用都有一个很大的年轻代和一个较小的年老代。原因是，这样可以尽可能回收掉大部分短期对象，减少中期的对象，而年老代尽存放长期存活对象。</li>
+</ul>
+<h3 id="较小堆引起的碎片问题">较小堆引起的碎片问题</h3>
+<p>因为年老代的并发收集器使用标记、清除算法，所以不会对堆进行压缩。当收集器回收时，他会把相邻的空间进行合并，这样可以分配给较大的对象。但是，当堆空间较小时，运行一段时间以后，就会出现“碎片”，如果并发收集器找不到足够的空间，那么并发收集器将会停止，然后使用传统的标记、清除方式进行回收。如果出现“碎片”，可能需要进行如下配置：</p>
+<ul>
+<li>-XX:+UseCMSCompactAtFullCollection：使用并发收集器时，开启对年老代的压缩。</li>
+<li>-XX:CMSFullGCsBeforeCompaction=0：上面配置开启的情况下，这里设置多少次Full GC后，对年老代进行压缩</li>
+</ul>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://www.iteye.com/blog/unixboy-174173">JVM调优总结 -Xms -Xmx -Xmn -Xss</a></li>
+<li><a href="https://blog.csdn.net/sivyer123/article/details/17139443">JVM 堆内存设置原理</a></li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Java持久化API]]></title>
         <id>http://goroyal.github.io/post/jpa/</id>
@@ -669,212 +861,6 @@ public class DirectMemoryOOM {
 <li>堆：对于大多数应用来说，Java堆是Java虚拟机所管理的内存中最大的一块。是被所有线程共享的一块内存区域，在虚拟机启动时创建。此内存区域的唯一的目的就是存放对象实例，几乎所有的对象实例都在这里分配内存。是垃圾收集器管理的主要区域。</li>
 <li>程序计数器：一块较小的内存空间，可以看作是当前线程所执行的字节码的行号指示器。</li>
 <li>直接内存：直接内存并不是虚拟机运行时数据区的一部分，也不是Java虚拟机规范中定义的内存区域。但是这部分内存也被频繁地使用，而且也可能导致OutOfMemoryError异常出现。JDK 1.4中新加入了NIO类，引入了一种基于通道（Channel）与缓冲区（Buffer）的I/O方式，它可以使用Native函数库直接分配堆外内存，然后通过一个存储在Java堆中的DirectByteBuffer对象作为这块内存的引用进行操作。这样能在一些场景中显著提高性能，因为避免了在Java堆和Native堆中来回复制数据。</li>
-</ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Java volatile]]></title>
-        <id>http://goroyal.github.io/post/java-volatile/</id>
-        <link href="http://goroyal.github.io/post/java-volatile/">
-        </link>
-        <updated>2020-08-02T11:28:35.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="volatile语义">volatile语义</h2>
-<p>一旦一个共享变量（类的成员变量、类的静态成员变量）被volatile修饰之后，那么就具备了两层语义：</p>
-<ul>
-<li>保证了不同线程对这个变量进行操作时的可见性，即一个线程修改了某个变量的值，这新值对其他线程来说是立即可见的。</li>
-<li>禁止进行指令重排序。</li>
-</ul>
-<p>看一段代码：</p>
-<pre><code class="language-java">public class VolatileExample extends Thread{
-    //设置类静态变量,各线程访问这同一共享变量
-    private  static boolean flag = false;
-    //无限循环,等待flag变为true时才跳出循环
-   public void run() {
-       while (!flag){
-       };
-       System.out.println(&quot;停止了&quot;);
-   }
-
-    public static void main(String[] args) throws Exception {
-        new VolatileExample().start();
-        //sleep的目的是等待线程启动完毕,也就是说进入run的无限循环体了
-        Thread.sleep(100);
-        flag = true;
-    }
-}
-</code></pre>
-<p>当把上面代码中变量flag改成下面这样：</p>
-<pre><code class="language-java">private  static valotile boolean flag = false;
-</code></pre>
-<p>在执行的话，你就会发现打印了“停止了”信息，因为用volatile修饰之后就变得不一样了：</p>
-<ul>
-<li>第一：使用volatile关键字会强制将修改的值立即写入主存；</li>
-<li>第二：使用volatile关键字的话，当线程main进行修改时，会导致线程那么线程VolatileExample的工作内存中缓存变量flag的缓存行无效（反映到硬件层的话，就是CPU的L1或者L2缓存中对应的缓存行无效）；</li>
-<li>第三：由于线程那么线程VolatileExample的工作内存中缓存变量flag的缓存行无效，所以线程那么线程VolatileExample再次读取变量flag的值时会去主存读取。</li>
-</ul>
-<p>那么在线程main修改flag值时（当然这里包括2个操作，修改线程main工作内存中的值，然后将修改后的值写入内存），会使得线程VolatileExample的工作内存中缓存变量flag的缓存行无效，然后线程读取时，发现自己的缓存行无效，它会等待缓存行对应的主存地址被更新之后，然后去对应的主存读取最新的值。</p>
-<p>那么线程VolatileExample读取到的就是最新的正确的值。<br>
-使用volatile关键字增加了实例变量在多个线程之间的可见性。但是volatile关键字最致命的缺点是不支持原子性。</p>
-<p>下面将关键字synchronized和volatile进行一下比较：</p>
-<ol>
-<li>关键字volatile是线程同步的轻量级实现，所以volatile性能肯定比synchronized要好，并且volatile只能修饰于变量，而synchronized可以修饰方法，以及代码块。随着JDK新版本的发布，synchronized关键字在执行效率上得到很大提升，在开发中使用synchronized关键字的比率还是比较大的。</li>
-<li>多线程访问volatile不会发生阻塞，而synchronized会出现阻塞。</li>
-<li>volatile能保证数据的可见性，但不能保证原子性；而synchronized可以保证原子性，也可以间接保证可见性，因为它将私有内存和公共内存中的数据做同步。</li>
-<li>再次重申一下，关键字volatile解决的是变量在多个线程之间的可见性；而synchronized关键字解决的是多个线程之间访问资源的同步性。</li>
-</ol>
-<h2 id="volatile非原子的特性">volatile非原子的特性</h2>
-<p>从上面知道volatile关键字保证了操作的可见性，但是volatile能保证对变量的操作是原子性吗？<br>
-下面看一个例子：</p>
-<pre><code class="language-Java">public class Test {
-    public volatile int inc = 0;
-     
-    public void increase() {
-        inc++;
-    }
-     
-    public static void main(String[] args) {
-        final Test test = new Test();
-        for(int i=0;i&lt;10;i++){
-            new Thread(){
-                public void run() {
-                    for(int j=0;j&lt;1000;j++)
-                        test.increase();
-                };
-            }.start();
-        }
-         
-         //保证前面的线程都执行完
-        while(Thread.activeCount()&gt;1)
-   			Thread.yield();
-        System.out.println(test.inc);
-    }
-}
-</code></pre>
-<p>也许有些朋友认为输出结果是10000。但是事实上运行它会发现每次运行结果都不一致，都是一个小于10000的数字。可能有人会有疑问，不对啊，上面是对变量inc进行自增操作，由于volatile保证了可见性，那么在每个线程中对inc自增完之后，在其他线程中都能看到修改后的值啊，所以有10个线程分别进行了1000次操作，那么最终inc的值应该是1000*10=10000。</p>
-<p>这里面就有一个误区了，volatile关键字能保证可见性没有错，但是上面的程序错在没能保证原子性。可见性只能保证每次读取的是最新的值，但是volatile没办法保证对变量的操作的原子性。</p>
-<p>在前面已经提到过，自增操作是不具备原子性的，它包括读取变量的原始值、进行加1操作、写入工作内存。那么就是说自增操作的三个子操作可能会分割开执行，就有可能导致下面这种情况出现：</p>
-<p>假如某个时刻变量inc的值为10，线程1对变量进行自增操作，线程1先读取了变量inc的原始值，然后线程1被阻塞了；</p>
-<p>然后线程2对变量进行自增操作，线程2也去读取变量inc的原始值，由于线程1只是对变量inc进行读取操作，而没有对变量进行修改操作，所以不会导致线程2的工作内存中缓存变量inc的缓存行无效，所以线程2会直接去主存读取inc的值，发现inc的值是10，然后进行加1操作，并把11写入工作内存，最后写入主存。</p>
-<p>然后线程1接着进行加1操作，由于已经读取了inc的值，注意此时在线程1的工作内存中inc的值仍然为10，所以线程1对inc进行加1操作后inc的值为11，然后将11写入工作内存，最后写入主存。</p>
-<p>那么两个线程分别进行了一次自增操作后，inc只增加了1。</p>
-<p>虽然happens-before规则中的volatile变量规则是保证一个变量在修改volatile变量时，会让缓存行无效吗，但是要注意，线程1对变量进行读取操作之后，被阻塞了的话，并没有对inc值进行修改。然后虽然volatile能保证线程2对变量inc的值读取是从内存中读取的，但是线程1没有进行修改，所以线程2根本就不会看到修改的值。</p>
-<p><strong>根源就在这里，自增操作不是原子性操作，而且volatile也无法保证对变量的任何操作都是原子性的。</strong></p>
-<p>把上面的代码改成以下任何一种都可以达到效果：<br>
-采用synchronized：</p>
-<pre><code class="language-java">public class Test {
-    public  int inc = 0;
-    
-    public synchronized void increase() {
-        inc++;
-    }
-    
-    public static void main(String[] args) {
-        final Test test = new Test();
-        for(int i=0;i&lt;10;i++){
-            new Thread(){
-                public void run() {
-                    for(int j=0;j&lt;1000;j++)
-                        test.increase();
-                };
-            }.start();
-        }
-        
-        while(Thread.activeCount()&gt;1)  //保证前面的线程都执行完
-            Thread.yield();
-        System.out.println(test.inc);
-    }
-}
-</code></pre>
-<p>采用Lock：</p>
-<pre><code class="language-java">public class Test {
-    public  int inc = 0;
-    Lock lock = new ReentrantLock();
-    
-    public  void increase() {
-        lock.lock();
-        try {
-            inc++;
-        } finally{
-            lock.unlock();
-        }
-    }
-    
-    public static void main(String[] args) {
-        final Test test = new Test();
-        for(int i=0;i&lt;10;i++){
-            new Thread(){
-                public void run() {
-                    for(int j=0;j&lt;1000;j++)
-                        test.increase();
-                };
-            }.start();
-        }
-        
-        while(Thread.activeCount()&gt;1)  //保证前面的线程都执行完
-            Thread.yield();
-        System.out.println(test.inc);
-    }
-}
-</code></pre>
-<p>采用AtomicInteger：</p>
-<pre><code class="language-Java">public class Test {
-    public  AtomicInteger inc = new AtomicInteger();
-     
-    public  void increase() {
-        inc.getAndIncrement();
-    }
-    
-    public static void main(String[] args) {
-        final Test test = new Test();
-        for(int i=0;i&lt;10;i++){
-            new Thread(){
-                public void run() {
-                    for(int j=0;j&lt;1000;j++)
-                        test.increase();
-                };
-            }.start();
-        }
-        
-        while(Thread.activeCount()&gt;1)  //保证前面的线程都执行完
-            Thread.yield();
-        System.out.println(test.inc);
-    }
-}
-</code></pre>
-<p>在java 1.5的java.util.concurrent.atomic包下提供了一些原子操作类，即对基本数据类型的 自增（加1操作），自减（减1操作）、以及加法操作（加一个数），减法操作（减一个数）进行了封装，保证这些操作是原子性操作。atomic是利用CAS来实现原子性操作的（Compare And Swap），CAS实际上是利用处理器提供的CMPXCHG指令实现的，而处理器执行CMPXCHG指令是一个原子性操作。</p>
-<h2 id="volatile能保证有序性">volatile能保证有序性</h2>
-<p>在前面提到volatile关键字能禁止指令重排序，所以volatile能在一定程度上保证有序性。</p>
-<p>volatile关键字禁止指令重排序有两层意思：<br>
-1）当程序执行到volatile变量的读操作或者写操作时，在其前面的操作的更改肯定全部已经进行，且结果已经对后面的操作可见；在其后面的操作肯定还没有进行；</p>
-<p>2）在进行指令优化时，不能将在对volatile变量访问的语句放在其后面执行，也不能把volatile变量后面的语句放到其前面执行。<br>
-可能上面说的比较绕，举个简单的例子：</p>
-<pre><code class="language-Java">//x、y为非volatile变量
-//flag为volatile变量
- 
-x = 2;        //语句1
-y = 0;        //语句2
-flag = true;  //语句3
-x = 4;         //语句4
-y = -1;       //语句5
-</code></pre>
-<p>由于flag变量为volatile变量，那么在进行指令重排序的过程的时候，不会将语句3放到语句1、语句2前面，也不会讲语句3放到语句4、语句5后面。但是要注意语句1和语句2的顺序、语句4和语句5的顺序是不作任何保证的。并且volatile关键字能保证，执行到语句3时，语句1和语句2必定是执行完毕了的，且语句1和语句2的执行结果对语句3、语句4、语句5是可见的。</p>
-<h2 id="volatile的原理和实现机制">volatile的原理和实现机制</h2>
-<p>前面讲述了源于volatile关键字的一些使用，下面我们来探讨一下volatile到底如何保证可见性和禁止指令重排序的。</p>
-<p>下面这段话摘自《深入理解Java虚拟机》：</p>
-<blockquote>
-<p>观察加入volatile关键字和没有加入volatile关键字时所生成的汇编代码发现，加入volatile关键字时，会多出一个lock前缀指令。<br>
-lock前缀指令实际上相当于一个内存屏障（也成内存栅栏），内存屏障会提供3个功能：</p>
-<ul>
-<li>它确保指令重排序时不会把其后面的指令排到内存屏障之前的位置，也不会把前面的指令排到内存屏障的后面；即在执行到内存屏障这句指令时，在它前面的操作已经全部完成；</li>
-<li>它会强制将对缓存的修改操作立即写入主存；</li>
-<li>如果是写操作，它会导致其他CPU中对应的缓存行无效。</li>
-</ul>
-</blockquote>
-<h2 id="总结">总结</h2>
-<p>synchronized关键字是防止多个线程同时执行一段代码，那么就会很影响程序执行效率，而volatile关键字在某些情况下性能要优于synchronized，但是要注意volatile关键字是无法替代synchronized关键字的，因为volatile关键字无法保证操作的原子性。通常来说，使用volatile必须具备以下2个条件：</p>
-<ul>
-<li>对变量的写操作不依赖于当前值</li>
-<li>该变量没有包含在具有其他变量的不变式中</li>
 </ul>
 ]]></content>
     </entry>

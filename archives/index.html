@@ -9,7 +9,7 @@
 <meta name="description" content="学习分享">
 <meta name="theme-color" content="#000">
 <title>Goroyal&#39;s blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1596441978817">
+<link rel="shortcut icon" href="/favicon.ico?v=1597979016281">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -196,7 +196,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">38</span>
+        <span class="site-item-stat-count">39</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -243,7 +243,7 @@
   <div class="archive-timeline-box">
     <div class="archive-timeline-title">
       
-        <h2 class="language" data-lan="archives" data-count="38">非常好！目前共计38篇日志，继续努力！</h2>
+        <h2 class="language" data-lan="archives" data-count="39">非常好！目前共计39篇日志，继续努力！</h2>
       
     </div>
     
@@ -253,6 +253,19 @@
           <h2 class="tag-year">2020</h2>
         </div>    
         
+      
+      <a href="http://goroyal.github.io/post/jvm-args/">
+        <div class="motion-warpper tag-archive-node">
+          <div class="tag-node">
+            <h1>
+              08-21
+              <small>JVM调优之参数配置</small>
+            </h1>
+          </div>  
+      </div>
+      </a>
+    
+      
       
       <a href="http://goroyal.github.io/post/jpa/">
         <div class="motion-warpper tag-archive-node">
@@ -983,6 +996,195 @@
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/jvm-args/"" data-c="
+          &lt;h2 id=&#34;堆内存大小设置&#34;&gt;堆内存大小设置&lt;/h2&gt;
+&lt;p&gt;JVM的堆内存大小有三方面限制：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;相关操作系统的数据模型（32位还是64位）限制&lt;/li&gt;
+&lt;li&gt;系统的可用虚拟内存限制&lt;/li&gt;
+&lt;li&gt;系统的可用物理内存限制&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;32位系统下，一般限制在1.5G~2G，64位操作系统对内存无限制。&lt;/p&gt;
+&lt;p&gt;JVM的堆内存分为2块：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Meta space：从Java 8开始，Java淘汰了原来的持久代（Permanent Generation），代之以元空间Meta space。主要存放的是Java类定义信息和常量。&lt;/li&gt;
+&lt;li&gt;Heap = 分为年轻代和年老代。年轻代又常分为2个Survivor区和1个Eden区。年轻代和年老代的划分对垃圾收集影响比较大。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;大部分对象在Eden区中生成。当Eden区满时，还存活的对象将被复制到Survivor区（两个中的一个），当一个Survivor区满时，此区的存活对象将被复制到另外一个Survivor区，当另一个Survivor区也满了的时候，从前一个Survivor区复制过来的并且此时还存活的对象，将可能被复制到年老代。&lt;/p&gt;
+&lt;p&gt;2个Survivor区是对称的，没有先后关系，所以同一个Survivor区中可能同时存在从Eden区复制过来对象，和从另一个Survivor区复制过来的对象；而复制到年老区的只有从另一个Survivor区过来的对象。因为需要交换的原因，Survivor区至少有一个是空的。特殊的情况下，根据程序需要，Survivor区是可以配置为多个的（多于2个），这样可以增加对象在年轻代中的存在时间，减少被放到年老代的可能。&lt;/p&gt;
+&lt;p&gt;针对年轻代的垃圾回收即Young GC。在年轻代中经历了若干次（可配置）垃圾回收后仍然存活的对象，就会被复制到年老代中。因此，可以认为年老代中存放的都是一些生命周期较长的对象。针对年老代的垃圾回收即Full GC。&lt;/p&gt;
+&lt;p&gt;JVM的一个典型设置：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;java -Xmx3550m -Xms3550m -Xmn2g -Xss128k
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;-Xmx3550m&lt;/code&gt;：设置JVM最大可用内存为3550M。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-Xms3550m&lt;/code&gt;：设置JVM初始内存为3550m。此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-Xmn2g&lt;/code&gt;：设置年轻代大小为2G。整个JVM内存大小=年轻代大小 + 年老代大小 + 元空间大小。持久代一般固定大小为64m，所以增大年轻代后，将会减小年老代大小。此值对系统性能影响较大，&lt;strong&gt;Oracle官方推荐配置为整个堆的3/8&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-Xss128k&lt;/code&gt;：设置每个线程的堆栈大小。Java 5以后每个线程堆栈大小为1M，以前每个线程堆栈大小为256K。更具应用的线程所需内存大小进行调整。在相同物理内存下，减小这个值能生成更多的线程。但是操作系统对一个进程内的线程数还是有限制的，不能无限生成，经验值在3000~5000左右。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;java -Xmx3550m -Xms3550m -Xss128k -XX:NewRatio=4 -XX:SurvivorRatio=4 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;-XX:NewRatio=4&lt;/code&gt;：设置年轻代（包括Eden和两个Survivor区）与年老代的比值（除去持久代）。设置为4，则年轻代与年老代所占比值为1：4，年轻代占整个堆栈的1/5&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-XX:SurvivorRatio=4&lt;/code&gt;：设置年轻代中Eden区与Survivor区的大小比值。设置为4，则两个Survivor区与一个Eden区的比值为2:4，一个Survivor区占整个年轻代的1/6&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-XX:MaxTenuringThreshold=0&lt;/code&gt;：设置垃圾最大年龄。如果设置为0的话，则年轻代对象不经过Survivor区，直接进入年老代。对于年老代比较多的应用，可以提高效率。如果将此值设置为一个较大值，则年轻代对象会在Survivor区进行多次复制，这样可以增加对象再年轻代的存活时间，增加在年轻代即被回收的概论。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;回收器选择&#34;&gt;回收器选择&lt;/h2&gt;
+&lt;p&gt;JVM给了三种选择：串行收集器、并行收集器、并发收集器，但是串行收集器只适用于小数据量的情况，所以这里的选择主要针对并行收集器和并发收集器。默认情况下，Java 5以前都是使用串行收集器，如果想使用其他收集器需要在启动时加入相应参数。JDK5.0以后，JVM会根据当前系统配置进行判断。&lt;/p&gt;
+&lt;h3 id=&#34;吞吐量优先的并行收集器&#34;&gt;吞吐量优先的并行收集器&lt;/h3&gt;
+&lt;p&gt;如上文所述，并行收集器主要以到达一定的吞吐量为目标，适用于科学技术和后台处理等。&lt;br&gt;
+典型配置：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;java -Xmx3800m -Xms3800m -Xmn2g -Xss128k -XX:+UseParallelGC -XX:ParallelGCThreads=20
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;-XX:+UseParallelGC&lt;/code&gt;：选择并行收集器。此配置仅对年轻代有效。即上述配置下，年轻代使用并发收集，而年老代仍旧使用串行收集。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-XX:ParallelGCThreads=20&lt;/code&gt;：配置并行收集器的线程数，即：同时多少个线程一起进行垃圾回收。此值最好配置与处理器数目相等。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt; java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseParallelGC -XX:ParallelGCThreads=20 -XX:+UseParallelOldGC
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;-XX:+UseParallelOldGC&lt;/code&gt;：配置年老代垃圾收集方式为并行收集。JDK6.0支持对年老代并行收集。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseParallelGC -XX:MaxGCPauseMillis=100
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;-XX:MaxGCPauseMillis=100&lt;/code&gt;：设置每次年轻代垃圾回收的最长时间，如果无法满足此时间，JVM会自动调整年轻代大小，以满足此值。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseParallelGC -XX:MaxGCPauseMillis=100 -XX:+UseAdaptiveSizePolicy
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;-XX:+UseAdaptiveSizePolicy&lt;/code&gt;：设置此选项后，并行收集器会自动选择年轻代区大小和相应的Survivor区比例，以达到目标系统规定的最低相应时间或者收集频率等，此值建议使用并行收集器时，一直打开。&lt;/p&gt;
+&lt;h3 id=&#34;响应时间优先的并发收集器&#34;&gt;响应时间优先的并发收集器&lt;/h3&gt;
+&lt;p&gt;如上文所述，并发收集器主要是保证系统的响应时间，减少垃圾收集时的停顿时间。适用于应用服务器、电信领域等。&lt;br&gt;
+典型配置：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:ParallelGCThreads=20 -XX:+UseConcMarkSweepGC -XX:+UseParNewGC
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;-XX:+UseConcMarkSweepGC&lt;/code&gt;：设置年老代为并发收集。测试中配置这个以后，&lt;code&gt;-XX:NewRatio=4&lt;/code&gt;的配置失效了，原因不明。所以，此时年轻代大小最好用-Xmn设置。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-XX:+UseParNewGC&lt;/code&gt;：设置年轻代为并行收集。可与CMS收集同时使用。JDK5.0以上，JVM会根据系统配置自行设置，所以无需再设置此值。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseConcMarkSweepGC -XX:CMSFullGCsBeforeCompaction=5 -XX:+UseCMSCompactAtFullCollection
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;-XX:CMSFullGCsBeforeCompaction&lt;/code&gt;：由于并发收集器不对内存空间进行压缩、整理，所以运行一段时间以后会产生“碎片”，使得运行效率降低。此值设置运行多少次GC以后对内存空间进行压缩、整理。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-XX:+UseCMSCompactAtFullCollection&lt;/code&gt;：打开对年老代的压缩。可能会影响性能，但是可以消除碎片&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;辅助信息&#34;&gt;辅助信息&lt;/h2&gt;
+&lt;p&gt;JVM提供了大量命令行参数，打印信息，供调试使用。主要有以下一些：&lt;/p&gt;
+&lt;h3 id=&#34;-xxprintgc&#34;&gt;&lt;code&gt;-XX:+PrintGC&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;输出形式：[GC 118250K-&amp;gt;113543K(130112K), 0.0094143 secs]&lt;br&gt;
+[Full GC 121376K-&amp;gt;10414K(130112K), 0.0650971 secs]&lt;/p&gt;
+&lt;h3 id=&#34;-xxprintgcdetails&#34;&gt;&lt;code&gt;-XX:+PrintGCDetails&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;输出形式：[GC [DefNew: 8614K-&amp;gt;781K(9088K), 0.0123035 secs] 118250K-&amp;gt;113543K(130112K), 0.0124633 secs]&lt;br&gt;
+[GC [DefNew: 8614K-&amp;gt;8614K(9088K), 0.0000665 secs][Tenured: 112761K-&amp;gt;10414K(121024K), 0.0433488 secs] 121376K-&amp;gt;10414K(130112K), 0.0436268 secs]&lt;/p&gt;
+&lt;h3 id=&#34;-xxprintgctimestamps&#34;&gt;&lt;code&gt;-XX:+PrintGCTimeStamps&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;PrintGCTimeStamps可与上面两个混合使用&lt;br&gt;
+输出形式：11.851: [GC 98328K-&amp;gt;93620K(130112K), 0.0082960 secs]&lt;/p&gt;
+&lt;h3 id=&#34;-xxprintgcapplicationconcurrenttime&#34;&gt;&lt;code&gt;-XX:+PrintGCApplicationConcurrentTime&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;打印每次垃圾回收前，程序未中断的执行时间。可与上面混合使用&lt;br&gt;
+输出形式：Application time: 0.5291524 seconds&lt;/p&gt;
+&lt;h3 id=&#34;-xxprintgcapplicationstoppedtime&#34;&gt;&lt;code&gt;-XX:+PrintGCApplicationStoppedTime&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;打印垃圾回收期间程序暂停的时间。可与上面混合使用&lt;br&gt;
+输出形式：Total time for which application threads were stopped: 0.0468229 seconds&lt;/p&gt;
+&lt;h3 id=&#34;-xxprintheapatgc&#34;&gt;&lt;code&gt;-XX:PrintHeapAtGC&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;打印GC前后的详细堆栈信息，输出形式：&lt;br&gt;
+34.702: [GC {Heap before gc invocations=7:&lt;br&gt;
+def new generation total 55296K, used 52568K [0x1ebd0000, 0x227d0000, 0x227d0000)&lt;br&gt;
+eden space 49152K, 99% used [0x1ebd0000, 0x21bce430, 0x21bd0000)&lt;br&gt;
+from space 6144K, 55% used [0x221d0000, 0x22527e10, 0x227d0000)&lt;br&gt;
+to space 6144K, 0% used [0x21bd0000, 0x21bd0000, 0x221d0000)&lt;br&gt;
+tenured generation total 69632K, used 2696K [0x227d0000, 0x26bd0000, 0x26bd0000)&lt;br&gt;
+the space 69632K, 3% used [0x227d0000, 0x22a720f8, 0x22a72200, 0x26bd0000)&lt;br&gt;
+compacting perm gen total 8192K, used 2898K [0x26bd0000, 0x273d0000, 0x2abd0000)&lt;br&gt;
+the space 8192K, 35% used [0x26bd0000, 0x26ea4ba8, 0x26ea4c00, 0x273d0000)&lt;br&gt;
+ro space 8192K, 66% used [0x2abd0000, 0x2b12bcc0, 0x2b12be00, 0x2b3d0000)&lt;br&gt;
+rw space 12288K, 46% used [0x2b3d0000, 0x2b972060, 0x2b972200, 0x2bfd0000)&lt;br&gt;
+34.735: [DefNew: 52568K-&amp;gt;3433K(55296K), 0.0072126 secs] 55264K-&amp;gt;6615K(124928K)Heap after gc invocations=8:&lt;br&gt;
+def new generation total 55296K, used 3433K [0x1ebd0000, 0x227d0000, 0x227d0000)&lt;br&gt;
+eden space 49152K, 0% used [0x1ebd0000, 0x1ebd0000, 0x21bd0000)&lt;br&gt;
+from space 6144K, 55% used [0x21bd0000, 0x21f2a5e8, 0x221d0000)&lt;br&gt;
+to space 6144K, 0% used [0x221d0000, 0x221d0000, 0x227d0000)&lt;br&gt;
+tenured generation total 69632K, used 3182K [0x227d0000, 0x26bd0000, 0x26bd0000)&lt;br&gt;
+the space 69632K, 4% used [0x227d0000, 0x22aeb958, 0x22aeba00, 0x26bd0000)&lt;br&gt;
+compacting perm gen total 8192K, used 2898K [0x26bd0000, 0x273d0000, 0x2abd0000)&lt;br&gt;
+the space 8192K, 35% used [0x26bd0000, 0x26ea4ba8, 0x26ea4c00, 0x273d0000)&lt;br&gt;
+ro space 8192K, 66% used [0x2abd0000, 0x2b12bcc0, 0x2b12be00, 0x2b3d0000)&lt;br&gt;
+rw space 12288K, 46% used [0x2b3d0000, 0x2b972060, 0x2b972200, 0x2bfd0000)&lt;br&gt;
+}&lt;br&gt;
+, 0.0757599 secs]&lt;/p&gt;
+&lt;h3 id=&#34;-xloggcfilename&#34;&gt;-Xloggc:filename&lt;/h3&gt;
+&lt;p&gt;与上面几个配合使用，把相关日志信息记录到文件以便分析。&lt;/p&gt;
+&lt;h2 id=&#34;常见配置汇总&#34;&gt;常见配置汇总&lt;/h2&gt;
+&lt;h3 id=&#34;堆设置&#34;&gt;堆设置&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;-Xms:初始堆大小&lt;/li&gt;
+&lt;li&gt;-Xmx:最大堆大小&lt;/li&gt;
+&lt;li&gt;-XX:NewSize=n:设置年轻代大小&lt;/li&gt;
+&lt;li&gt;-XX:NewRatio=n:设置年轻代和年老代的比值。如:为3，表示年轻代与年老代比值为1：3，年轻代占整个年轻代年老代和的1/4&lt;/li&gt;
+&lt;li&gt;-XX:SurvivorRatio=n:年轻代中Eden区与两个Survivor区的比值。注意Survivor区有两个。如：3，表示Eden：Survivor=3：2，一个Survivor区占整个年轻代的1/5&lt;/li&gt;
+&lt;li&gt;-XX:MaxPermSize=n:设置持久代大小&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;优先级&#34;&gt;优先级&lt;/h4&gt;
+&lt;p&gt;-Xmn，-XX:NewSize/-XX:MaxNewSize，-XX:NewRatio 3组参数都可以影响年轻代的大小，混合使用的情况下，优先级如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;高优先级：-XX:NewSize/-XX:MaxNewSize&lt;/li&gt;
+&lt;li&gt;中优先级：-Xmn（默认等效 -Xmn=-XX:NewSize=-XX:MaxNewSize=?）&lt;/li&gt;
+&lt;li&gt;低优先级：-XX:NewRatio&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;收集器设置&#34;&gt;收集器设置&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;-XX:+UseSerialGC:设置串行收集器&lt;/li&gt;
+&lt;li&gt;-XX:+UseParallelGC:设置并行收集器&lt;/li&gt;
+&lt;li&gt;-XX:+UseParalledlOldGC:设置并行年老代收集器&lt;/li&gt;
+&lt;li&gt;-XX:+UseConcMarkSweepGC:设置并发收集器&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;并行收集器设置&#34;&gt;并行收集器设置&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;-XX:ParallelGCThreads=n:设置并行收集器收集时使用的CPU数。并行收集线程数。&lt;/li&gt;
+&lt;li&gt;-XX:MaxGCPauseMillis=n:设置并行收集最大暂停时间&lt;/li&gt;
+&lt;li&gt;-XX:GCTimeRatio=n:设置垃圾回收时间占程序运行时间的百分比。公式为1/(1+n)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;并发收集器设置&#34;&gt;并发收集器设置&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;-XX:+CMSIncrementalMode:设置为增量模式。适用于单CPU情况。&lt;/li&gt;
+&lt;li&gt;-XX:ParallelGCThreads=n:设置并发收集器年轻代收集方式为并行收集时，使用的CPU数。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;垃圾回收统计信息&#34;&gt;垃圾回收统计信息&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;-XX:+PrintGC&lt;/li&gt;
+&lt;li&gt;-XX:+PrintGCDetails&lt;/li&gt;
+&lt;li&gt;-XX:+PrintGCTimeStamps&lt;/li&gt;
+&lt;li&gt;-Xloggc:filename&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;调优总结&#34;&gt;调优总结&lt;/h2&gt;
+&lt;h3 id=&#34;年轻代大小选择&#34;&gt;年轻代大小选择&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;响应时间优先的应用：尽可能设大，直到接近系统的最低响应时间限制（根据实际情况选择）。在此种情况下，年轻代收集发生的频率也是最小的。同时，减少到达年老代的对象。&lt;/li&gt;
+&lt;li&gt;吞吐量优先的应用：尽可能的设置大，可能到达Gbit的程度。因为对响应时间没有要求，垃圾收集可以并行进行，一般适合8CPU以上的应用。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;年老代大小选择&#34;&gt;年老代大小选择&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;响应时间优先的应用：年老代使用并发收集器，所以其大小需要小心设置，一般要考虑并发会话率和会话持续时间等一些参数。如果堆设置小了，可以会造成内存碎片、高回收频率以及应用暂停而使用传统的标记清除方式；如果堆大了，则需要较长的收集时间。最优化的方案，一般需要参考以下数据获得：&lt;/li&gt;
+&lt;li&gt;并发垃圾收集信息&lt;/li&gt;
+&lt;li&gt;持久代并发收集次数&lt;/li&gt;
+&lt;li&gt;传统GC信息&lt;/li&gt;
+&lt;li&gt;花在年轻代和年老代回收上的时间比例，减少年轻代和年老代花费的时间，一般会提高应用的效率&lt;/li&gt;
+&lt;li&gt;吞吐量优先的应用：一般吞吐量优先的应用都有一个很大的年轻代和一个较小的年老代。原因是，这样可以尽可能回收掉大部分短期对象，减少中期的对象，而年老代尽存放长期存活对象。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;较小堆引起的碎片问题&#34;&gt;较小堆引起的碎片问题&lt;/h3&gt;
+&lt;p&gt;因为年老代的并发收集器使用标记、清除算法，所以不会对堆进行压缩。当收集器回收时，他会把相邻的空间进行合并，这样可以分配给较大的对象。但是，当堆空间较小时，运行一段时间以后，就会出现“碎片”，如果并发收集器找不到足够的空间，那么并发收集器将会停止，然后使用传统的标记、清除方式进行回收。如果出现“碎片”，可能需要进行如下配置：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;-XX:+UseCMSCompactAtFullCollection：使用并发收集器时，开启对年老代的压缩。&lt;/li&gt;
+&lt;li&gt;-XX:CMSFullGCsBeforeCompaction=0：上面配置开启的情况下，这里设置多少次Full GC后，对年老代进行压缩&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;参考&#34;&gt;参考&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.iteye.com/blog/unixboy-174173&#34;&gt;JVM调优总结 -Xms -Xmx -Xmn -Xss&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.csdn.net/sivyer123/article/details/17139443&#34;&gt;JVM 堆内存设置原理&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+">JVM调优之参数配置</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="http://goroyal.github.io/post/jpa/"" data-c="
