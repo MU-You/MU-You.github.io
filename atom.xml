@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>http://goroyal.github.io</id>
+    <id>http://119.45.146.199</id>
     <title>Goroyal&apos;s blog</title>
-    <updated>2020-08-21T03:03:40.076Z</updated>
+    <updated>2020-09-04T07:36:40.280Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="http://goroyal.github.io"/>
-    <link rel="self" href="http://goroyal.github.io/atom.xml"/>
+    <link rel="alternate" href="http://119.45.146.199"/>
+    <link rel="self" href="http://119.45.146.199/atom.xml"/>
     <subtitle>学习分享</subtitle>
-    <logo>http://goroyal.github.io/images/avatar.png</logo>
-    <icon>http://goroyal.github.io/favicon.ico</icon>
+    <logo>http://119.45.146.199/images/avatar.png</logo>
+    <icon>http://119.45.146.199/favicon.ico</icon>
     <rights>All rights reserved 2020, Goroyal&apos;s blog</rights>
     <entry>
         <title type="html"><![CDATA[JVM调优之参数配置]]></title>
-        <id>http://goroyal.github.io/post/jvm-args/</id>
-        <link href="http://goroyal.github.io/post/jvm-args/">
+        <id>http://119.45.146.199/post/jvm-args/</id>
+        <link href="http://119.45.146.199/post/jvm-args/">
         </link>
         <updated>2020-08-21T02:23:11.000Z</updated>
         <content type="html"><![CDATA[<h2 id="堆内存大小设置">堆内存大小设置</h2>
@@ -204,8 +204,8 @@ rw space 12288K, 46% used [0x2b3d0000, 0x2b972060, 0x2b972200, 0x2bfd0000)<br>
     </entry>
     <entry>
         <title type="html"><![CDATA[Java持久化API]]></title>
-        <id>http://goroyal.github.io/post/jpa/</id>
-        <link href="http://goroyal.github.io/post/jpa/">
+        <id>http://119.45.146.199/post/jpa/</id>
+        <link href="http://119.45.146.199/post/jpa/">
         </link>
         <updated>2020-08-03T08:04:32.000Z</updated>
         <content type="html"><![CDATA[<p>Java持久化API(Java Persistence API, JPA)是基于POJO的持久化机制，从Hibernate和Java数据对象上借鉴了很多理念，引入了Java 5注解的特性。</p>
@@ -227,8 +227,8 @@ JPA定义的两种类型的实体管理器：</p>
     </entry>
     <entry>
         <title type="html"><![CDATA[C#中引入的class命名空间相同但是source不同的问题解决]]></title>
-        <id>http://goroyal.github.io/post/csharp-same-class-name-namespace-diff-source/</id>
-        <link href="http://goroyal.github.io/post/csharp-same-class-name-namespace-diff-source/">
+        <id>http://119.45.146.199/post/csharp-same-class-name-namespace-diff-source/</id>
+        <link href="http://119.45.146.199/post/csharp-same-class-name-namespace-diff-source/">
         </link>
         <updated>2020-08-03T07:39:20.000Z</updated>
         <content type="html"><![CDATA[<h2 id="场景">场景</h2>
@@ -259,8 +259,8 @@ private readonly ProjectZ::ProjextX.ClassA variable = new ProjectZ::ProjextX.Cla
     </entry>
     <entry>
         <title type="html"><![CDATA[MSBuild学习]]></title>
-        <id>http://goroyal.github.io/post/msbuild-learn/</id>
-        <link href="http://goroyal.github.io/post/msbuild-learn/">
+        <id>http://119.45.146.199/post/msbuild-learn/</id>
+        <link href="http://119.45.146.199/post/msbuild-learn/">
         </link>
         <updated>2020-08-03T07:36:16.000Z</updated>
         <content type="html"><![CDATA[<p>MSBuild是.NET平台下的构建工具。</p>
@@ -322,8 +322,8 @@ msbuild file.proj -p:Flavor=Debug -p:Platform=x86
     </entry>
     <entry>
         <title type="html"><![CDATA[Inverted Index]]></title>
-        <id>http://goroyal.github.io/post/inverted-index/</id>
-        <link href="http://goroyal.github.io/post/inverted-index/">
+        <id>http://119.45.146.199/post/inverted-index/</id>
+        <link href="http://119.45.146.199/post/inverted-index/">
         </link>
         <updated>2020-08-03T07:33:37.000Z</updated>
         <content type="html"><![CDATA[<p>Inverted Index, 也就是反向索引（倒排索引）。反向索引结构是典型的搜索引擎算法重要的部分。</p>
@@ -469,8 +469,8 @@ T2 = &quot;it is a banana&quot;
     </entry>
     <entry>
         <title type="html"><![CDATA[JVM类加载机制]]></title>
-        <id>http://goroyal.github.io/post/jvm-lei-jia-zai-ji-zhi/</id>
-        <link href="http://goroyal.github.io/post/jvm-lei-jia-zai-ji-zhi/">
+        <id>http://119.45.146.199/post/jvm-lei-jia-zai-ji-zhi/</id>
+        <link href="http://119.45.146.199/post/jvm-lei-jia-zai-ji-zhi/">
         </link>
         <updated>2020-08-02T15:04:49.000Z</updated>
         <content type="html"><![CDATA[<p>Java里天生可以动态扩展的语言特性就是依赖运行期动态加载和动态连接这个特点实现的。如编写一个面向接口的应用程序，可以等到运行时再指定其实际的实现类。</p>
@@ -582,8 +582,8 @@ System.getProperties().put(&quot;sun.misc.ProxyGenerator.saveGeneratedFiles&quot
     </entry>
     <entry>
         <title type="html"><![CDATA[JVM垃圾收集器]]></title>
-        <id>http://goroyal.github.io/post/jvm-la-ji-shou-ji-qi/</id>
-        <link href="http://goroyal.github.io/post/jvm-la-ji-shou-ji-qi/">
+        <id>http://119.45.146.199/post/jvm-la-ji-shou-ji-qi/</id>
+        <link href="http://119.45.146.199/post/jvm-la-ji-shou-ji-qi/">
         </link>
         <updated>2020-08-02T15:03:44.000Z</updated>
         <content type="html"><![CDATA[<p>常用垃圾收集器：G1，CMS等</p>
@@ -637,8 +637,8 @@ ParNew收集器是许多运行在Server模式下的虚拟机中首选的新生�
     </entry>
     <entry>
         <title type="html"><![CDATA[JVM内存溢出]]></title>
-        <id>http://goroyal.github.io/post/jvm-nei-cun-yi-chu/</id>
-        <link href="http://goroyal.github.io/post/jvm-nei-cun-yi-chu/">
+        <id>http://119.45.146.199/post/jvm-nei-cun-yi-chu/</id>
+        <link href="http://119.45.146.199/post/jvm-nei-cun-yi-chu/">
         </link>
         <updated>2020-08-02T14:56:33.000Z</updated>
         <content type="html"><![CDATA[<p>JVM内存溢出经常有2种报错：</p>
@@ -805,8 +805,8 @@ public class DirectMemoryOOM {
     </entry>
     <entry>
         <title type="html"><![CDATA[JVM GC]]></title>
-        <id>http://goroyal.github.io/post/jvm-gc/</id>
-        <link href="http://goroyal.github.io/post/jvm-gc/">
+        <id>http://119.45.146.199/post/jvm-gc/</id>
+        <link href="http://119.45.146.199/post/jvm-gc/">
         </link>
         <updated>2020-08-02T14:49:41.000Z</updated>
         <content type="html"><![CDATA[<h2 id="引用计数法">引用计数法</h2>
@@ -844,8 +844,8 @@ public class DirectMemoryOOM {
     </entry>
     <entry>
         <title type="html"><![CDATA[Java内存模型]]></title>
-        <id>http://goroyal.github.io/post/java-memory-model/</id>
-        <link href="http://goroyal.github.io/post/java-memory-model/">
+        <id>http://119.45.146.199/post/java-memory-model/</id>
+        <link href="http://119.45.146.199/post/java-memory-model/">
         </link>
         <updated>2020-08-02T14:47:54.000Z</updated>
         <content type="html"><![CDATA[<p>在多核系统中，处理器一般有一层或者多层的缓存，这些的缓存通过加速数据访问（因为数据距离处理器更近）和降低共享内存在总线上的通讯（因为本地缓存能够满足很多内存操作）来提高CPU性能。缓存能够大大提升性能，但是它们也带来了许多挑战。例如，当两个CPU同时检查相同的内存地址时会发生什么？在什么样的条件下它们会看到相同的值？</p>
