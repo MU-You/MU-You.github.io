@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://goroyal.github.io</id>
     <title>行知其远</title>
-    <updated>2020-12-10T15:30:10.470Z</updated>
+    <updated>2020-12-10T15:31:34.814Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://goroyal.github.io"/>
     <link rel="self" href="https://goroyal.github.io/atom.xml"/>
@@ -10,6 +10,13 @@
     <logo>https://goroyal.github.io/images/avatar.png</logo>
     <icon>https://goroyal.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 行知其远</rights>
+    <entry>
+        <title type="html"><![CDATA[Column Table & Row Table]]></title>
+        <id>https://goroyal.github.io/wzihO9SnJ/</id>
+        <link href="https://goroyal.github.io/wzihO9SnJ/">
+        </link>
+        <updated>2020-12-10T15:31:00.000Z</updated>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Kafka语义]]></title>
         <id>https://goroyal.github.io/0-m3H7Wxa/</id>
@@ -72,12 +79,5 @@
         <link href="https://goroyal.github.io/jvm-la-ji-shou-ji-qi/">
         </link>
         <updated>2020-08-02T15:03:44.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[JVM内存溢出]]></title>
-        <id>https://goroyal.github.io/jvm-nei-cun-yi-chu/</id>
-        <link href="https://goroyal.github.io/jvm-nei-cun-yi-chu/">
-        </link>
-        <updated>2020-08-02T14:56:33.000Z</updated>
     </entry>
 </feed>
