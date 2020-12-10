@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://goroyal.github.io</id>
     <title>行知其远</title>
-    <updated>2020-12-10T15:32:48.029Z</updated>
+    <updated>2020-12-10T15:33:41.771Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://goroyal.github.io"/>
     <link rel="self" href="https://goroyal.github.io/atom.xml"/>
@@ -12,22 +12,22 @@
     <rights>All rights reserved 2020, 行知其远</rights>
     <entry>
         <title type="html"><![CDATA[Column Table & Row Table]]></title>
-        <id>https://goroyal.github.io/post/wzihO9SnJ/</id>
-        <link href="https://goroyal.github.io/post/wzihO9SnJ/">
+        <id>https://goroyal.github.io/post/column-row-table/</id>
+        <link href="https://goroyal.github.io/post/column-row-table/">
         </link>
         <updated>2020-12-10T15:31:00.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[Kafka语义]]></title>
-        <id>https://goroyal.github.io/post/0-m3H7Wxa/</id>
-        <link href="https://goroyal.github.io/post/0-m3H7Wxa/">
+        <id>https://goroyal.github.io/post/kafka-semantics/</id>
+        <link href="https://goroyal.github.io/post/kafka-semantics/">
         </link>
         <updated>2020-12-10T15:28:39.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[Kafka的高效读写]]></title>
-        <id>https://goroyal.github.io/post/HRv2vmF96/</id>
-        <link href="https://goroyal.github.io/post/HRv2vmF96/">
+        <id>https://goroyal.github.io/post/kakfa-efficient-rw/</id>
+        <link href="https://goroyal.github.io/post/kakfa-efficient-rw/">
         </link>
         <updated>2020-12-10T15:27:36.000Z</updated>
     </entry>
