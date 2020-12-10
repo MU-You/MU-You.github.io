@@ -30,34 +30,17 @@
       
         <div class="animated fadeInLeft" style="animation-delay: 0.4s">
           <p class="my-4 text-gray-600 font-light hidden lg:block">
-            鲲之大，不知其几千里。
+            文章目录
           </p>
-          <div class="animated fadeInLeft social-container hidden lg:block" style="animation-delay: 0.6s">
-            
-              
-                <a href="https://github.com/goroyal" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="ri-github-line"></i>
-                </a>
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E9%85%8D%E7%BD%AE%E5%AE%9E%E4%BD%93%E7%AE%A1%E7%90%86%E5%99%A8%E5%B7%A5%E5%8E%82">配置实体管理器工厂</a></li>
+</ul>
+</li>
+</ul>
+
           </div>
         </div>
       
@@ -101,58 +84,64 @@
 </div>
 <div class="mask" onclick="closeMenu()">
 </div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4">
-        <h2 class="text-lg text-gray-700 mb-8">
-          <i class="ri-bookmark-2-line"></i> 标签云
-        </h2>
-        <div class="tags-container">
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Java持久化API</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2020-08-03 / 1 min read
+        </div>
+        
+        <div class="post-content yue">
+          <p>Java持久化API(Java Persistence API, JPA)是基于POJO的持久化机制，从Hibernate和Java数据对象上借鉴了很多理念，引入了Java 5注解的特性。</p>
+<p>在Spring中使用JPA的第一步是要在Spring应用上下文中将实体管理器工厂按照Bean的形式来进行配置。</p>
+<h2 id="配置实体管理器工厂">配置实体管理器工厂</h2>
+<p>基于JPA的应用程序使用EntityManagerFactory的实现类来获取EntityManager实例。<br>
+JPA定义的两种类型的实体管理器：</p>
+<ul>
+<li>应用程序管理类型（Application-managed），由LocalEntityManagerFactoryBean生成</li>
+<li>容器管理类型（Container-managed），由LocalContainerEntityManagerFactoryBean生成</li>
+</ul>
+<p>二者区别在于EntityManager的创建和管理方式：</p>
+<ul>
+<li>应用程序管理类型的EntityManager由EntityManagerFactory创建</li>
+<li>容器管理类型的EntityManager由PersistenceProvider的createEntityManagerFactory()方法得到的<br>
+二者唯一值得关注的区别是在Spring应用上下文中如何进行配置。</li>
+</ul>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/Ke7gk0EO5/">
+            <span class="flex-auto">Java</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/Ke7gk0EO5/" :style="{ 'animation-delay': `${0 * 0.2}s` }">
-              <span class="flex-auto">Java</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">13</span>
-            </a>
+            <div class="prev-post">
+              <a href="https://goroyal.github.io/jvm-args/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  JVM调优之参数配置
+                </h3>
+              </a>
+            </div>
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/ZbecWX-__/" :style="{ 'animation-delay': `${1 * 0.2}s` }">
-              <span class="flex-auto">.NET</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
+
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/5boyAOfFj/" :style="{ 'animation-delay': `${2 * 0.2}s` }">
-              <span class="flex-auto">Version Control</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/o6aLUZ3Go/" :style="{ 'animation-delay': `${3 * 0.2}s` }">
-              <span class="flex-auto">JavaScript</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/dOIw4zPHC/" :style="{ 'animation-delay': `${4 * 0.2}s` }">
-              <span class="flex-auto">Data Structure</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/8q5LigPjO/" :style="{ 'animation-delay': `${5 * 0.2}s` }">
-              <span class="flex-auto">Database</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/R38FKKbZc/" :style="{ 'animation-delay': `${6 * 0.2}s` }">
-              <span class="flex-auto">Linux</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">4</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/en071zNCj/" :style="{ 'animation-delay': `${7 * 0.2}s` }">
-              <span class="flex-auto">Programming</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/T48Oi5XwY/" :style="{ 'animation-delay': `${8 * 0.2}s` }">
-              <span class="flex-auto">HTTP</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
+            <div class="next-post">
+              <a href="https://goroyal.github.io/csharp-same-class-name-namespace-diff-source/">
+                <h3 class="post-title">
+                  C#中引入的class命名空间相同但是source不同的问题解决
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
           
         </div>
+
+        
+
       </div>
     </div>
 

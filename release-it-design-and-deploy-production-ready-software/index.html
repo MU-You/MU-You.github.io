@@ -30,34 +30,13 @@
       
         <div class="animated fadeInLeft" style="animation-delay: 0.4s">
           <p class="my-4 text-gray-600 font-light hidden lg:block">
-            鲲之大，不知其几千里。
+            文章目录
           </p>
-          <div class="animated fadeInLeft social-container hidden lg:block" style="animation-delay: 0.6s">
-            
-              
-                <a href="https://github.com/goroyal" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="ri-github-line"></i>
-                </a>
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E7%AC%94%E8%AE%B0">笔记</a></li>
+</ul>
+
           </div>
         </div>
       
@@ -101,58 +80,67 @@
 </div>
 <div class="mask" onclick="closeMenu()">
 </div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4">
-        <h2 class="text-lg text-gray-700 mb-8">
-          <i class="ri-bookmark-2-line"></i> 标签云
-        </h2>
-        <div class="tags-container">
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">发布！软件的设计与部署</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2016-06-11 / 3 min read
+        </div>
+        
+        <div class="post-content yue">
+          <h1 id="笔记">笔记</h1>
+<p>早期决策对系统的最终形态影响最大，最初的决策最难以更改。这个时候团队对软件的最终结构最无知，但必须要做出某些不可更改的决策。</p>
+<p>敏捷强调及早发布并持续改进，意味着软件可以尽快投入使用，因为软件投入使用是唯一得知软件如何响应真实世界刺激的途径。</p>
+<p>发布1.0版是软件生命的开始，而不是项目的结束。1.0版发布后，你的生活质量取决于你在这个重要里程碑之前所做的选择。</p>
+<p>对于那些还没有被取消或废弃的系统来说，系统的运营时间要远远多于开发时间，靠承担经常性运营成本来避免一次性成本，是没有意义的。</p>
+<p>宕机后恢复服务是优先级最高的任务。重大事故之后的管理认知和管理事故本身同样重要。</p>
+<p>系统寿命受到的主要威胁是内存泄露和数据疯涨。</p>
+<p>有条墨菲定律，只要你不针对某种失效情况特别做测试，它一定会发生。</p>
+<p>最初的触发点，裂痕扩散的方式和损坏的结果，并称为故障模式。</p>
+<p>代码耦合得越紧，代码错误扩散的机会也越大。反之，代码越松散，就如同减震器一样越能消除而非扩大这种错误的影响。</p>
+<p>考虑下面各种可能存在的冲击和压力：</p>
+<ul>
+<li>如果我不启动连接？</li>
+<li>如果连接需要10分钟？</li>
+<li>如果已经连接，那它如何断开连接？</li>
+<li>如果已经连接，而我却不能得到另一端的任何响应？</li>
+<li>如果需要2分钟来回应我的查询请求？</li>
+<li>如果同时有10000个请求？</li>
+<li>如果网络陷入蠕虫的攻击而瘫痪，而我要将关于SQLException异常发生的错误信息写入日志时，我的磁盘已满？</li>
+</ul>
+<p>网络永远是不可靠的，超时是让你放弃等待你认为不会到来的响应的一种简单机制。设置合理的超时可以隔离故障，在其他系统、子系统或设备中的问题不会成为你的问题。所有阻塞线程的资源池都应设置一个超时，以确保不管资源最后是否可用，线程都可以被解除阻塞。如果不这么做，就可能会永远等待了。</p>
+<p>电路中的保险丝，自己先失效，从而控制整体失效。但是有人自己使用高电流低电阻的保险丝，从而不起到保险作用。软件系统中也可以使用断路器来保护。检测过度使用，然后先失效（跳闸），可以再重新设置恢复系统使用。</p>
+
+        </div>
+
+        
+
+
+        <div class="flex justify-between py-8">
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/Ke7gk0EO5/" :style="{ 'animation-delay': `${0 * 0.2}s` }">
-              <span class="flex-auto">Java</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">13</span>
-            </a>
+            <div class="prev-post">
+              <a href="https://goroyal.github.io/final-finally-finalize-in-java/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  Java中的final、finally和finalize
+                </h3>
+              </a>
+            </div>
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/ZbecWX-__/" :style="{ 'animation-delay': `${1 * 0.2}s` }">
-              <span class="flex-auto">.NET</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
+
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/5boyAOfFj/" :style="{ 'animation-delay': `${2 * 0.2}s` }">
-              <span class="flex-auto">Version Control</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/o6aLUZ3Go/" :style="{ 'animation-delay': `${3 * 0.2}s` }">
-              <span class="flex-auto">JavaScript</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/dOIw4zPHC/" :style="{ 'animation-delay': `${4 * 0.2}s` }">
-              <span class="flex-auto">Data Structure</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/8q5LigPjO/" :style="{ 'animation-delay': `${5 * 0.2}s` }">
-              <span class="flex-auto">Database</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/R38FKKbZc/" :style="{ 'animation-delay': `${6 * 0.2}s` }">
-              <span class="flex-auto">Linux</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">4</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/en071zNCj/" :style="{ 'animation-delay': `${7 * 0.2}s` }">
-              <span class="flex-auto">Programming</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/T48Oi5XwY/" :style="{ 'animation-delay': `${8 * 0.2}s` }">
-              <span class="flex-auto">HTTP</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
+            <div class="next-post">
+              <a href="https://goroyal.github.io/handle-password-expire-in-oracle/">
+                <h3 class="post-title">
+                  Oracle用户密码过期解决
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
           
         </div>
+
+        
+
       </div>
     </div>
 

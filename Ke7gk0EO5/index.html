@@ -16,7 +16,7 @@
 
   </head>
   <body>
-    <div class="main px-4 flex flex-col lg:flex-row">
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
       <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
   <div class="lg:sticky top-0">
     <div class="sidebar-content">
@@ -102,25 +102,11 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4">
-        <h2 class="latest-article text-lg text-gray-700 mb-8">
-          <i class="ri-article-line"></i>
-          最新文章
+        <h2 class="text-lg text-gray-700 mb-8">
+          <i class="ri-bookmark-line"></i> Java
         </h2>
         
   <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${0 * 0.2}s` }">
-    
-    <div class="content">
-      <a href="https://goroyal.github.io/test/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">Test</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
-      </div>
-      <div class="text-gray-400 text-sm font-light">2020-11-20 / 1 min read</div>
-    </div>
-  </section>
-
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${1 * 0.2}s` }">
     
     <div class="content">
       <a href="https://goroyal.github.io/jvm-args/">
@@ -133,7 +119,7 @@
     </div>
   </section>
 
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${2 * 0.2}s` }">
+  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${1 * 0.2}s` }">
     
     <div class="content">
       <a href="https://goroyal.github.io/jpa/">
@@ -146,85 +132,7 @@
     </div>
   </section>
 
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${3 * 0.2}s` }">
-    
-    <div class="content">
-      <a href="https://goroyal.github.io/csharp-same-class-name-namespace-diff-source/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">C#中引入的class命名空间相同但是source不同的问题解决</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
-      </div>
-      <div class="text-gray-400 text-sm font-light">2020-08-03 / 2 min read</div>
-    </div>
-  </section>
-
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${4 * 0.2}s` }">
-    
-    <div class="content">
-      <a href="https://goroyal.github.io/msbuild-learn/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">MSBuild学习</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
-      </div>
-      <div class="text-gray-400 text-sm font-light">2020-08-03 / 3 min read</div>
-    </div>
-  </section>
-
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${5 * 0.2}s` }">
-    
-    <div class="content">
-      <a href="https://goroyal.github.io/inverted-index/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">Inverted Index</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
-      </div>
-      <div class="text-gray-400 text-sm font-light">2020-08-03 / 3 min read</div>
-    </div>
-  </section>
-
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${6 * 0.2}s` }">
-    
-    <div class="content">
-      <a href="https://goroyal.github.io/jvm-lei-jia-zai-ji-zhi/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">JVM类加载机制</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
-      </div>
-      <div class="text-gray-400 text-sm font-light">2020-08-02 / 13 min read</div>
-    </div>
-  </section>
-
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${7 * 0.2}s` }">
-    
-    <div class="content">
-      <a href="https://goroyal.github.io/jvm-la-ji-shou-ji-qi/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">JVM垃圾收集器</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
-      </div>
-      <div class="text-gray-400 text-sm font-light">2020-08-02 / 4 min read</div>
-    </div>
-  </section>
-
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${8 * 0.2}s` }">
-    
-    <div class="content">
-      <a href="https://goroyal.github.io/jvm-nei-cun-yi-chu/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">JVM内存溢出</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
-      </div>
-      <div class="text-gray-400 text-sm font-light">2020-08-02 / 10 min read</div>
-    </div>
-  </section>
-
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${9 * 0.2}s` }">
+  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${2 * 0.2}s` }">
     
     <div class="content">
       <a href="https://goroyal.github.io/jvm-gc/">
@@ -237,23 +145,111 @@
     </div>
   </section>
 
-        <div class="read-more">
-          
-            <a href="https://goroyal.github.io/page/2" class="animated fadeIn font-extrabold text-gray-700 hover:text-gray-900 more-btn">
-              阅读更多
-              <i class="ri-arrow-right-line"></i>
-            </a>
-          
-        </div>
-        <div class="index-page">
-          <div class="pagination-container animated fadeIn">
+  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${3 * 0.2}s` }">
+    
+    <div class="content">
+      <a href="https://goroyal.github.io/java-memory-model/">
+        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">Java内存模型</h2>
+      </a>
+      <div class="post-abstract text-gray-700 font-light my-4">
+        
+      </div>
+      <div class="text-gray-400 text-sm font-light">2020-08-02 / 5 min read</div>
+    </div>
+  </section>
+
+  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${4 * 0.2}s` }">
+    
+    <div class="content">
+      <a href="https://goroyal.github.io/java-volatile/">
+        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">Java volatile</h2>
+      </a>
+      <div class="post-abstract text-gray-700 font-light my-4">
+        
+      </div>
+      <div class="text-gray-400 text-sm font-light">2020-08-02 / 11 min read</div>
+    </div>
+  </section>
+
+  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${5 * 0.2}s` }">
+    
+    <div class="content">
+      <a href="https://goroyal.github.io/java-thread-feature/">
+        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">Java 线程中的3个特性</h2>
+      </a>
+      <div class="post-abstract text-gray-700 font-light my-4">
+        
+      </div>
+      <div class="text-gray-400 text-sm font-light">2020-08-02 / 7 min read</div>
+    </div>
+  </section>
+
+  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${6 * 0.2}s` }">
+    
+    <div class="content">
+      <a href="https://goroyal.github.io/java-lock/">
+        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">Java锁</h2>
+      </a>
+      <div class="post-abstract text-gray-700 font-light my-4">
+        
+      </div>
+      <div class="text-gray-400 text-sm font-light">2020-08-02 / 7 min read</div>
+    </div>
+  </section>
+
+  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${7 * 0.2}s` }">
+    
+    <div class="content">
+      <a href="https://goroyal.github.io/java-baozhuang-class/">
+        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">Java包装类的比较</h2>
+      </a>
+      <div class="post-abstract text-gray-700 font-light my-4">
+        
+      </div>
+      <div class="text-gray-400 text-sm font-light">2020-07-20 / 1 min read</div>
+    </div>
+  </section>
+
+  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${8 * 0.2}s` }">
+    
+    <div class="content">
+      <a href="https://goroyal.github.io/java-thread/">
+        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">Java中的线程</h2>
+      </a>
+      <div class="post-abstract text-gray-700 font-light my-4">
+        
+      </div>
+      <div class="text-gray-400 text-sm font-light">2020-07-20 / 2 min read</div>
+    </div>
+  </section>
+
+  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${9 * 0.2}s` }">
+    
+    <div class="content">
+      <a href="https://goroyal.github.io/java-map/">
+        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">【数据结构】Java里的各种Map</h2>
+      </a>
+      <div class="post-abstract text-gray-700 font-light my-4">
+        <p><code>Map</code>就如它字面意思，是一个从键（key）到值（value）的映射。我们在Map里面存储键值对，根据键得到值，因此键是不能重复的（如果插入一个有重复键的记录，则会覆盖原有的值），但是值可以重复。</p>
+<p>Java里面基于对Map的不同访问需求创建了它的不同实现类：</p>
+<ul>
+<li>对键的顺序没有要求</li>
+<li>取出键的顺序按照插入记录时的顺序</li>
+<li>取出键的顺序按照键的升序排序</li>
+</ul>
+
+      </div>
+      <div class="text-gray-400 text-sm font-light">2020-07-10 / 4 min read</div>
+    </div>
+  </section>
+
+        <div class="pagination-container animated fadeIn">
   
   
-    <a href="https://goroyal.github.io/page/2" class="page-btn">下一页 <i class="ri-arrow-right-line"></i></a>
+    <a href="https://goroyal.github.io/Ke7gk0EO5/page/2" class="page-btn">下一页 <i class="ri-arrow-right-line"></i></a>
   
 </div>
 
-        </div>
       </div>
     </div>
 

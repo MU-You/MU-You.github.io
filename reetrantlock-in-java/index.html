@@ -30,34 +30,18 @@
       
         <div class="animated fadeInLeft" style="animation-delay: 0.4s">
           <p class="my-4 text-gray-600 font-light hidden lg:block">
-            鲲之大，不知其几千里。
+            文章目录
           </p>
-          <div class="animated fadeInLeft social-container hidden lg:block" style="animation-delay: 0.6s">
-            
-              
-                <a href="https://github.com/goroyal" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="ri-github-line"></i>
-                </a>
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E7%B1%BB%E8%AF%B4%E6%98%8E">类说明</a></li>
+<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
+</ul>
+</li>
+</ul>
+
           </div>
         </div>
       
@@ -101,58 +85,71 @@
 </div>
 <div class="mask" onclick="closeMenu()">
 </div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4">
-        <h2 class="text-lg text-gray-700 mb-8">
-          <i class="ri-bookmark-2-line"></i> 标签云
-        </h2>
-        <div class="tags-container">
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Java中的可重入锁ReetrantLock</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2015-08-28 / 2 min read
+        </div>
+        
+        <div class="post-content yue">
+          <h2 id="类说明">类说明</h2>
+<p><code>ReetrantLock</code>是一个可重入排它<code>Lock</code>，和使用<code>synchronized</code>方法和语句的隐式监视器锁有着相同的基本行为和语义，但是有着扩展性能。</p>
+<p><code>ReentrantLock</code>由上次成功加锁但是还没有解锁的线程所持有。在锁没有被其他线程持有时，一个线程调用<code>lock</code>将返回成功获取锁。如果当前线程已经持有锁那么该方法将立即返回。这个可以使用方法<code>isHeldByCurrentThread</code>和<code>getHoldCount</code>检查。</p>
+<!-- more -->
+<p>这个类的构造器接收一个可选的公平性参数。当设为 true 时，在争用的情况下，锁倾向于授权给等待时间最长的线程。另外，这个锁不保证任何特定访问顺序。使用被多个线程访问的公平锁的程序将呈现比使用默认设置的情况较低的总吞吐量（也就是变慢了，通常是慢很多），但是在获取锁和保证不饥饿的时间上有较小的方差。</p>
+<p>公平锁可以保证锁的获取按照FIFO原则，而代价是进行大量的线程切换。非公平性锁虽然可能造成线程饥饿，但是较少线程切换，保证了很大的吞吐量。</p>
+<p>同样需要注意的是，不计时的<code>tryLock()</code>方法不赞成公平设置。如果锁是可用的它将成功获得锁，而不管其他线程是否正在等待。</p>
+<p>建议实践时永远在<code>lock</code>后面立即跟上一个<code>try</code>块，大多数典型的在构造之前/之后的情况是：</p>
+<pre><code class="language-java">class X{
+	private final ReentrantLock lock = new ReentrantLock();
+	//...
+	public void m(){
+		lock.lock(); // block until condition holds
+		try{
+			// ... method body
+		} finally {
+			lock.unlock();
+		}
+	}
+}
+</code></pre>
+<p>除了实现<code>Lock</code>接口，这个类定义了大量 public 和 protected 方法来检查锁的状态。其中有一些方法只用于仪表和监控。</p>
+<p>这个类的序列化和内置锁的行为方式一致：反序列化的锁是处于解锁状态，在序列化的时候不管当前它的状态。</p>
+<p>这个锁支持相同线程递归锁最大2147483647次。尝试超过这个限制将导致从加锁方法抛出<code>Error</code>。</p>
+<h2 id="参考资料">参考资料</h2>
+<p>JDK 1.7</p>
+
+        </div>
+
+        
+
+
+        <div class="flex justify-between py-8">
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/Ke7gk0EO5/" :style="{ 'animation-delay': `${0 * 0.2}s` }">
-              <span class="flex-auto">Java</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">13</span>
-            </a>
+            <div class="prev-post">
+              <a href="https://goroyal.github.io/handle-password-expire-in-oracle/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  Oracle用户密码过期解决
+                </h3>
+              </a>
+            </div>
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/ZbecWX-__/" :style="{ 'animation-delay': `${1 * 0.2}s` }">
-              <span class="flex-auto">.NET</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
+
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/5boyAOfFj/" :style="{ 'animation-delay': `${2 * 0.2}s` }">
-              <span class="flex-auto">Version Control</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/o6aLUZ3Go/" :style="{ 'animation-delay': `${3 * 0.2}s` }">
-              <span class="flex-auto">JavaScript</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/dOIw4zPHC/" :style="{ 'animation-delay': `${4 * 0.2}s` }">
-              <span class="flex-auto">Data Structure</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/8q5LigPjO/" :style="{ 'animation-delay': `${5 * 0.2}s` }">
-              <span class="flex-auto">Database</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/R38FKKbZc/" :style="{ 'animation-delay': `${6 * 0.2}s` }">
-              <span class="flex-auto">Linux</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">4</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/en071zNCj/" :style="{ 'animation-delay': `${7 * 0.2}s` }">
-              <span class="flex-auto">Programming</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/T48Oi5XwY/" :style="{ 'animation-delay': `${8 * 0.2}s` }">
-              <span class="flex-auto">HTTP</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
+            <div class="next-post">
+              <a href="https://goroyal.github.io/readwrite-lock-in-java/">
+                <h3 class="post-title">
+                  Java中的ReadWriteLock
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
           
         </div>
+
+        
+
       </div>
     </div>
 

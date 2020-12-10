@@ -30,34 +30,19 @@
       
         <div class="animated fadeInLeft" style="animation-delay: 0.4s">
           <p class="my-4 text-gray-600 font-light hidden lg:block">
-            鲲之大，不知其几千里。
+            文章目录
           </p>
-          <div class="animated fadeInLeft social-container hidden lg:block" style="animation-delay: 0.6s">
-            
-              
-                <a href="https://github.com/goroyal" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="ri-github-line"></i>
-                </a>
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%9C%BA%E6%99%AF">场景</a></li>
+<li><a href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88">解决方案</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5">参考链接</a></li>
+</ul>
+
           </div>
         </div>
       
@@ -101,58 +86,73 @@
 </div>
 <div class="mask" onclick="closeMenu()">
 </div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4">
-        <h2 class="text-lg text-gray-700 mb-8">
-          <i class="ri-bookmark-2-line"></i> 标签云
-        </h2>
-        <div class="tags-container">
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">C#中引入的class命名空间相同但是source不同的问题解决</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2020-08-03 / 2 min read
+        </div>
+        
+        <div class="post-content yue">
+          <h2 id="场景">场景</h2>
+<ol>
+<li>在z项目里引用x和y项目，分别为x.dll和y.dll。</li>
+<li>引入的class A在x.dll和y.dll都定义了，而且命名空间一样，然后x和y同时在z项目中被用到，z中想使用class A就会遇到这问题</li>
+<li>x项目中定义了class A，同时y项目中在csproj文件里用<code>&lt;Compile Include=&quot;..\x\A.cs&quot;&gt;</code>将其引入进来并重新编译。然后x和y同时在z项目中被用到，z中想使用class A时候就会同样遇到这问题。</li>
+</ol>
+<h2 id="解决方案">解决方案</h2>
+<p>第一步，在z项目引入x和y的时候指定它的alias，如下：</p>
+<pre><code class="language-XML">&lt;ProjectReference Include=&quot;..\ProjextX\ProjextX.csproj&quot;&gt;
+    &lt;Project&gt;{EE0F5BBF-54D4-40EB-BEB2-5D07A49BC5B8}&lt;/Project&gt;
+    &lt;Name&gt;ProjextX.ClassA&lt;/Name&gt;
+    &lt;Aliases&gt;ClassA&lt;/Aliases&gt;
+&lt;/ProjectReference&gt;
+</code></pre>
+<p>第二步，在z项目中用到class A的地方，先在引用其他namespace之前加上<code>extern alias</code>，比如：</p>
+<pre><code class="language-java">// 引入命名空间前
+extern alias ProjextX;
+
+// 调用的时候
+private readonly ProjectZ::ProjextX.ClassA variable = new ProjectZ::ProjextX.ClassA();
+</code></pre>
+<p>注意的是，<code>extern alias</code>放在自己这个类的namespace定义外边还是里边效果是不一样的。</p>
+<h1 id="参考链接">参考链接</h1>
+<p>https://blogs.msdn.microsoft.com/ansonh/2006/09/27/extern-alias-walkthrough/</p>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/ZbecWX-__/">
+            <span class="flex-auto">.NET</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/Ke7gk0EO5/" :style="{ 'animation-delay': `${0 * 0.2}s` }">
-              <span class="flex-auto">Java</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">13</span>
-            </a>
+            <div class="prev-post">
+              <a href="https://goroyal.github.io/jpa/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  Java持久化API
+                </h3>
+              </a>
+            </div>
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/ZbecWX-__/" :style="{ 'animation-delay': `${1 * 0.2}s` }">
-              <span class="flex-auto">.NET</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
+
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/5boyAOfFj/" :style="{ 'animation-delay': `${2 * 0.2}s` }">
-              <span class="flex-auto">Version Control</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/o6aLUZ3Go/" :style="{ 'animation-delay': `${3 * 0.2}s` }">
-              <span class="flex-auto">JavaScript</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/dOIw4zPHC/" :style="{ 'animation-delay': `${4 * 0.2}s` }">
-              <span class="flex-auto">Data Structure</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/8q5LigPjO/" :style="{ 'animation-delay': `${5 * 0.2}s` }">
-              <span class="flex-auto">Database</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/R38FKKbZc/" :style="{ 'animation-delay': `${6 * 0.2}s` }">
-              <span class="flex-auto">Linux</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">4</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/en071zNCj/" :style="{ 'animation-delay': `${7 * 0.2}s` }">
-              <span class="flex-auto">Programming</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/T48Oi5XwY/" :style="{ 'animation-delay': `${8 * 0.2}s` }">
-              <span class="flex-auto">HTTP</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
+            <div class="next-post">
+              <a href="https://goroyal.github.io/msbuild-learn/">
+                <h3 class="post-title">
+                  MSBuild学习
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
           
         </div>
+
+        
+
       </div>
     </div>
 

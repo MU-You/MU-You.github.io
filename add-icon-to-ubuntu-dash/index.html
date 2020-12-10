@@ -30,33 +30,9 @@
       
         <div class="animated fadeInLeft" style="animation-delay: 0.4s">
           <p class="my-4 text-gray-600 font-light hidden lg:block">
-            鲲之大，不知其几千里。
+            文章目录
           </p>
-          <div class="animated fadeInLeft social-container hidden lg:block" style="animation-delay: 0.6s">
-            
-              
-                <a href="https://github.com/goroyal" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="ri-github-line"></i>
-                </a>
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
+          <div class="toc-container hidden lg:block">
             
           </div>
         </div>
@@ -101,58 +77,77 @@
 </div>
 <div class="mask" onclick="closeMenu()">
 </div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4">
-        <h2 class="text-lg text-gray-700 mb-8">
-          <i class="ri-bookmark-2-line"></i> 标签云
-        </h2>
-        <div class="tags-container">
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Ubuntu中给Dash创建图标</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2017-05-21 / 1 min read
+        </div>
+        
+        <div class="post-content yue">
+          <p>我们建设以创建 Eclipse 程序图标为例</p>
+<ul>
+<li>进入图标存放目录|：<code>cd /usr/share/applications</code></li>
+<li>创建文件并编辑：<code>sudo gedit eclipse.desktop</code></li>
+</ul>
+<pre><code>[Desktop Entry]
+Name=eclipse
+Name[zh_CN]=eclipse
+Comment=eclipse Client
+Exec=/usr/programa/tools/eclipse/eclipse
+Icon=/usr/programa/tools/eclipse/icon.xpm
+Terminal=false
+Type=Application
+Categories=Application;
+Encoding=UTF-8
+StartupNotify=true
+</code></pre>
+<p>重点参数说明（注意：路径使用完整路径）</p>
+<ul>
+<li>Name 为你想要显示在 Launcher 中的名称</li>
+<li>Comment 为说明。</li>
+<li>Exec 为程序执行位置</li>
+<li>Icon 为图标所在路径</li>
+</ul>
+<p>最后，打开 Dash，在顶部搜索框搜索 eclipse，此时你应该能搜到它，先单击试一下看能不能打开，如果可以打开，拖到该图标启动器上，下次就可以直接从启动器打开了</p>
+<p><strong>资料</strong></p>
+<ul>
+<li><a href="http://my.oschina.net/Obahua/blog/110612">Ubuntu 将 Sublime Text 添加到 Launcher 和其它方式 原<br>
+</a></li>
+<li><a href="http://www.cnblogs.com/enein/articles/2818864.html">Ubuntu 12.10 程序图标放到启动器</a></li>
+<li><a href="http://blog.chinaunix.net/uid-26404477-id-3462663.html">向Ubuntu Dash中添加图标</a>\</li>
+</ul>
+
+        </div>
+
+        
+
+
+        <div class="flex justify-between py-8">
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/Ke7gk0EO5/" :style="{ 'animation-delay': `${0 * 0.2}s` }">
-              <span class="flex-auto">Java</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">13</span>
-            </a>
+            <div class="prev-post">
+              <a href="https://goroyal.github.io/abstract-class-and-interface/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  Java 抽象类和接口
+                </h3>
+              </a>
+            </div>
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/ZbecWX-__/" :style="{ 'animation-delay': `${1 * 0.2}s` }">
-              <span class="flex-auto">.NET</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
+
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/5boyAOfFj/" :style="{ 'animation-delay': `${2 * 0.2}s` }">
-              <span class="flex-auto">Version Control</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/o6aLUZ3Go/" :style="{ 'animation-delay': `${3 * 0.2}s` }">
-              <span class="flex-auto">JavaScript</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/dOIw4zPHC/" :style="{ 'animation-delay': `${4 * 0.2}s` }">
-              <span class="flex-auto">Data Structure</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/8q5LigPjO/" :style="{ 'animation-delay': `${5 * 0.2}s` }">
-              <span class="flex-auto">Database</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/R38FKKbZc/" :style="{ 'animation-delay': `${6 * 0.2}s` }">
-              <span class="flex-auto">Linux</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">4</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/en071zNCj/" :style="{ 'animation-delay': `${7 * 0.2}s` }">
-              <span class="flex-auto">Programming</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/T48Oi5XwY/" :style="{ 'animation-delay': `${8 * 0.2}s` }">
-              <span class="flex-auto">HTTP</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
+            <div class="next-post">
+              <a href="https://goroyal.github.io/final-finally-finalize-in-java/">
+                <h3 class="post-title">
+                  Java中的final、finally和finalize
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
           
         </div>
+
+        
+
       </div>
     </div>
 

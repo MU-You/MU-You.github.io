@@ -30,33 +30,9 @@
       
         <div class="animated fadeInLeft" style="animation-delay: 0.4s">
           <p class="my-4 text-gray-600 font-light hidden lg:block">
-            鲲之大，不知其几千里。
+            文章目录
           </p>
-          <div class="animated fadeInLeft social-container hidden lg:block" style="animation-delay: 0.6s">
-            
-              
-                <a href="https://github.com/goroyal" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="ri-github-line"></i>
-                </a>
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
+          <div class="toc-container hidden lg:block">
             
           </div>
         </div>
@@ -101,58 +77,76 @@
 </div>
 <div class="mask" onclick="closeMenu()">
 </div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4">
-        <h2 class="text-lg text-gray-700 mb-8">
-          <i class="ri-bookmark-2-line"></i> 标签云
-        </h2>
-        <div class="tags-container">
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Java synchronized</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2020-08-02 / 4 min read
+        </div>
+        
+        <div class="post-content yue">
+          <p>synchronized，我们谓之锁，主要用来给方法、代码块加锁。当某个方法或者代码块使用synchronized时，那么在同一时刻至多仅有有一个线程在执行该段代码。当有多个线程访问同一对象的加锁方法/代码块时，同一时间只有一个线程在执行，其余线程必须要等待当前线程执行完之后才能执行该代码段。但是，其余线程是可以访问该对象中的非加锁代码块的。</p>
+<p>synchronized主要包括两种方法：synchronized 方法、synchronized 代码块。</p>
+<p>synchronized 方法通过在方法声明中加入 synchronized关键字来声明 synchronized 方法。如：</p>
+<pre><code class="language-java">public synchronized void getResult();
+</code></pre>
+<p>synchronized方法控制对类成员变量的访问。它是如何来避免类成员变量的访问控制呢？我们知道方法使用了synchronized关键字表明该方法已加锁，在任一线程在访问改方法时都必须要判断该方法是否有其他线程在“独占”。每个类实例对应一个把锁，每个synchronized方法都必须调用该方法的类实例的锁方能执行，否则所属线程阻塞，方法一旦执行，就独占该锁，直到从该方法返回时才将锁释放，被阻塞的线程方能获得该锁。</p>
+<p>其实synchronized方法是存在缺陷的，如果我们将一个很大的方法声明为synchronized将会大大影响效率的。如果多个线程在访问一个synchronized方法，那么同一时刻只有一个线程在执行该方法，而其他线程都必须等待，但是如果该方法没有使用synchronized，则所有线程可以在同一时刻执行它，减少了执行的总时间。所以如果我们知道一个方法不会被多个线程执行到或者说不存在资源共享的问题，则不需要使用synchronized关键字。但是如果一定要使用synchronized关键字，那么我们可以synchronized代码块来替换synchronized方法。</p>
+<p>synchronized代码块所起到的作用和synchronized方法一样，只不过它使临界区变的尽可能短了，换句话说：它只把需要的共享数据保护起来，其余的长代码块留出此操作。语法如下：</p>
+<pre><code class="language-java">synchronized(object) {  
+    //允许访问控制的代码  
+}
+</code></pre>
+<p>如果我们需要以这种方式来使用synchronized关键字,那么必须要通过一个对象引用来作为参数,通常这个参数我们常使用为this.</p>
+<pre><code class="language-java">synchronized (this) {
+    //允许访问控制的代码 
+}
+</code></pre>
+<p>对于synchronized(this)有如下理解：</p>
+<ul>
+<li>当两个并发线程访问同一个对象object中的这个synchronized(this)同步代码块时，一个时间内只能有一个线程得到执行。另一个线程必须等待当前线程执行完这个代码块以后才能执行该代码块。</li>
+<li>然而，当一个线程访问object的一个synchronized(this)同步代码块时，另一个线程仍然可以访问object中的非synchronized(this)同步代码块。</li>
+<li>尤其关键的是，当一个线程访问object的一个synchronized(this)同步代码块时，其他线程对object中所有其他synchronized(this)同步代码块得访问将被阻塞。</li>
+<li>第三个例子同样适用其他同步代码块。也就是说，当一个线程访问object的一个synchronized(this)同步代码块时，它就获得了这个object的对象锁。结果，其他线程对该object对象所有同步代码部分的访问都将被暂时阻塞。</li>
+<li>以上规则对其他对象锁同样适用</li>
+</ul>
+<p>Java中每一个对象都可以作为锁，它主要体现在下面三个方面：</p>
+<ul>
+<li>对于同步方法，锁是当前实例对象。</li>
+<li>对于同步方法块，锁是Synchonized括号里配置的对象。</li>
+<li>对于静态同步方法，锁是当前对象的Class对象。</li>
+</ul>
+
+        </div>
+
+        
+
+
+        <div class="flex justify-between py-8">
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/Ke7gk0EO5/" :style="{ 'animation-delay': `${0 * 0.2}s` }">
-              <span class="flex-auto">Java</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">13</span>
-            </a>
+            <div class="prev-post">
+              <a href="https://goroyal.github.io/java-lock/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  Java锁
+                </h3>
+              </a>
+            </div>
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/ZbecWX-__/" :style="{ 'animation-delay': `${1 * 0.2}s` }">
-              <span class="flex-auto">.NET</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
+
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/5boyAOfFj/" :style="{ 'animation-delay': `${2 * 0.2}s` }">
-              <span class="flex-auto">Version Control</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/o6aLUZ3Go/" :style="{ 'animation-delay': `${3 * 0.2}s` }">
-              <span class="flex-auto">JavaScript</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/dOIw4zPHC/" :style="{ 'animation-delay': `${4 * 0.2}s` }">
-              <span class="flex-auto">Data Structure</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/8q5LigPjO/" :style="{ 'animation-delay': `${5 * 0.2}s` }">
-              <span class="flex-auto">Database</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/R38FKKbZc/" :style="{ 'animation-delay': `${6 * 0.2}s` }">
-              <span class="flex-auto">Linux</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">4</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/en071zNCj/" :style="{ 'animation-delay': `${7 * 0.2}s` }">
-              <span class="flex-auto">Programming</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/T48Oi5XwY/" :style="{ 'animation-delay': `${8 * 0.2}s` }">
-              <span class="flex-auto">HTTP</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
+            <div class="next-post">
+              <a href="https://goroyal.github.io/git-commands/">
+                <h3 class="post-title">
+                  常用的Git命令
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
           
         </div>
+
+        
+
       </div>
     </div>
 

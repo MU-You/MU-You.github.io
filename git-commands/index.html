@@ -30,33 +30,9 @@
       
         <div class="animated fadeInLeft" style="animation-delay: 0.4s">
           <p class="my-4 text-gray-600 font-light hidden lg:block">
-            鲲之大，不知其几千里。
+            文章目录
           </p>
-          <div class="animated fadeInLeft social-container hidden lg:block" style="animation-delay: 0.6s">
-            
-              
-                <a href="https://github.com/goroyal" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="ri-github-line"></i>
-                </a>
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
+          <div class="toc-container hidden lg:block">
             
           </div>
         </div>
@@ -101,58 +77,126 @@
 </div>
 <div class="mask" onclick="closeMenu()">
 </div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4">
-        <h2 class="text-lg text-gray-700 mb-8">
-          <i class="ri-bookmark-2-line"></i> 标签云
-        </h2>
-        <div class="tags-container">
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">常用的Git命令</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2020-08-02 / 4 min read
+        </div>
+        
+        <div class="post-content yue">
+          <p>配置账号信息</p>
+<pre><code class="language-shell">git config --global user.name &quot;your username&quot;
+git config --global user.email &quot;your email&quot;
+</code></pre>
+<p>查看配置相关的信息</p>
+<pre><code class="language-shell">git config --list # 查看配置的信息
+git help config # 获取帮助信息
+</code></pre>
+<p>配置自动换行</p>
+<pre><code class="language-shell">git config --global core.autocrlf input # 提交到git时是否自动将换行符转换为lf
+</code></pre>
+<p>配置密钥</p>
+<pre><code class="language-shell">ssh-keygen -t rsa -C &quot;your email&quot; # 生成密钥
+ssh -T git@github.com # 测试是否成功
+</code></pre>
+<p>新建仓库</p>
+<pre><code class="language-shell">git init # 初始化本地仓库
+git clone &lt;url&gt; # 克隆远程版本库
+git add –all # 添加所有文件到暂存区（stage，index）
+git status # 查看当前git状态
+git remote add origin https://github.com/freshdgq/test.git # 关联到远程仓库地址
+git push -u origin master # 第一次推送master分支的所有内容
+</code></pre>
+<p>修改和提交</p>
+<pre><code class="language-shell">git status # 查看git当前状态
+git diff # 查看改动后和改动前的不同之处
+git add . # 跟踪所有改动过的文件
+git add &lt;file&gt; # 跟踪指定的文件
+git mv &lt;old&gt; &lt;new&gt; # 文件改名
+git rm &lt;file&gt; # 删除指定文件
+git rm --cached &lt;file&gt; # 停止跟踪文件但不删除
+git commit -m &quot;message&quot; # 提交修改的文件到当前分支
+git commit --amend # 修改最后一次提交
+</code></pre>
+<p>状态与版本处理</p>
+<pre><code class="language-shell">git log # 查看提交的历史记录
+git log -p &lt;file&gt; # 查看指定文件的提交记录
+git blame &lt;file&gt; # 以列表方式查看指定文件的提交历史
+git reset --hard HEAD  # 撤销工作目录中所有未提交文件的修改内容
+git checkout HEAD &lt;file&gt; # 撤销指定的未提交文件的修改内容
+git revert &lt;commit&gt; 撤销指定的提交
+git reset --hard HEAD^ # 回退本地分支到上一个版本
+git reset --hard HEAD~n # 回退本地分支到上n个版本
+git checkout – readme.txt # 把readme.txt文件在工作区的修改全部撤销
+</code></pre>
+<p>分支与标签处理</p>
+<pre><code class="language-shell">git branch # 查看本地所有分支
+git checkout &lt;branch/tag&gt; # 切换到指定分支或标签
+
+git branch &lt;new-branch&gt; # 创建新分支
+git checkout -b &lt;new-branch&gt; # 创建并切换到新分支
+git branch -d &lt;branch&gt; # 删除本地分支
+
+git merge &lt;branch&gt; # 合并指定分支到当前分支
+git rebase &lt;branch&gt; # 衍合指定分支到当前分支
+
+git tag # 列出所有本地标签
+git tag &lt;tagname&gt; # 基于最新提交创建标签
+git tag -d &lt;tagname&gt; # 删除标签
+</code></pre>
+<p>本地远程</p>
+<pre><code class="language-shell">git remote # 获得远程库列表
+git remote v # 查看远程版本库信息
+git remote show &lt;remote&gt; # 查看指定远程版本库信息
+git remote add &lt;remote&gt;&lt;url&gt; # 添加远程版本库
+git remote rm &lt;name&gt; # 删除对应的远程库
+git branch -u origin/master master # 本地跟踪远程
+
+git fetch &lt;remote&gt; # 从远程库获取代码
+git pull &lt;remote&gt;&lt;branch&gt; # 拉取远程指定分支代码并快速合并
+git push &lt;remote&gt;&lt;branch&gt; # 推送代码到远程指定分支并快速合并
+git push &lt;remote&gt;:&lt;branch/tag-name&gt; # 删除远程分支或标签
+git push --tags # 上传所有标签
+
+git pull origin master # 从远程的master分支拉取代码到本地
+git push origin master # 推送最新修改到远程的主分支
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/5boyAOfFj/">
+            <span class="flex-auto">Version Control</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/Ke7gk0EO5/" :style="{ 'animation-delay': `${0 * 0.2}s` }">
-              <span class="flex-auto">Java</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">13</span>
-            </a>
+            <div class="prev-post">
+              <a href="https://goroyal.github.io/java-synchronized/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  Java synchronized
+                </h3>
+              </a>
+            </div>
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/ZbecWX-__/" :style="{ 'animation-delay': `${1 * 0.2}s` }">
-              <span class="flex-auto">.NET</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
+
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/5boyAOfFj/" :style="{ 'animation-delay': `${2 * 0.2}s` }">
-              <span class="flex-auto">Version Control</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/o6aLUZ3Go/" :style="{ 'animation-delay': `${3 * 0.2}s` }">
-              <span class="flex-auto">JavaScript</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/dOIw4zPHC/" :style="{ 'animation-delay': `${4 * 0.2}s` }">
-              <span class="flex-auto">Data Structure</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/8q5LigPjO/" :style="{ 'animation-delay': `${5 * 0.2}s` }">
-              <span class="flex-auto">Database</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/R38FKKbZc/" :style="{ 'animation-delay': `${6 * 0.2}s` }">
-              <span class="flex-auto">Linux</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">4</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/en071zNCj/" :style="{ 'animation-delay': `${7 * 0.2}s` }">
-              <span class="flex-auto">Programming</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://goroyal.github.io/T48Oi5XwY/" :style="{ 'animation-delay': `${8 * 0.2}s` }">
-              <span class="flex-auto">HTTP</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
+            <div class="next-post">
+              <a href="https://goroyal.github.io/execute-script-in-web-page/">
+                <h3 class="post-title">
+                  网页里面引起脚本执行的方式
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
           
         </div>
+
+        
+
       </div>
     </div>
 
