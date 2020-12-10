@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://goroyal.github.io</id>
     <title>行知其远</title>
-    <updated>2020-12-10T15:31:34.814Z</updated>
+    <updated>2020-12-10T15:32:48.029Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://goroyal.github.io"/>
     <link rel="self" href="https://goroyal.github.io/atom.xml"/>
@@ -12,71 +12,71 @@
     <rights>All rights reserved 2020, 行知其远</rights>
     <entry>
         <title type="html"><![CDATA[Column Table & Row Table]]></title>
-        <id>https://goroyal.github.io/wzihO9SnJ/</id>
-        <link href="https://goroyal.github.io/wzihO9SnJ/">
+        <id>https://goroyal.github.io/post/wzihO9SnJ/</id>
+        <link href="https://goroyal.github.io/post/wzihO9SnJ/">
         </link>
         <updated>2020-12-10T15:31:00.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[Kafka语义]]></title>
-        <id>https://goroyal.github.io/0-m3H7Wxa/</id>
-        <link href="https://goroyal.github.io/0-m3H7Wxa/">
+        <id>https://goroyal.github.io/post/0-m3H7Wxa/</id>
+        <link href="https://goroyal.github.io/post/0-m3H7Wxa/">
         </link>
         <updated>2020-12-10T15:28:39.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[Kafka的高效读写]]></title>
-        <id>https://goroyal.github.io/HRv2vmF96/</id>
-        <link href="https://goroyal.github.io/HRv2vmF96/">
+        <id>https://goroyal.github.io/post/HRv2vmF96/</id>
+        <link href="https://goroyal.github.io/post/HRv2vmF96/">
         </link>
         <updated>2020-12-10T15:27:36.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[JVM调优之参数配置]]></title>
-        <id>https://goroyal.github.io/jvm-args/</id>
-        <link href="https://goroyal.github.io/jvm-args/">
+        <id>https://goroyal.github.io/post/jvm-args/</id>
+        <link href="https://goroyal.github.io/post/jvm-args/">
         </link>
         <updated>2020-08-21T02:23:11.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[Java持久化API]]></title>
-        <id>https://goroyal.github.io/jpa/</id>
-        <link href="https://goroyal.github.io/jpa/">
+        <id>https://goroyal.github.io/post/jpa/</id>
+        <link href="https://goroyal.github.io/post/jpa/">
         </link>
         <updated>2020-08-03T08:04:32.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[C#中引入的class命名空间相同但是source不同的问题解决]]></title>
-        <id>https://goroyal.github.io/csharp-same-class-name-namespace-diff-source/</id>
-        <link href="https://goroyal.github.io/csharp-same-class-name-namespace-diff-source/">
+        <id>https://goroyal.github.io/post/csharp-same-class-name-namespace-diff-source/</id>
+        <link href="https://goroyal.github.io/post/csharp-same-class-name-namespace-diff-source/">
         </link>
         <updated>2020-08-03T07:39:20.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[MSBuild学习]]></title>
-        <id>https://goroyal.github.io/msbuild-learn/</id>
-        <link href="https://goroyal.github.io/msbuild-learn/">
+        <id>https://goroyal.github.io/post/msbuild-learn/</id>
+        <link href="https://goroyal.github.io/post/msbuild-learn/">
         </link>
         <updated>2020-08-03T07:36:16.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[Inverted Index]]></title>
-        <id>https://goroyal.github.io/inverted-index/</id>
-        <link href="https://goroyal.github.io/inverted-index/">
+        <id>https://goroyal.github.io/post/inverted-index/</id>
+        <link href="https://goroyal.github.io/post/inverted-index/">
         </link>
         <updated>2020-08-03T07:33:37.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[JVM类加载机制]]></title>
-        <id>https://goroyal.github.io/jvm-lei-jia-zai-ji-zhi/</id>
-        <link href="https://goroyal.github.io/jvm-lei-jia-zai-ji-zhi/">
+        <id>https://goroyal.github.io/post/jvm-lei-jia-zai-ji-zhi/</id>
+        <link href="https://goroyal.github.io/post/jvm-lei-jia-zai-ji-zhi/">
         </link>
         <updated>2020-08-02T15:04:49.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[JVM垃圾收集器]]></title>
-        <id>https://goroyal.github.io/jvm-la-ji-shou-ji-qi/</id>
-        <link href="https://goroyal.github.io/jvm-la-ji-shou-ji-qi/">
+        <id>https://goroyal.github.io/post/jvm-la-ji-shou-ji-qi/</id>
+        <link href="https://goroyal.github.io/post/jvm-la-ji-shou-ji-qi/">
         </link>
         <updated>2020-08-02T15:03:44.000Z</updated>
     </entry>
