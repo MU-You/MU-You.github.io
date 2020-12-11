@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://goroyal.github.io</id>
     <title>行知其远</title>
-    <updated>2020-12-11T05:01:08.536Z</updated>
+    <updated>2020-12-11T05:09:30.653Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://goroyal.github.io"/>
     <link rel="self" href="https://goroyal.github.io/atom.xml"/>
@@ -10,6 +10,13 @@
     <logo>https://goroyal.github.io/images/avatar.png</logo>
     <icon>https://goroyal.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 行知其远</rights>
+    <entry>
+        <title type="html"><![CDATA[微服务与SOA架构对比]]></title>
+        <id>https://goroyal.github.io/post/microservice-and-soa/</id>
+        <link href="https://goroyal.github.io/post/microservice-and-soa/">
+        </link>
+        <updated>2020-12-11T05:08:53.000Z</updated>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Java ClassLoader和双亲委派模型]]></title>
         <id>https://goroyal.github.io/post/classloader/</id>
@@ -72,12 +79,5 @@
         <link href="https://goroyal.github.io/post/jpa/">
         </link>
         <updated>2020-08-03T08:04:32.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[C#中引入的class命名空间相同但是source不同的问题解决]]></title>
-        <id>https://goroyal.github.io/post/csharp-same-class-name-namespace-diff-source/</id>
-        <link href="https://goroyal.github.io/post/csharp-same-class-name-namespace-diff-source/">
-        </link>
-        <updated>2020-08-03T07:39:20.000Z</updated>
     </entry>
 </feed>

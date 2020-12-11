@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>行知其远</title>
 <meta name="description" content="鲲之大，不知其几千里。" />
-<link rel="shortcut icon" href="https://goroyal.github.io/favicon.ico?v=1607662865110">
+<link rel="shortcut icon" href="https://goroyal.github.io/favicon.ico?v=1607663365650">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://goroyal.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://goroyal.github.io/images/avatar.png?v=1607662865110" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://goroyal.github.io/images/avatar.png?v=1607663365650" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">行知其远</h1>
       </div>
@@ -33,7 +33,14 @@
             文章目录
           </p>
           <div class="toc-container hidden lg:block">
-            
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
+</ul>
+</li>
+</ul>
+
           </div>
         </div>
       
@@ -115,7 +122,7 @@
 </tr>
 </tbody>
 </table>
-<p>如果嫌密码总是会过期比较麻烦的话，可以执行下面的SQL语句，让密码生命周期不受限制：</p>
+<p>如果嫌密码总是会过期比较麻烦的话，可以执行下面的SQL语句，让密码生命周期不受限制（<strong>仅适用于在本地开发的数据库</strong>）：</p>
 <pre><code class="language-sql">ALTER PROFILE DEFAULT LIMIT PASSWORD_LIFE_TIME UNLIMITED;
 </code></pre>
 <p>针对已经过期的用户，如TEST3，需要重置它的密码（如密码设为test3）：</p>
@@ -124,8 +131,10 @@
 <p>然后解除用户的锁定，</p>
 <pre><code class="language-sql">ALTER USER TEST3 ACCOUNT UNLOCK;
 </code></pre>
-<p><strong>参考资料：</strong></p>
-<p><a href="https://hecpv.wordpress.com/2014/10/16/how-to-solve-ora-28001-the-password-has-expired/">https://hecpv.wordpress.com/2014/10/16/how-to-solve-ora-28001-the-password-has-expired/</a></p>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li><a href="https://hecpv.wordpress.com/2014/10/16/how-to-solve-ora-28001-the-password-has-expired/">HOW TO SOLVE ORA-28001: THE PASSWORD HAS EXPIRED</a></li>
+</ul>
 
         </div>
 
