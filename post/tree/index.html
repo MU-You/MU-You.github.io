@@ -33,14 +33,7 @@
             文章目录
           </p>
           <div class="toc-container hidden lg:block">
-            <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
-</ul>
-</li>
-</ul>
-
+            
           </div>
         </div>
       
@@ -85,151 +78,13 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">Inverted Index</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">【数据结构】树</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2020-08-03 / 3 min read
+          2020-12-11 / 1 min read
         </div>
         
         <div class="post-content yue">
-          <p>Inverted Index, 也就是反向索引（倒排索引）。反向索引结构是典型的搜索引擎算法重要的部分。</p>
-<p>常规的索引是文档到关键词的映射，但是这样的话检索关键词会比较慢，需要遍历一个又一个的文档。反向索引是从关键词到文档，这样可以根据关键词找到它在哪个文档里出现。</p>
-<p>一个未经处理的数据库中，一般是以文档ID作为索引，以文档内容作为记录。而Inverted index 指的是将单词或记录作为索引，将文档ID作为记录，这样便可以方便地通过单词或记录查找到其所在的文档吗。</p>
-<p>以英文为例，下面是要被索引的文本：</p>
-<pre><code>T0 = &quot;it is what it is&quot;
-T1 = &quot;what is it&quot;
-T2 = &quot;it is a banana&quot;
-</code></pre>
-<p>可以得到下列的反向文件索引：</p>
-<pre><code>&quot;a&quot;: {2}
-&quot;banana&quot;: {2}
-&quot;it&quot;: {0, 1, 2}
-&quot;is&quot;: {0, 1, 2}
-&quot;what&quot;: {0, 1}
-</code></pre>
-<p>还可以在反向索引里面加上单词出现的位置，比如<code>&quot;banana&quot;: {(2, 3)}</code>表示banana出现在第三个文本的第四个位置。</p>
-<p>反向索引在ElasticSearch里面也被使用到（Lucene)。假设有2个文档，文档的<code>content</code>域包含下列内容：</p>
-<ol>
-<li>The quick brown fox jumped over the lazy dog</li>
-<li>Quick brown foxes leap over lazy dogs in summer</li>
-</ol>
-<p>为了创建反向索引，首先将每个文档的<code>content</code>拆分成词（称为<code>词条</code>或<code>token</code>），创建一个包含所有不重复词条的排序列表，然后列出每个词条出现在哪个文档。如下所示：</p>
-<table>
-<thead>
-<tr>
-<th>Term</th>
-<th>Doc_1</th>
-<th>Doc_2</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Quick</td>
-<td></td>
-<td>X</td>
-</tr>
-<tr>
-<td>The</td>
-<td>X</td>
-<td></td>
-</tr>
-<tr>
-<td>brown</td>
-<td>X</td>
-<td>X</td>
-</tr>
-<tr>
-<td>dog</td>
-<td>X</td>
-<td></td>
-</tr>
-<tr>
-<td>dogs</td>
-<td></td>
-<td>X</td>
-</tr>
-<tr>
-<td>fox</td>
-<td>X</td>
-<td></td>
-</tr>
-<tr>
-<td>foxes</td>
-<td></td>
-<td>X</td>
-</tr>
-<tr>
-<td>in</td>
-<td></td>
-<td>X</td>
-</tr>
-<tr>
-<td>jumped</td>
-<td>X</td>
-<td></td>
-</tr>
-<tr>
-<td>lazy</td>
-<td>X</td>
-<td>X</td>
-</tr>
-<tr>
-<td>leap</td>
-<td></td>
-<td>X</td>
-</tr>
-<tr>
-<td>over</td>
-<td>X</td>
-<td>X</td>
-</tr>
-<tr>
-<td>quick</td>
-<td>X</td>
-<td></td>
-</tr>
-<tr>
-<td>summer</td>
-<td></td>
-<td>X</td>
-</tr>
-<tr>
-<td>the</td>
-<td>X</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<p>如果我们想搜索<code>quick brown</code>，我们只需要查找包含每个词条的文档：</p>
-<table>
-<thead>
-<tr>
-<th>Term</th>
-<th>Doc_1</th>
-<th>Doc_2</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>brown</td>
-<td>X</td>
-<td>X</td>
-</tr>
-<tr>
-<td>quick</td>
-<td>X</td>
-<td></td>
-</tr>
-<tr>
-<td><strong>Total</strong></td>
-<td><strong>2</strong></td>
-<td><strong>1</strong></td>
-</tr>
-</tbody>
-</table>
-<p>两个文档都匹配，但是第一个文档比第二个匹配度更高。当然了，上面的反向索引存在点问题，比如<code>Quick</code>和<code>quick</code>，<code>dogs</code>和<code>dog</code>，可以作为相同词根进行索引，但还是不够的，需要进一步<a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/analysis-intro.html">分析</a>。</p>
-<h2 id="参考">参考</h2>
-<p><a href="https://zh.wikipedia.org/zh-hans/%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95">维基百科</a><br>
-<a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/inverted-index.html">ElasticSearch文档</a></p>
+          <p>Mark</p>
 
         </div>
 
@@ -243,10 +98,10 @@ T2 = &quot;it is a banana&quot;
         <div class="flex justify-between py-8">
           
             <div class="prev-post">
-              <a href="https://goroyal.github.io/post/msbuild-learn/">
+              <a href="https://goroyal.github.io/post/java-generic-type/">
                 <h3 class="post-title">
                   <i class="ri-arrow-left-line"></i>
-                  MSBuild学习
+                  Java泛型
                 </h3>
               </a>
             </div>
@@ -254,9 +109,9 @@ T2 = &quot;it is a banana&quot;
 
           
             <div class="next-post">
-              <a href="https://goroyal.github.io/post/jvm-lei-jia-zai-ji-zhi/">
+              <a href="https://goroyal.github.io/post/column-row-table/">
                 <h3 class="post-title">
-                  JVM类加载机制
+                  Column Table &amp; Row Table
                   <i class="ri-arrow-right-line"></i>
                 </h3>
               </a>

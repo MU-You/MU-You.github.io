@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://goroyal.github.io</id>
     <title>行知其远</title>
-    <updated>2020-12-10T15:33:41.771Z</updated>
+    <updated>2020-12-11T05:01:08.536Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://goroyal.github.io"/>
     <link rel="self" href="https://goroyal.github.io/atom.xml"/>
@@ -10,6 +10,34 @@
     <logo>https://goroyal.github.io/images/avatar.png</logo>
     <icon>https://goroyal.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 行知其远</rights>
+    <entry>
+        <title type="html"><![CDATA[Java ClassLoader和双亲委派模型]]></title>
+        <id>https://goroyal.github.io/post/classloader/</id>
+        <link href="https://goroyal.github.io/post/classloader/">
+        </link>
+        <updated>2020-12-11T05:00:29.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Web开发中的日志]]></title>
+        <id>https://goroyal.github.io/post/log/</id>
+        <link href="https://goroyal.github.io/post/log/">
+        </link>
+        <updated>2020-12-11T04:55:00.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Java泛型]]></title>
+        <id>https://goroyal.github.io/post/java-generic-type/</id>
+        <link href="https://goroyal.github.io/post/java-generic-type/">
+        </link>
+        <updated>2020-12-11T04:53:28.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[【数据结构】树]]></title>
+        <id>https://goroyal.github.io/post/tree/</id>
+        <link href="https://goroyal.github.io/post/tree/">
+        </link>
+        <updated>2020-12-11T04:51:49.000Z</updated>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Column Table & Row Table]]></title>
         <id>https://goroyal.github.io/post/column-row-table/</id>
@@ -51,33 +79,5 @@
         <link href="https://goroyal.github.io/post/csharp-same-class-name-namespace-diff-source/">
         </link>
         <updated>2020-08-03T07:39:20.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[MSBuild学习]]></title>
-        <id>https://goroyal.github.io/post/msbuild-learn/</id>
-        <link href="https://goroyal.github.io/post/msbuild-learn/">
-        </link>
-        <updated>2020-08-03T07:36:16.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Inverted Index]]></title>
-        <id>https://goroyal.github.io/post/inverted-index/</id>
-        <link href="https://goroyal.github.io/post/inverted-index/">
-        </link>
-        <updated>2020-08-03T07:33:37.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[JVM类加载机制]]></title>
-        <id>https://goroyal.github.io/post/jvm-lei-jia-zai-ji-zhi/</id>
-        <link href="https://goroyal.github.io/post/jvm-lei-jia-zai-ji-zhi/">
-        </link>
-        <updated>2020-08-02T15:04:49.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[JVM垃圾收集器]]></title>
-        <id>https://goroyal.github.io/post/jvm-la-ji-shou-ji-qi/</id>
-        <link href="https://goroyal.github.io/post/jvm-la-ji-shou-ji-qi/">
-        </link>
-        <updated>2020-08-02T15:03:44.000Z</updated>
     </entry>
 </feed>
