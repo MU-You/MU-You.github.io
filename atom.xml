@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://goroyal.github.io</id>
     <title>行知其远</title>
-    <updated>2020-12-30T14:55:47.596Z</updated>
+    <updated>2020-12-30T14:59:04.948Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://goroyal.github.io"/>
     <link rel="self" href="https://goroyal.github.io/atom.xml"/>
@@ -33,11 +33,17 @@
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[代码模块化]]></title>
-        <id>https://goroyal.github.io/post/code-modularization/</id>
-        <link href="https://goroyal.github.io/post/code-modularization/">
+        <title type="html"><![CDATA[代码模块化重构]]></title>
+        <id>https://goroyal.github.io/post/code-modularization-refactor/</id>
+        <link href="https://goroyal.github.io/post/code-modularization-refactor/">
         </link>
         <updated>2020-12-11T05:10:03.000Z</updated>
+        <summary type="html"><![CDATA[<h2 id="为什么要做模块化">为什么要做模块化</h2>
+<p>我们都知道代码设计有个原则：不要重复你自己。代码要尽可能的被复用。对于同一个功能，当它第一次被写出来后，其他模块会去引用它。随着时间的推移，每个模块都有自己的一些功能点被其他模块调用，甚至作为基础的框架层还会去调用业务层的代码（比如注册实现、框架针对特定业务的需求对一些功能做定制）。</p>
+]]></summary>
+        <content type="html"><![CDATA[<h2 id="为什么要做模块化">为什么要做模块化</h2>
+<p>我们都知道代码设计有个原则：不要重复你自己。代码要尽可能的被复用。对于同一个功能，当它第一次被写出来后，其他模块会去引用它。随着时间的推移，每个模块都有自己的一些功能点被其他模块调用，甚至作为基础的框架层还会去调用业务层的代码（比如注册实现、框架针对特定业务的需求对一些功能做定制）。</p>
+]]></content>
     </entry>
     <entry>
         <title type="html"><![CDATA[微服务与SOA架构对比]]></title>
