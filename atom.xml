@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://goroyal.github.io</id>
     <title>行知其远</title>
-    <updated>2020-12-11T05:10:50.044Z</updated>
+    <updated>2020-12-30T14:31:22.197Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://goroyal.github.io"/>
     <link rel="self" href="https://goroyal.github.io/atom.xml"/>
@@ -10,6 +10,28 @@
     <logo>https://goroyal.github.io/images/avatar.png</logo>
     <icon>https://goroyal.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 行知其远</rights>
+    <entry>
+        <title type="html"><![CDATA[Java反射]]></title>
+        <id>https://goroyal.github.io/post/java-reflection/</id>
+        <link href="https://goroyal.github.io/post/java-reflection/">
+        </link>
+        <updated>2020-12-30T14:30:43.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Java面向对象三大特性]]></title>
+        <id>https://goroyal.github.io/post/java-ooo/</id>
+        <link href="https://goroyal.github.io/post/java-ooo/">
+        </link>
+        <updated>2020-12-30T14:29:58.000Z</updated>
+        <summary type="html"><![CDATA[<h2 id="引言">引言</h2>
+<p>传统的结构化程序设计通过设计一系列的过程（即算法）来求解问题。这些过程一旦被确定，就要开始考虑存储数据的方式。Pascak语言的设计者Niklaus Wirth将程序定义为算法+数据结构，算法是第一位的，数据结构是第二位的。这明确表述了程序员的工作方式：首先要确定如何操作数据，然后再考虑如何组织数据，以便于数据操作。而面向对象程序设计却将数据放在第一位，然后再考虑操作数据的算法。<br>
+面向对象程序设计是当今主流的程序设计范型之一，Java是完全面向对象的语言。面向对象的程序是由对象组成的，每个对象包含对用户公开的特定部分和隐藏的实现部分。在Java的面向对象概念中，有三大特性，分别是封装、继承、多态。</p>
+]]></summary>
+        <content type="html"><![CDATA[<h2 id="引言">引言</h2>
+<p>传统的结构化程序设计通过设计一系列的过程（即算法）来求解问题。这些过程一旦被确定，就要开始考虑存储数据的方式。Pascak语言的设计者Niklaus Wirth将程序定义为算法+数据结构，算法是第一位的，数据结构是第二位的。这明确表述了程序员的工作方式：首先要确定如何操作数据，然后再考虑如何组织数据，以便于数据操作。而面向对象程序设计却将数据放在第一位，然后再考虑操作数据的算法。<br>
+面向对象程序设计是当今主流的程序设计范型之一，Java是完全面向对象的语言。面向对象的程序是由对象组成的，每个对象包含对用户公开的特定部分和隐藏的实现部分。在Java的面向对象概念中，有三大特性，分别是封装、继承、多态。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[代码模块化]]></title>
         <id>https://goroyal.github.io/post/code-modularization/</id>
@@ -65,19 +87,5 @@
         <link href="https://goroyal.github.io/post/kafka-semantics/">
         </link>
         <updated>2020-12-10T15:28:39.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Kafka的高效读写]]></title>
-        <id>https://goroyal.github.io/post/kakfa-efficient-rw/</id>
-        <link href="https://goroyal.github.io/post/kakfa-efficient-rw/">
-        </link>
-        <updated>2020-12-10T15:27:36.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[JVM调优之参数配置]]></title>
-        <id>https://goroyal.github.io/post/jvm-args/</id>
-        <link href="https://goroyal.github.io/post/jvm-args/">
-        </link>
-        <updated>2020-08-21T02:23:11.000Z</updated>
     </entry>
 </feed>
